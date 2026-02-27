@@ -1,16 +1,11 @@
 using UnityEngine;
 
-public class BarrackBuilding : MonoBehaviour
+public class BarrackBuilding : IBuilding
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     void Start()
     {
-        
+        buildingType = BuildingType.Barracks;
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+ 
 }

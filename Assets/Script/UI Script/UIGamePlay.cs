@@ -19,13 +19,13 @@ public class UIGamePlay : MonoBehaviour
 
     public void Initilize()
     {
-        playerName.text = "Player1";
-        playerGold.text = "100";
+        playerName.text = PlayerProfile.Instance.GetPlayerName();
+        playerGold.text = PlayerProfile.Instance.GetCoins().ToString();
     }   
     
     public void OpenPopup()
     {
-        UIManager.Instance.OpenShop();
+        GameController.Instance.OpenShop();
     }
 
     public void OpenPopup1()

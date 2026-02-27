@@ -12,7 +12,8 @@ GameObject:
   - component: {fileID: 8286282391875677468}
   - component: {fileID: 1054518896489781588}
   - component: {fileID: 7926577536126023316}
-  m_Layer: 0
+  - component: {fileID: 7236582585119975976}
+  m_Layer: 11
   m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -31,7 +32,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 4, y: 4, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 7310636614455290829}
   m_Father: {fileID: 471807421885630901}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!33 &8286282391875677468
@@ -113,6 +115,20 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &7236582585119975976
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 599029907973378197}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a65e76499f5ff54d8b3b30aa3c09872, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MainTowerBuiding
+  buildingType: 1
+  animator: {fileID: 6032166862939817461}
 --- !u!1 &7944149532447748471
 GameObject:
   m_ObjectHideFlags: 0
@@ -125,6 +141,7 @@ GameObject:
   - component: {fileID: 5970439197240943720}
   - component: {fileID: 8448671094076706978}
   - component: {fileID: 5556023530335910446}
+  - component: {fileID: 6032166862939817461}
   m_Layer: 0
   m_Name: Building_2
   m_TagString: Untagged
@@ -140,12 +157,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7944149532447748471}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.005, y: 0, z: -0.0147}
-  m_LocalScale: {x: 1.2955633, y: 1, z: 1.0770885}
+  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: -0.00125, y: -0.0036750005, z: 0}
+  m_LocalScale: {x: 0.32389084, y: 1, z: 0.26927206}
   m_ConstrainProportionsScale: 1
   m_Children: []
-  m_Father: {fileID: 471807421885630901}
+  m_Father: {fileID: 2899563819818021893}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!33 &5970439197240943720
 MeshFilter:
@@ -234,6 +251,28 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4118172251044840284, guid: d46a3bc37d4cc5d489a828a8f3ffe72e, type: 3}
+--- !u!95 &6032166862939817461
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7944149532447748471}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &8737090827306324103
 GameObject:
   m_ObjectHideFlags: 0
@@ -243,8 +282,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 471807421885630901}
-  - component: {fileID: 8914763808658194341}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: MainTower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -265,18 +303,5 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2899563819818021893}
-  - {fileID: 7310636614455290829}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8914763808658194341
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8737090827306324103}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a65e76499f5ff54d8b3b30aa3c09872, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MainTowerBuiding

@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
 
     public void BuyBuilding(int buildingId)
     {
-        UIManager.Instance.CloseShop();
+        GameController.Instance.CloseShop();
 
         Debug.Log($"GameManager: Buy Building {buildingId}");
         BuildingData buildingData = DataManager.Instance.GetBuildingDataByID(buildingId);

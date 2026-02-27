@@ -9,8 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1764928230202509643}
-  - component: {fileID: 2314264542373000483}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Barack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -31,21 +30,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1228039147224399303}
-  - {fileID: 4198424276158884052}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2314264542373000483
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3294114340381151476}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2d552556ad6d3e8459e788d32d8fa05a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
 --- !u!1 &3533104754502922862
 GameObject:
   m_ObjectHideFlags: 0
@@ -58,6 +44,7 @@ GameObject:
   - component: {fileID: 1003202345390876529}
   - component: {fileID: 3028917581727421371}
   - component: {fileID: 1309879058341034295}
+  - component: {fileID: 3111340482112119854}
   m_Layer: 0
   m_Name: Building 3
   m_TagString: Untagged
@@ -73,12 +60,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3533104754502922862}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.01, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5000001, z: 0.5000001}
+  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: 0.010000001}
+  m_LocalScale: {x: 0.25, y: 0.5, z: 0.25}
   m_ConstrainProportionsScale: 1
   m_Children: []
-  m_Father: {fileID: 1764928230202509643}
+  m_Father: {fileID: 1228039147224399303}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &1003202345390876529
 MeshFilter:
@@ -172,6 +159,28 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 5699116488273444177, guid: ee07a42e67cf378428d6a8ee02575483, type: 3}
+--- !u!95 &3111340482112119854
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3533104754502922862}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 7ad5477a16ada3246b7cc8865dc84844, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &4044269387486465315
 GameObject:
   m_ObjectHideFlags: 0
@@ -184,7 +193,8 @@ GameObject:
   - component: {fileID: 3278851702196712902}
   - component: {fileID: 264402152010512044}
   - component: {fileID: 1681726896025830938}
-  m_Layer: 0
+  - component: {fileID: 8910433468325770360}
+  m_Layer: 11
   m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -203,7 +213,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 4198424276158884052}
   m_Father: {fileID: 1764928230202509643}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!33 &3278851702196712902
@@ -285,3 +296,17 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &8910433468325770360
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4044269387486465315}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d552556ad6d3e8459e788d32d8fa05a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  buildingType: 2
+  animator: {fileID: 3111340482112119854}
