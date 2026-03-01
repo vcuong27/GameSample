@@ -60,6 +60,11 @@ public class GameController : IMenuStack
     {
         CloseMenu();
 
+        if (openedBuildingMenu == null)
+        {
+            return;
+        }
+
         BuildingType type = openedBuildingMenu.buildingType;
         switch (type)
         {
