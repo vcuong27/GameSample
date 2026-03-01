@@ -30,7 +30,7 @@ public class LoadingController : IMenuStack
 
         // build player profile
         Debug.Log("Building Player Profile...");
-        PlayerProfile.Instance.Initialize();
+        PlayerProfile.Instance.RequestPlayerProfile();
         while (!PlayerProfile.Instance.IsInitialize())
         {
             yield return new WaitForSeconds(1f);

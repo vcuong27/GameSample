@@ -1,0 +1,13 @@
+/.vs
+/Library
+/Temp
+/Logs
+/LeanGUI.csproj
+/LeanTransition.csproj
+/LeanTransition.Editor.csproj
+/Assembly-CSharp.csproj
+/Assembly-CSharp-Editor.csproj
+/CW.Common.csproj
+/GameSample.slnx
+/LeanCommon.csproj
+/UserSettings

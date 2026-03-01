@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,6 +17,22 @@ public class UIGamePlay : MonoBehaviour
         Initilize();
     }
 
+    private void OnEnable()
+    {
+        PlayerProfile.OnProfileUpdated += PlayerProleUpdated;
+    }
+
+    private void OnDisable()
+    {
+        PlayerProfile.OnProfileUpdated -= PlayerProleUpdated;
+    }
+
+
+
+    private void PlayerProleUpdated()
+    {
+        Initilize();
+    }
 
     public void Initilize()
     {

@@ -4,7 +4,7 @@ using System;
 
 
 [Serializable]
-class PlayerProfileData
+public class PlayerProfileData
 {
     public int playerID;
     public string playerName;
@@ -16,6 +16,9 @@ class PlayerProfileData
 
 public class PlayerProfile : MonoBehaviour
 {
+
+    public static Action OnProfileUpdated;
+
 
     private static PlayerProfile _instance;
     public static PlayerProfile Instance => _instance;
@@ -30,18 +33,30 @@ public class PlayerProfile : MonoBehaviour
     private bool IsInitialized = false;
     private PlayerProfileData CurentProfile;
 
-    public void Initialize()
+    public void RequestPlayerProfile()
     {
-        CurentProfile = new PlayerProfileData
+        OnlineManager.Instance.GetPlayerProfile();
+    }
+
+    public void Initialize(PlayerProfileData profileData)
+    {
+        if (profileData != null)
         {
-            playerID = 1,
-            playerName = "Player1",
-            level = 1,
-            experience = 0,
-            coins = 1000
-        };
+            CurentProfile = profileData;
+        }
+        else
+        {
+            CurentProfile = new PlayerProfileData
+            {
+                playerID = 1,
+                playerName = "Player1",
+                level = 1,
+                experience = 0,
+                coins = 1000
+            };
+        }
 
-
+        OnProfileUpdated.Invoke();
         IsInitialized = true;
     }
 
@@ -49,7 +64,6 @@ public class PlayerProfile : MonoBehaviour
     {
         return IsInitialized;
     }
-
 
     public string GetPlayerName()
     {
@@ -64,7 +78,7 @@ public class PlayerProfile : MonoBehaviour
     public int GetCoins()
     {
         return CurentProfile.coins;
-    }   
+    }
 
 
 }
