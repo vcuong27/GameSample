@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -5,6 +6,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private GameObject Object3D;
     [SerializeField] private GridInput  gridInput;
+
+    public static Action<FarmData> ON_UPDATE_FARM_DATA;
 
 
     private static GameManager _instance;
@@ -44,11 +47,12 @@ public class GameManager : MonoBehaviour
                 Debug.Log("No space available for the building.");
             }
         }
-
-        /*BuildingData buildingData = DataManager.Instance.GetBuildingDataByID(buildingId);
-        GameObject buildingObj = Instantiate(DataManager.Instance.GetbuidingDataGames(buildingData.buildingType).buildingPrefab, Object3D.transform);
-        gridInput.cellHighlight = buildingObj.transform;*/
-
     }
 
+
+    public void UpdateFarmData(FarmData farmData)
+    {
+        PlayerProfile.Instance.UpdateFarmData(farmData);
+        ON_UPDATE_FARM_DATA?.Invoke(farmData);
+    }
 }

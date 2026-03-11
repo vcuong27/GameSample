@@ -50,8 +50,11 @@ public class OnlineManager : MonoBehaviour
         GET_EQUIPMENTS = 38,
         SET_CHARACTER_SELECTED = 39,
         CHARACTER_EQUIP = 40,
-        CHARACTER_UNEQUIP = 41
+        CHARACTER_UNEQUIP = 41,
+        COLLECT_FARM = 42,
     }
+
+
 
     private static OnlineManager _instance;
     public static OnlineManager Instance => _instance;
@@ -73,9 +76,18 @@ public class OnlineManager : MonoBehaviour
 
     }
 
+    public void CollectFarm(int buildingID)
+    {
+        CS_CollectFarmMessage mes = new CS_CollectFarmMessage();
+        mes.playerID = PlayerProfile.Instance.GetPlayeID();
+        mes.buildingID = buildingID;
+
+        SendMessage(MessageID.COLLECT_FARM, mes);
+    }    
+
     public void SendAutentication()
     {
-        AutenticationMessage aut = new AutenticationMessage();
+        CS_AutenticationMessage aut = new CS_AutenticationMessage();
         aut.username = "test";
         aut.password = "test";
 
@@ -84,7 +96,7 @@ public class OnlineManager : MonoBehaviour
 
     public void GetPlayerProfile()
     {
-        GetPlayerProfileMessage mes = new GetPlayerProfileMessage();
+        CS_PlayerProfileMessage mes = new CS_PlayerProfileMessage();
 
         SendMessage(MessageID.GET_PROFILE, mes);
     }
@@ -189,6 +201,14 @@ public class OnlineManager : MonoBehaviour
             case MessageID.CHARACTER_EQUIP:
                 break;
             case MessageID.CHARACTER_UNEQUIP:
+                break;
+            case MessageID.COLLECT_FARM:
+                SC_CollectFarmMessage sC_CollectFarmMessage = JsonUtility.FromJson<SC_CollectFarmMessage>(packet.ReadString());
+                if(sC_CollectFarmMessage.status == MessageStatus.SUCCESS)
+                {
+                    GameManager.Instance.UpdateFarmData(sC_CollectFarmMessage.farmData);
+                }
+
                 break;
             default:
                 break;

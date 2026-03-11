@@ -11,6 +11,7 @@ public class PlayerProfileData
     public int level;
     public int experience;
     public int coins;
+    public FarmData[] farmDatas;
 }
 
 
@@ -80,5 +81,24 @@ public class PlayerProfile : MonoBehaviour
         return CurentProfile.coins;
     }
 
+    public int GetPlayeID()
+    {
+        return CurentProfile.playerID;
+    }
 
+    public void UpdateFarmData(FarmData farmData)
+    {
+        foreach (FarmData data in CurentProfile.farmDatas)
+        {
+            if (data.id == farmData.id)
+            {
+                data.Level = farmData.Level;
+                data.CoinPerSecond = farmData.CoinPerSecond;
+                data.MaxCoin = farmData.MaxCoin;
+                data.CurrentCoin = farmData.CurrentCoin;
+                data.StartTime = farmData.StartTime;
+                break;
+            }
+        }
+    }
 }

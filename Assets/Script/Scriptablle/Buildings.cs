@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public enum BuildingType
@@ -23,6 +24,16 @@ public class BuildingData
     public float buildSpeed;
     public Vector2Int size;
     public Vector2Int pivot;
+}
+
+[System.Serializable]
+public class FarmData : BuildingData
+{
+    public int Level;
+    public int CoinPerSecond;
+    public int MaxCoin;
+    public int CurrentCoin;
+    public DateTime StartTime;
 }
 
 [System.Serializable]
