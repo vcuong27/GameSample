@@ -36,6 +36,18 @@ public class FarmData : BuildingData
     public DateTime StartTime;
 }
 
+
+[System.Serializable]
+public class BarrackData : BuildingData
+{
+    public int Level;
+    public float TrainingTime;
+
+}
+
+
+
+
 [System.Serializable]
 public class BuidingDataGame
 {
