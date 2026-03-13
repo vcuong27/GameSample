@@ -1,3 +1,4 @@
+using Lean.Gui;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -20,7 +21,7 @@ public class GameController : IMenuStack
 
     public void OpenShop()
     {
-        OpenMenu(uIShop.gameObject);
+        OpenMenu(uIShop.gameObject.GetComponent<LeanWindow>());
         uIShop.InitUI();
     }
 
@@ -40,7 +41,7 @@ public class GameController : IMenuStack
             case BuildingType.MainTower:
                 break;
             case BuildingType.Barracks:
-                OpenMenu( uIBarackPanel.gameObject);
+                //OpenMenu( uIBarackPanel.gameObject.getc);
                 uIBarackPanel.Inlitilize((BarrackBuilding)building);
                 break;
             case BuildingType.Farm:

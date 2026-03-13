@@ -1,25 +1,26 @@
+using Lean.Gui;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class IMenuStack : MonoBehaviour
 {
-    Stack<GameObject> menuStack = new Stack<GameObject>();
+    Stack<LeanWindow> menuStack = new Stack<LeanWindow>();
 
     [SerializeField] private GameObject uIRoot;
 
-    public void OpenMenu(GameObject menu)
+    public void OpenMenu(LeanWindow menu)
     {
         menuStack.Push(menu);
-        menu.SetActive(true);
+        menu.Set(true);
     }
 
     public void CloseMenu()
     {
         if (menuStack.Count > 0)
         {
-            GameObject topMenu = menuStack.Pop();
-            topMenu.SetActive(false);
+            LeanWindow topMenu = menuStack.Pop();
+            topMenu.Set(false);
         }
     }
 
@@ -27,8 +28,8 @@ public class IMenuStack : MonoBehaviour
     {
         while (menuStack.Count > 0)
         {
-            GameObject menu = menuStack.Pop();
-            menu.SetActive(false);
+            LeanWindow menu = menuStack.Pop();
+            menu.Set(false);
         }
     }
 
