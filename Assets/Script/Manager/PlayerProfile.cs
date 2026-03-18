@@ -30,6 +30,18 @@ public class PlayerProfile : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+    private void Start()
+    {
+        CurentProfile = new PlayerProfileData
+        {
+            playerID = 1,
+            playerName = "Player1",
+            level = 1,
+            experience = 0,
+            coins = 1000
+        };
+    }
+
 
     private bool IsInitialized = false;
     private PlayerProfileData CurentProfile;

@@ -8,12 +8,12 @@ public class IBuilding : MonoBehaviour
 
     public void Select()
     {
-        animator.SetTrigger("Click");
+        //animator.SetTrigger("Click");
     }
 
     public void Place()
     {
-        animator.SetTrigger("Place");
+        //animator.SetTrigger("Place");
     }
 
 }

@@ -13,6 +13,7 @@ public class IMenuStack : MonoBehaviour
     {
         menuStack.Push(menu);
         menu.Set(true);
+        menu.gameObject.SetActive(true);
     }
 
     public void CloseMenu()
@@ -21,6 +22,7 @@ public class IMenuStack : MonoBehaviour
         {
             LeanWindow topMenu = menuStack.Pop();
             topMenu.Set(false);
+            topMenu.gameObject.SetActive(false);
         }
     }
 
