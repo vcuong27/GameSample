@@ -102,13 +102,9 @@ public class PlayerProfile : MonoBehaviour
     {
         foreach (FarmData data in CurentProfile.farmDatas)
         {
-            if (data.id == farmData.id)
+            if (data.ID == farmData.ID)
             {
                 data.Level = farmData.Level;
-                data.CoinPerSecond = farmData.CoinPerSecond;
-                data.MaxCoin = farmData.MaxCoin;
-                data.CurrentCoin = farmData.CurrentCoin;
-                data.StartTime = farmData.StartTime;
                 break;
             }
         }

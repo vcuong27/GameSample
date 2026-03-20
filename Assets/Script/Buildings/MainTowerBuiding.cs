@@ -5,7 +5,7 @@ public class MainTowerBuiding : IBuilding
 
     void Start()
     {
-        buildingType = BuildingType.MainTower;
+        buildingType = BuildingType.MAINTOWER;
     }
 
 

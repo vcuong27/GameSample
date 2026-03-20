@@ -9,7 +9,7 @@ public class FarmBuilding : IBuilding
 
     void Start()
     {
-        buildingType = BuildingType.Farm;
+        buildingType = BuildingType.FARM_GOLD;
     }
 
     private void OnEnable()
@@ -30,7 +30,7 @@ public class FarmBuilding : IBuilding
 
     private void UpdateFarmData(FarmData data)
     {
-        if(curentFarmData.id != data.id)
+        if(curentFarmData.ID != data.ID)
         {
             return;
         }
@@ -42,10 +42,10 @@ public class FarmBuilding : IBuilding
     {
         Debug.Log($"Collected {curentFarmData.CurrentCoin} coins from the farm.");
         curentFarmData.CurrentCoin = 0; 
-        curentFarmData.StartTime = DateTime.UtcNow;
+        curentFarmData.ColectedTime = DateTime.UtcNow;
         ObjectUI.SetActive(false);
         
-        OnlineManager.Instance.CollectFarm(curentFarmData.id);
+        OnlineManager.Instance.CollectFarm(curentFarmData.ID);
 
     }
 
@@ -59,7 +59,7 @@ public class FarmBuilding : IBuilding
     {
         if (curentFarmData.CurrentCoin < curentFarmData.MaxCoin)
         {
-            curentFarmData.CurrentCoin = (int)(curentFarmData.CoinPerSecond * (DateTime.UtcNow - curentFarmData.StartTime).TotalSeconds);
+            curentFarmData.CurrentCoin = (int)(curentFarmData.CoinPerMinute * (DateTime.UtcNow - curentFarmData.ColectedTime).TotalSeconds);
             if (curentFarmData.CurrentCoin > curentFarmData.MaxCoin)
             {
                 curentFarmData.CurrentCoin = curentFarmData.MaxCoin; 

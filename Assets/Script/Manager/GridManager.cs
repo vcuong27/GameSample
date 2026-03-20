@@ -35,7 +35,7 @@ public class GridManager : MonoBehaviour
             GridMattrix[i] = new BuildingType[height];
             for (int j = 0; j < height; j++)
             {
-                GridMattrix[i][j] = BuildingType.None;
+                GridMattrix[i][j] = BuildingType.NONE;
             }
         }
         _instance = this;

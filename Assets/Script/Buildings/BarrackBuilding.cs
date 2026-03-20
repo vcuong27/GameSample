@@ -12,9 +12,7 @@ public class BarrackBuilding : IBuilding
 
 
     [SerializeField]
-    private GameObject BarrackUI;
-    [SerializeField]
-    private Slider BarrackValue;
+    private BarrackBuildingUI BarrackUI;
 
     private BarrackState barrackState;
     private BarrackData currentData;
@@ -24,12 +22,13 @@ public class BarrackBuilding : IBuilding
 
     void Start()
     {
-        buildingType = BuildingType.Barracks;
+        buildingType = BuildingType.BARRACKS;
         currentData = new BarrackData();
         currentData.TrainingTime = 10;
         percent = 0f;
         trainingTime = 0f;
         barrackState = BarrackState.Idle;
+        BarrackUI.Initialize(this);
     }
 
     public void Initialize(BarrackData data)
@@ -52,11 +51,11 @@ public class BarrackBuilding : IBuilding
                 if (trainingTime < currentData.TrainingTime)
                 {
                     percent = trainingTime / currentData.TrainingTime;
-                    BarrackValue.value = percent;
+                    BarrackUI.UpdateUI(percent, currentData.TrainingTime);
                 }
                 else
                 {
-                    BarrackValue.value = 1f;
+                    BarrackUI.UpdateUI(100, currentData.TrainingTime);
                     barrackState = BarrackState.ReadyToCollect;
                 }
                 break;
@@ -80,7 +79,7 @@ public class BarrackBuilding : IBuilding
         barrackState = BarrackState.Idle;
         percent = 0f;
         trainingTime = 0f;
-        BarrackValue.value = 0f;
+        //BarrackValue.value = 0f;
     }
 
     public void Collect()
@@ -90,7 +89,7 @@ public class BarrackBuilding : IBuilding
             Debug.Log("Unit trained and ready to deploy!");
             percent = 0f;
             trainingTime = 0f;
-            BarrackValue.value = 0f;
+            //BarrackValue.value = 0f;
         }
         else
         {

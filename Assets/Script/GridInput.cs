@@ -1,5 +1,6 @@
 // GridInput.cs
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.EventSystems;
 
 [DisallowMultipleComponent]
@@ -28,6 +29,8 @@ public class GridInput : MonoBehaviour
     private bool _isHoldingMouse;
     private bool _isDragging;
 
+    private AudioSource audioSource;
+
     private void Reset()
     {
         cam = Camera.main;
@@ -39,6 +42,8 @@ public class GridInput : MonoBehaviour
         {
             cam = Camera.main;
         }
+        //audioSource = GetComponent<AudioSource>();
+        //audioSource.clip = SoundManager.Instance.GetAudioClipByType(SoundType.BGM, SoundClip.BGM_Main);
     }
 
     private void Update()
@@ -52,9 +57,14 @@ public class GridInput : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
+           //audioSource.clip = SoundManager.Instance.GetAudioClipByType(SoundType.BGM, SoundClip.BGM_Battle);
+           //audioSource.Play();
+           //audioSource.Pause();
+           //audioSource.Stop();
+
             _isHoldingMouse = true;
             TryPickHouseUnderMouse();
-            if(_pickedHouse == null)
+            if (_pickedHouse == null)
             {
                 GameController.Instance.CloseBuildMenu();
             }

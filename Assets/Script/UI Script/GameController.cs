@@ -36,21 +36,21 @@ public class GameController : IMenuStack
         BuildingType type = openedBuildingMenu.buildingType;
         switch (type)
         {
-            case BuildingType.None:
+            case BuildingType.NONE:
                 break;
-            case BuildingType.MainTower:
+            case BuildingType.MAINTOWER:
                 break;
-            case BuildingType.Barracks:
+            case BuildingType.BARRACKS:
                 //OpenMenu( uIBarackPanel.gameObject.getc);
                 uIBarackPanel.Inlitilize((BarrackBuilding)building);
                 break;
-            case BuildingType.Farm:
+            case BuildingType.FARM_GOLD:
                 break;
-            case BuildingType.Workshop:
+            case BuildingType.WORKSHOP:
                 break;
-            case BuildingType.Tree:
+            case BuildingType.TREE:
                 break;
-            case BuildingType.Rock:
+            case BuildingType.ROCK:
                 break;
             default:
                 break;
@@ -69,19 +69,19 @@ public class GameController : IMenuStack
         BuildingType type = openedBuildingMenu.buildingType;
         switch (type)
         {
-            case BuildingType.None:
+            case BuildingType.NONE:
                 break;
-            case BuildingType.MainTower:
+            case BuildingType.MAINTOWER:
                 break;
-            case BuildingType.Barracks:
+            case BuildingType.BARRACKS:
                 break;
-            case BuildingType.Farm:
+            case BuildingType.FARM_GOLD:
                 break;
-            case BuildingType.Workshop:
+            case BuildingType.WORKSHOP:
                 break;
-            case BuildingType.Tree:
+            case BuildingType.TREE:
                 break;
-            case BuildingType.Rock:
+            case BuildingType.ROCK:
                 break;
             default:
                 break;

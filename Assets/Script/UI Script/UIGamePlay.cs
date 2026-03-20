@@ -38,8 +38,8 @@ public class UIGamePlay : MonoBehaviour
 
     public void Initilize()
     {
-        playerName.text = PlayerProfile.Instance.GetPlayerName();
-        playerGold.text = PlayerProfile.Instance.GetCoins().ToString();
+        //playerName.text = PlayerProfile.Instance.GetPlayerName();
+        //playerGold.text = PlayerProfile.Instance.GetCoins().ToString();
 
 
     }  

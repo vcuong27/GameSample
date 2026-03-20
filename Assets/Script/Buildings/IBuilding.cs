@@ -4,7 +4,7 @@ public class IBuilding : MonoBehaviour
 {
     public BuildingType buildingType;
 
-    public Animator animator;
+    //public Animator animator;
 
     public void Select()
     {
