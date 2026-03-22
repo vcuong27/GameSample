@@ -1,11 +1,13 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class BarrackBuilding : IBuilding
 {
-    enum BarrackState
+    public enum BarrackState
     {
         Idle,
+        Constructing,
         Training,
         ReadyToCollect
     }
@@ -19,12 +21,12 @@ public class BarrackBuilding : IBuilding
     private float percent;
     private float trainingTime;
 
+    private DateTime ConstructingTime;
 
     void Start()
     {
         buildingType = BuildingType.BARRACKS;
         currentData = new BarrackData();
-        currentData.TrainingTime = 10;
         percent = 0f;
         trainingTime = 0f;
         barrackState = BarrackState.Idle;
@@ -40,37 +42,35 @@ public class BarrackBuilding : IBuilding
 
     private void Update()
     {
-       
-
         switch (barrackState)
         {
             case BarrackState.Idle:
                 break;
+            case BarrackState.Constructing:
+                DateTime CurentTime = DateTime.UtcNow;
+                TimeSpan Remaintime = CurentTime - ConstructingTime;
+                //float percent = (Remaintime.Seconds / currentData.BuildTime)*100;
+                BarrackUI.UpdateConstructTime(100, Remaintime);
+                break;
             case BarrackState.Training:
-                trainingTime += Time.deltaTime;
-                if (trainingTime < currentData.TrainingTime)
-                {
-                    percent = trainingTime / currentData.TrainingTime;
-                    BarrackUI.UpdateUI(percent, currentData.TrainingTime);
-                }
-                else
-                {
-                    BarrackUI.UpdateUI(100, currentData.TrainingTime);
-                    barrackState = BarrackState.ReadyToCollect;
-                }
                 break;
             case BarrackState.ReadyToCollect:
                 break;
             default:
                 break;
         }
+    }
 
+    public BarrackState GetBarrackState()
+    {
+        return barrackState;
     }
 
     public void Confirm()
     {
         Debug.Log("Confirm");
-        barrackState = BarrackState.Training;
+        barrackState = BarrackState.Constructing;
+        ConstructingTime =  DateTime.UtcNow.AddSeconds(currentData.BuildTime);
     }
 
     public void Cancel()

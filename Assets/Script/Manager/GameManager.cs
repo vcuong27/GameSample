@@ -19,12 +19,18 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    public void BuyBuilding(int buildingId)
+    public void BuyBuilding(BuildingType type)
     {
+        if(PlayerProfile.Instance.GetCoins() < DataManager.Instance.GetBuildingDataByID(type).Price)
+        {
+            Debug.Log("Not enough coins to buy the building.");
+            return;
+        }
+
         GameController.Instance.CloseShop();
 
-        Debug.Log($"GameManager: Buy Building {buildingId}");
-        BuildingData buildingData = DataManager.Instance.GetBuildingDataByID(buildingId);
+        Debug.Log($"GameManager: Buy Building {type}");
+        BuidingDataGame buildingData = DataManager.Instance.GetbuidingDataGames(type);
         if (buildingData != null)
         {
             Vector2Int pos = GridManager.Instance.FindPlaceForBuilding(buildingData.size);

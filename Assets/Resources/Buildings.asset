@@ -12,59 +12,44 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7621c944ff2e6b40982ef579cc4e9ca, type: 3}
   m_Name: Buildings
   m_EditorClassIdentifier: Assembly-CSharp::Buildings
-  buildingDatas:
-  - id: 1
-    buildingType: 1
-    buildingName: Main
-    cost: 5000
-    buildTime: 0
-    buildSpeed: 0
-    size: {x: 2, y: 2}
-    pivot: {x: 0, y: 0}
-  - id: 2
-    buildingType: 1
-    buildingName: Main
-    cost: 10000
-    buildTime: 0
-    buildSpeed: 0
-    size: {x: 2, y: 2}
-    pivot: {x: 0, y: 0}
-  - id: 3
-    buildingType: 2
-    buildingName: Baracks 1
-    cost: 500
-    buildTime: 10
-    buildSpeed: 10
-    size: {x: 1, y: 1}
-    pivot: {x: 0, y: 0}
-  - id: 4
-    buildingType: 2
-    buildingName: Baracks 2
-    cost: 200
-    buildTime: 10
-    buildSpeed: 10
-    size: {x: 1, y: 1}
-    pivot: {x: 0, y: 0}
-  - id: 5
-    buildingType: 2
-    buildingName: Baracks 3
-    cost: 2000
-    buildTime: 10
-    buildSpeed: 10
-    size: {x: 1, y: 1}
-    pivot: {x: 0, y: 0}
-  - id: 6
-    buildingType: 2
-    buildingName: Baracks 4
-    cost: 1000
-    buildTime: 10
-    buildSpeed: 10
-    size: {x: 1, y: 1}
-    pivot: {x: 0, y: 0}
+  farmData:
+    ID: 1
+    Name: farm
+    BuildingType: 10
+    Level: 1
+    MaxLevel: 10
+    BuildTime: 60
+    UpgradeTime: 60
+    State: 0
+    Price: 100
+    UpgradePrice: 64000000640000006400000064000000640000006400000064000000640000006400000064000000
+    CurrentCoin: 0
+    MaxCoin: 1000
+    CoinPerMinute: 10
+  barrackData:
+    ID: 2
+    Name: barack
+    BuildingType: 50
+    Level: 1
+    MaxLevel: 10
+    BuildTime: 60
+    UpgradeTime: 60
+    State: 0
+    Price: 500
+    UpgradePrice: f4010000f4010000f4010000f4010000f4010000f4010000f4010000f4010000f4010000f4010000
   buidingDataGames:
-  - buildingType: 1
+  - size: {x: 1, y: 1}
+    pivot: {x: 0, y: 0}
+    buildingType: 1
     buildSprite: {fileID: -169667091, guid: a5e645d0b2507ac42807ef8e886f7d45, type: 3}
-    buildingPrefab: {fileID: 8737090827306324103, guid: bebfe3dc18986a446a4fff4a4aecc459, type: 3}
-  - buildingType: 2
-    buildSprite: {fileID: -1737005464, guid: a5e645d0b2507ac42807ef8e886f7d45, type: 3}
-    buildingPrefab: {fileID: 3294114340381151476, guid: be3c626c8e5dba14fbdf0db8c5970e06, type: 3}
+    buildingPrefab: {fileID: 5931148700297190095, guid: dfabc9b7e0f02b14087a893a7a44c556, type: 3}
+  - size: {x: 1, y: 1}
+    pivot: {x: 0, y: 0}
+    buildingType: 50
+    buildSprite: {fileID: -1611400383, guid: a5e645d0b2507ac42807ef8e886f7d45, type: 3}
+    buildingPrefab: {fileID: 5325591293069440501, guid: eb33bfba04610a648a356c80596e50a6, type: 3}
+  - size: {x: 1, y: 1}
+    pivot: {x: 0, y: 0}
+    buildingType: 10
+    buildSprite: {fileID: 194516358, guid: a5e645d0b2507ac42807ef8e886f7d45, type: 3}
+    buildingPrefab: {fileID: 5986772186702043087, guid: 3f4e4ed240a33a94087a0b792813284b, type: 3}

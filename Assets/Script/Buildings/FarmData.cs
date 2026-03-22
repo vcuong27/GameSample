@@ -11,3 +11,5 @@ public class FarmData : IBuildingData
     public int CoinPerMinute;
     public DateTime ColectedTime; // thoi gian bat dau thu thap
 }
+
+

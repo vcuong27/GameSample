@@ -1,10 +1,13 @@
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Playables;
 
 public class DataManager : MonoBehaviour
 {
 
     private Buildings buildingsData;
+    List<IBuildingData> listBuildData;
 
     private static DataManager _instance;
     public static DataManager Instance
@@ -23,6 +26,9 @@ public class DataManager : MonoBehaviour
     public void Initlize()
     {
         buildingsData = Resources.Load<Buildings>("Buildings");
+        listBuildData = new List<IBuildingData>();
+        listBuildData.Add(buildingsData.farmData);
+        listBuildData.Add(buildingsData.barrackData);
     }
 
     private void Awake()
@@ -43,16 +49,16 @@ public class DataManager : MonoBehaviour
     public BuidingDataGame GetbuidingDataGames(BuildingType type)
     {
         return buildingsData.buidingDataGames.First(x => x.buildingType == type);
-    }    
-
-    public BuildingData GetBuildingDataByID(int id)
-    {
-        return buildingsData.buildingDatas.First(x => x.id == id);
     }
 
-    public BuildingData[] GetBuildingDatas()
+    public IBuildingData GetBuildingDataByID(BuildingType type)
     {
-        return buildingsData.buildingDatas;
+        return buildingsData.farmData;
+    }
+
+    public List<IBuildingData> GetBuildingDatas()
+    {
+        return listBuildData;
     }
 
 }

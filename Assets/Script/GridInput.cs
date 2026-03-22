@@ -19,7 +19,7 @@ public class GridInput : MonoBehaviour
     public float highlightYOffset = 0.02f;
 
     [Header("Drag & Drop")]
-    public float pickedYOffset = 0.05f;
+    public float pickedYOffset = -0.45f;
     public bool hideHighlightWhenOutOfGrid = true;
 
     private Vector2Int _currentCell;
@@ -161,7 +161,7 @@ public class GridInput : MonoBehaviour
 
         Vector3 center = grid.CellToWorldCenter(_currentCell);
 
-        _pickedHouse.position = new Vector3(center.x, center.y, center.z);
+        _pickedHouse.position = new Vector3(center.x, center.y - 0.98f, center.z);
 
         IBuilding sellectBuilding = _pickedHouse.GetComponent<IBuilding>();
 

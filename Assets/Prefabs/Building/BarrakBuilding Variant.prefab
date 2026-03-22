@@ -6,7 +6,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 2659776919122045278}
+    m_TransformParent: {fileID: 2583024202364176889}
     m_Modifications:
     - target: {fileID: 5966197211578267197, guid: 90de1a95e3342a741bd160b7c0b09d02, type: 3}
       propertyPath: m_LocalScale.x
@@ -26,7 +26,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5966197211578267197, guid: 90de1a95e3342a741bd160b7c0b09d02, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.48
       objectReference: {fileID: 0}
     - target: {fileID: 5966197211578267197, guid: 90de1a95e3342a741bd160b7c0b09d02, type: 3}
       propertyPath: m_LocalPosition.z
@@ -38,15 +38,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5966197211578267197, guid: 90de1a95e3342a741bd160b7c0b09d02, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 5966197211578267197, guid: 90de1a95e3342a741bd160b7c0b09d02, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 5966197211578267197, guid: 90de1a95e3342a741bd160b7c0b09d02, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 5966197211578267197, guid: 90de1a95e3342a741bd160b7c0b09d02, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -158,6 +158,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: -158120734, guid: a5e645d0b2507ac42807ef8e886f7d45, type: 3}
+    - target: {fileID: 6046369814968955977, guid: b7f1a9d5758d36042a446ecb07a099c5, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7344205153746626064, guid: b7f1a9d5758d36042a446ecb07a099c5, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -201,7 +205,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 1584494839723982864, guid: b7f1a9d5758d36042a446ecb07a099c5, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 1354618661890564279, guid: b7f1a9d5758d36042a446ecb07a099c5, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8308532389625141733}
     m_AddedComponents:
@@ -212,9 +216,20 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 4943504238651169442}
   m_SourcePrefab: {fileID: 100100000, guid: b7f1a9d5758d36042a446ecb07a099c5, type: 3}
---- !u!4 &2659776919122045278 stripped
+--- !u!114 &1184032326558401397 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2412429176166066747, guid: b7f1a9d5758d36042a446ecb07a099c5, type: 3}
+  m_PrefabInstance: {fileID: 3536500730682501454}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81fef0563e898f74f87bcb68d10688aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &2583024202364176889 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 1584494839723982864, guid: b7f1a9d5758d36042a446ecb07a099c5, type: 3}
+  m_CorrespondingSourceObject: {fileID: 1354618661890564279, guid: b7f1a9d5758d36042a446ecb07a099c5, type: 3}
   m_PrefabInstance: {fileID: 3536500730682501454}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &2665319093257789557 stripped
@@ -247,6 +262,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BarrackBuilding
   buildingType: 50
   BarrackUI: {fileID: 4943504238651169442}
+--- !u!114 &6895792524673641727 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7973317928840463793, guid: b7f1a9d5758d36042a446ecb07a099c5, type: 3}
+  m_PrefabInstance: {fileID: 3536500730682501454}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81fef0563e898f74f87bcb68d10688aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &6910354653315918343 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7994644001496073033, guid: b7f1a9d5758d36042a446ecb07a099c5, type: 3}
@@ -278,6 +304,8 @@ MonoBehaviour:
   TimeText: {fileID: 2665319093257789557}
   ProgressImg: {fileID: 7567237976606962723}
   ItemImg: {fileID: 6910354653315918343}
+  ConfirmButton: {fileID: 6895792524673641727}
+  CancelButton: {fileID: 1184032326558401397}
 --- !u!114 &7567237976606962723 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6345596569663675757, guid: b7f1a9d5758d36042a446ecb07a099c5, type: 3}

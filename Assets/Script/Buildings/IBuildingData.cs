@@ -29,11 +29,12 @@ public enum BuildingState
 public class IBuildingData
 {
     public int ID;
+    public string Name;
     public BuildingType BuildingType;
     public int Level;
     public int MaxLevel;
-    public DateTime BuildFinishTime;
-    public DateTime UpgradeFinishTime;
+    public int BuildTime;
+    public int UpgradeTime;
     public BuildingState State;
     public int Price;
     public int[] UpgradePrice;
