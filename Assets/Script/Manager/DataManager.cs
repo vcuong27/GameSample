@@ -7,7 +7,10 @@ public class DataManager : MonoBehaviour
 {
 
     private Buildings buildingsData;
-    List<IBuildingData> listBuildData;
+    private List<IBuildingData> listBuildData;
+
+    private Menus menus;
+    private List<MenuData> listMenuData;
 
     private static DataManager _instance;
     public static DataManager Instance
@@ -21,7 +24,7 @@ public class DataManager : MonoBehaviour
     public void InitOnlineData()
     {
 
-    }    
+    }
 
     public void Initlize()
     {
@@ -29,6 +32,9 @@ public class DataManager : MonoBehaviour
         listBuildData = new List<IBuildingData>();
         listBuildData.Add(buildingsData.farmData);
         listBuildData.Add(buildingsData.barrackData);
+
+        menus = Resources.Load<Menus>("Menus");
+        listMenuData = menus.MenuDatas.ToList();
     }
 
     private void Awake()
@@ -60,5 +66,13 @@ public class DataManager : MonoBehaviour
     {
         return listBuildData;
     }
+
+
+    public MenuData GetMenuData(MenuType type)
+    {
+        return listMenuData.First(x => x.Type == type);
+    }  
+        
+
 
 }

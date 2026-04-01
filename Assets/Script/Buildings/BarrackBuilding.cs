@@ -49,7 +49,6 @@ public class BarrackBuilding : IBuilding
             case BarrackState.Constructing:
                 DateTime CurentTime = DateTime.UtcNow;
                 TimeSpan Remaintime = CurentTime - ConstructingTime;
-                //float percent = (Remaintime.Seconds / currentData.BuildTime)*100;
                 BarrackUI.UpdateConstructTime(100, Remaintime);
                 break;
             case BarrackState.Training:

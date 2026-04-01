@@ -42,8 +42,6 @@ public class GridInput : MonoBehaviour
         {
             cam = Camera.main;
         }
-        //audioSource = GetComponent<AudioSource>();
-        //audioSource.clip = SoundManager.Instance.GetAudioClipByType(SoundType.BGM, SoundClip.BGM_Main);
     }
 
     private void Update()
@@ -57,11 +55,6 @@ public class GridInput : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-           //audioSource.clip = SoundManager.Instance.GetAudioClipByType(SoundType.BGM, SoundClip.BGM_Battle);
-           //audioSource.Play();
-           //audioSource.Pause();
-           //audioSource.Stop();
-
             _isHoldingMouse = true;
             TryPickHouseUnderMouse();
             if (_pickedHouse == null)
@@ -104,15 +97,6 @@ public class GridInput : MonoBehaviour
             if (_hasValidCell)
             {
                 _currentCell = cell;
-
-                //if (cellHighlight != null)
-                //{
-                //    Vector3 center = grid.CellToWorldCenter(cell);
-                //    cellHighlight.position = new Vector3(center.x, center.y + highlightYOffset, center.z);
-
-                //    if (!cellHighlight.gameObject.activeSelf)
-                //        cellHighlight.gameObject.SetActive(true);
-                //}
             }
             else
             {
@@ -135,7 +119,7 @@ public class GridInput : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit hit, 1000f, buildingLayer, QueryTriggerInteraction.Ignore))
         {
             _pickedHouse = hit.transform;
-            IBuilding sellectBuilding = _pickedHouse.GetComponent<IBuilding>();
+            IBuilding sellectBuilding = _pickedHouse.parent.GetComponent<IBuilding>();
 
             sellectBuilding.Select();
 
@@ -163,7 +147,7 @@ public class GridInput : MonoBehaviour
 
         _pickedHouse.position = new Vector3(center.x, center.y - 0.98f, center.z);
 
-        IBuilding sellectBuilding = _pickedHouse.GetComponent<IBuilding>();
+        IBuilding sellectBuilding = _pickedHouse.parent.GetComponent<IBuilding>();
 
         sellectBuilding.Place();
 

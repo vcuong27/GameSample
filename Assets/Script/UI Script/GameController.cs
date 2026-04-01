@@ -41,8 +41,8 @@ public class GameController : IMenuStack
             case BuildingType.MAINTOWER:
                 break;
             case BuildingType.BARRACKS:
-                //OpenMenu( uIBarackPanel.gameObject.getc);
-                uIBarackPanel.Inlitilize((BarrackBuilding)building);
+                uIBarackPanel.gameObject.SetActive(true);
+                uIBarackPanel.Initilize((BarrackBuilding)building,this);
                 break;
             case BuildingType.FARM_GOLD:
                 break;
@@ -74,6 +74,7 @@ public class GameController : IMenuStack
             case BuildingType.MAINTOWER:
                 break;
             case BuildingType.BARRACKS:
+                uIBarackPanel.gameObject.SetActive(false);
                 break;
             case BuildingType.FARM_GOLD:
                 break;

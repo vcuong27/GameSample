@@ -35,4 +35,9 @@ public class IMenuStack : MonoBehaviour
         }
     }
 
+    public GameObject GetUIRoot()
+    {
+        return uIRoot;
+    }
+
 }
