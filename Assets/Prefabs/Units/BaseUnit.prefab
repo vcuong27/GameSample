@@ -198,6 +198,7 @@ GameObject:
   - component: {fileID: 7775967698371307115}
   - component: {fileID: 7203421392544488305}
   - component: {fileID: 8293196703404923969}
+  - component: {fileID: 5274574067261065831}
   m_Layer: 0
   m_Name: Cylinder
   m_TagString: Untagged
@@ -300,6 +301,28 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
+--- !u!195 &5274574067261065831
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2398367292593591201}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5000001
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 1
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
 --- !u!1 &2430101368816219811
 GameObject:
   m_ObjectHideFlags: 0

@@ -132,6 +132,18 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8945392887950618251, guid: f6df095bb0370fa43bf412085334001a, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8945392887950618251, guid: f6df095bb0370fa43bf412085334001a, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8945392887950618251, guid: f6df095bb0370fa43bf412085334001a, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -157,3 +169,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4e232a361055be4a973ecf7b04e44b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SwordMan
+  m_Clip: {fileID: 0}
+  m_NavigationAgent: {fileID: 9116035943494772433}
+  Target: {fileID: 0}
+--- !u!195 &9116035943494772433 stripped
+NavMeshAgent:
+  m_CorrespondingSourceObject: {fileID: 5274574067261065831, guid: f6df095bb0370fa43bf412085334001a, type: 3}
+  m_PrefabInstance: {fileID: 4013172702304513206}
+  m_PrefabAsset: {fileID: 0}
