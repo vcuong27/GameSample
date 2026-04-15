@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
 
     public void BuyBuilding(BuildingType type)
     {
-        if(PlayerProfile.Instance.GetCoins() < DataManager.Instance.GetBuildingDataByID(type).Price)
+        if(PlayerProfile.Instance.GetNumberPlayerItemData(ItemType.COIN) < DataManager.Instance.GetBuildingDataByID(type).Price)
         {
             Debug.Log("Not enough coins to buy the building.");
             return;
@@ -58,7 +58,7 @@ public class GameManager : MonoBehaviour
 
     public void UpdateFarmData(FarmData farmData)
     {
-        PlayerProfile.Instance.UpdateFarmData(farmData);
+        //PlayerProfile.Instance.UpdateFarmData(farmData);
         ON_UPDATE_FARM_DATA?.Invoke(farmData);
     }
 }

@@ -35,17 +35,25 @@ public class BattleManager : MonoBehaviour
     private BattleResult battleResult;
 
     //enemy
-    private List<IBuildingData> listBuilding;
+    private List<PlayerBuildingData> listBuilding;
 
     //Player
-    private List<IUnitData> listUnit;
+    private List<PlayerUnitData> listPlayerUnit;
+    private List<PlayerItemData> listPlayerItem;
 
+    private void Awake()
+    {
+        if (_instance != null)
+            return;
 
+        _instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
 
     private void Start()
     {
-        _instance = this;
         battleState = BattleState.INIT;
+        InitData(PlayerProfile.Instance.GetPlayerBuildingDatas(), PlayerProfile.Instance.GetPlayerUnitDatas(), PlayerProfile.Instance.GetPlayerItemData()); 
     }
 
 
@@ -59,9 +67,11 @@ public class BattleManager : MonoBehaviour
         return battleResult;
     }
 
-    public void InitData(List<IBuildingData>  buildingDatas)
+    public void InitData(List<PlayerBuildingData> buildingDatas, List<PlayerUnitData> playerUnitDatas, List<PlayerItemData> playerItemDatas)
     {
         listBuilding = buildingDatas;
+        listPlayerUnit = playerUnitDatas;
+        listPlayerItem = playerItemDatas;
     }    
 
     public void InitBattle()
@@ -85,17 +95,16 @@ public class BattleManager : MonoBehaviour
     {
         battleState = BattleState.START;
         // logic start
-
         battleState = BattleState.BATTLE;
     }
 
-    public void BattleUpdate()
+    public void BattleUpdate() 
     {
         // tha unit
         // cap nhat trang thai cua cac don vi
         // kiem tra dieu kien ket thuc tran chien
 
-        foreach (var unit in listUnit)
+        foreach (var unit in listPlayerUnit)
         {
             // check HP
             // check status

@@ -21,8 +21,8 @@ public enum UnitState
 [Serializable]
 public class IUnitData
 {
-    public UnitType Type;
     public int ID;
+    public UnitType Type;
     public UnitState State;
     public int Level;
     public int MaxLevel;

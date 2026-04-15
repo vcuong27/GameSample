@@ -42,7 +42,7 @@ public class BarrackBuildingUI : MonoBehaviour
     public void Confirm()
     {
         Debug.Log("Confirm");
-        if(PlayerProfile.Instance.GetCoins() < DataManager.Instance.GetBuildingDataByID(BuildingType.BARRACKS).Price)
+        if(PlayerProfile.Instance.GetNumberPlayerItemData(ItemType.COIN) < DataManager.Instance.GetBuildingDataByID(BuildingType.BARRACKS).Price)
         {
             Debug.Log("Not enough coins build.");
             barrackBuilding.gameObject.SetActive(false);
