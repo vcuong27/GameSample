@@ -16,12 +16,15 @@ public class BarrackBuilding : IBuilding
     [SerializeField]
     private BarrackBuildingUI BarrackUI;
 
+
+    // Build data
     private BarrackState barrackState;
-    private BarrackData currentData;
     private float percent;
     private float trainingTime;
-
     private DateTime ConstructingTime;
+
+  
+
 
     void Start()
     {

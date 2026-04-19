@@ -11,7 +11,7 @@ public class PlayerBuildingData
     public BuildingType BuildingType;
     public int Level;
     public BuildingState State;
-    public Vector2 Position;
+    public Vector2Int Position;
     public DateTime EndTime; // thoi gian ket thuc xay dung, nang cap, thu thap = utc time
 }
 
@@ -76,10 +76,6 @@ public class PlayerProfile : MonoBehaviour
     {
         _instance = this;
         DontDestroyOnLoad(gameObject);
-    }
-
-    private void Start()
-    {
         CurentProfile = new PlayerProfileData
         {
             playerID = 1,
@@ -96,9 +92,44 @@ public class PlayerProfile : MonoBehaviour
             },
             settingData = new PlayerSettingData(),
         };
+        
+        CurentProfile.buildingDatas.Add(new PlayerBuildingData() {
+            ID = 1,
+            Level = 1,
+            BuildingType = BuildingType.MAINTOWER,
+            State = BuildingState.IDLE,
+            Position = new Vector2Int(2, 3),
+            EndTime = DateTime.UtcNow   
+        });
+        CurentProfile.buildingDatas.Add(new PlayerBuildingData()
+        {
+            ID = 2,
+            Level = 1,
+            BuildingType = BuildingType.BARRACKS,
+            State = BuildingState.IDLE,
+            Position = new Vector2Int(4,4),
+            EndTime = DateTime.UtcNow
+        });
 
+        CurentProfile.unitDatas.Add(new PlayerUnitData()
+        {
+            ID = 1,
+            Level = 1,
+            Type = UnitType.SWORDMAN,
+            Number = 10,
+        });
+         CurentProfile.unitDatas.Add(new PlayerUnitData()
+        {
+            ID = 2,
+            Level = 1,
+            Type = UnitType.ARCHER,
+            Number = 20,
+        });
+    }
+
+    private void Start()
+    {
         Initialize(null);
-
     }
 
 
@@ -123,7 +154,7 @@ public class PlayerProfile : MonoBehaviour
         //{
         //    CurentProfile = profileData;
         //}
-        OnProfileUpdated.Invoke();
+        OnProfileUpdated?.Invoke();
         IsInitialized = true;
     }
 

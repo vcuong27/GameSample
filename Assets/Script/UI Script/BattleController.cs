@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class BattleController : IMenuStack
@@ -5,8 +6,15 @@ public class BattleController : IMenuStack
     private static BattleController _instance;
     public static BattleController Instance => _instance;
 
+    [SerializeField]
     private UIMainBattle uIMainBattle;
-    
+    [SerializeField]
+    public GridManager gridManager;
+    [SerializeField]
+    public LayerMask groundLayer;
+    [SerializeField]
+    public GameObject object3D;
+
 
     private void OnEnable()
     {
@@ -31,6 +39,11 @@ public class BattleController : IMenuStack
     private void OnDestroy()
     {
         _instance = null;
+    }
+
+    public void InitBattleUI()
+    {
+        uIMainBattle.Init();
     }
 
     public void ShowPrepare()

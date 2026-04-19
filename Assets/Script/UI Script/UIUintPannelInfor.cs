@@ -1,16 +1,23 @@
+using System;
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class UIUintPannelInfor : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [SerializeField]
+    private GameObject contentUnitInfor;
+    [SerializeField]
+    private GameObject prefabUnitInfor;
+
+    public void Init()
     {
-        
+        List<PlayerUnitData> listUnit = BattleManager.Instance.GetListPlayerUnit();
+        foreach (PlayerUnitData unit in listUnit)
+        {
+            UIUnitInfor uIUnitInfor = Instantiate(prefabUnitInfor, contentUnitInfor.transform).GetComponent<UIUnitInfor>();
+            uIUnitInfor.Init(unit);
+        }    
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

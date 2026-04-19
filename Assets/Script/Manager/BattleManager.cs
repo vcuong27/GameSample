@@ -1,6 +1,8 @@
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.PlayerSettings;
 
 public enum BattleState
 {
@@ -31,15 +33,25 @@ public class BattleManager : MonoBehaviour
     }
 
 
-    private BattleState battleState;
-    private BattleResult battleResult;
+
 
     //enemy
     private List<PlayerBuildingData> listBuilding;
+    private List<IBuilding> listBuildingObj;
 
     //Player
     private List<PlayerUnitData> listPlayerUnit;
+    private List<IUnit> listPlayerUnitObj;
+
     private List<PlayerItemData> listPlayerItem;
+
+    //battle temp data
+    private BattleState battleState;
+    private BattleResult battleResult;
+    private int numberBuilding;
+    private int numberPlayerUnit;
+    public float remainTime;
+
 
     private void Awake()
     {
@@ -78,12 +90,30 @@ public class BattleManager : MonoBehaviour
     {
         // Khoi tao cac thong tin can thiet cho tran chien
         battleState = BattleState.PREPARE;
+        BattleController.Instance.InitBattleUI();
         BattleController.Instance.ShowPrepare();
+
         //load danh sach building và khoi tao map
         foreach (var building in listBuilding)
         {
-            // khoi tao map
+            BuidingDataGame buildingData = DataManager.Instance.GetbuidingDataGames(building.BuildingType);
+           bool result = BattleController.Instance.gridManager.PlaceBuilding(building.Position, buildingData.size, building.BuildingType);
+            if (result)
+            {
+                GameObject buildingObj = Instantiate(DataManager.Instance.GetbuidingDataGames(buildingData.buildingType).buildingPrefab, BattleController.Instance.object3D.transform);
+                buildingObj.transform.position = GridManager.Instance.CellToWorldCenter(building.Position, buildingData.size);
+                buildingObj.GetComponent<IBuilding>()?.InitBatle();
+                listBuildingObj.Add(buildingObj.GetComponent<IBuilding>());
+                numberBuilding ++;
+                Debug.Log("Building placed successfully.");
+            }
+            else
+            {
+                Debug.Log("Failed to place the building.");
+            }
         }   
+
+
     }
 
     public void PrepareBattle()
@@ -94,6 +124,10 @@ public class BattleManager : MonoBehaviour
     public void StartBattle()
     {
         battleState = BattleState.START;
+        battleResult = BattleResult.DRAW;
+        numberPlayerUnit = 0;
+        remainTime = 5 * 60;
+
         // logic start
         battleState = BattleState.BATTLE;
     }
@@ -101,36 +135,52 @@ public class BattleManager : MonoBehaviour
     public void BattleUpdate() 
     {
         // tha unit
-        // cap nhat trang thai cua cac don vi
-        // kiem tra dieu kien ket thuc tran chien
+        SpawnUnit();
+
+
+
+        int count = 0;
+        foreach (var building in listBuildingObj)
+        {
+            if (building.IsDestroyed() == false)
+            {
+                count++;
+            }
+        }
+        numberBuilding = count;
+
+        if (numberBuilding == 0)
+        {
+            battleResult = BattleResult.WIN;
+            battleState = BattleState.END;
+        }
+
+        count = 0;
+        foreach (var unit in listPlayerUnit)
+        {
+            count += unit.Number;
+        }
 
         foreach (var unit in listPlayerUnit)
         {
             // check HP
             // check status
-            // count
+            // count++
         }
 
-        foreach (var building in listBuilding)
-        {
-            // check HP
-            // check status
-            // count
-        }
+        numberPlayerUnit = count;
 
-        //check timer
-
-        if (true)
-        {
-            battleResult = BattleResult.WIN;
-        }
-        else
+        if (numberPlayerUnit == 0)
         {
             battleResult = BattleResult.LOSE;
+            battleState = BattleState.END;
         }
 
-        battleState = BattleState.END;
-
+        if(remainTime <=0)
+        {
+            battleResult = BattleResult.DRAW;
+            battleState = BattleState.END;
+        }
     }
 
     public void EndBattle()
@@ -165,6 +215,42 @@ public class BattleManager : MonoBehaviour
                 break;
         }
 
+    }
+
+
+    public List<PlayerUnitData> GetListPlayerUnit()
+    {
+        return listPlayerUnit;
+    }
+
+    private void SpawnUnit()
+    {
+        // kiểm tra người chơi chọn unit nào
+        // khi kích chuột vào cùng thả quân thì sẽ sinh ra unit đó ở vị trí đó
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (TryGetMouseHitPoint(out Vector3 hitPoint))
+            {
+                // Spawn unit at hitPoint
+                Debug.Log("Spawn unit at: " + hitPoint);
+                // Instantiate(unitPrefab, hitPoint, Quaternion.identity);
+                // listPlayerUnit.Add
+            }
+        }
+    }
+
+    private bool TryGetMouseHitPoint(out Vector3 hitPoint)
+    {
+        hitPoint = default;
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        if (Physics.Raycast(ray, out RaycastHit hit, 1000f, BattleController.Instance.groundLayer, QueryTriggerInteraction.Ignore))
+        {
+            hitPoint = hit.point;
+            return true;
+        }
+
+        return false;
     }
 
 }

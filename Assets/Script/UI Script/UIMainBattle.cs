@@ -10,10 +10,14 @@ public class UIMainBattle : MonoBehaviour
     [SerializeField]
     private UIBatterInfor BatterInfo;
 
+    [SerializeField]
+    private UIUintPannelInfor UintPannelInfor;
+
     public void Init()
     {
         DefendPlayerInfo.Init();
-        //BatterInfo.Init();
+        UintPannelInfor.Init();
+        BatterInfo.Init();
     }
 
     public void UPdateBattleInfor()
@@ -37,4 +41,5 @@ public class UIMainBattle : MonoBehaviour
     internal void StartBattle()
     {
     }
+
 }

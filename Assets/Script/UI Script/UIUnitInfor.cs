@@ -1,16 +1,24 @@
+using System;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIUnitInfor : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
+    [SerializeField]
+    private TextMeshProUGUI textUnitName;
+    [SerializeField]
+    private Image imageUnitIcon;
+
+
+    private PlayerUnitData unitData;
+    public void Init(PlayerUnitData unit)
     {
-        
+        unitData = unit;
+        //DataManager.Instance.GetUnitData(unitData.Type, out UnitData data);
+        textUnitName.text = "Name";
+        //imageUnitIcon.sprite = unitData.UnitIcon;
     }
+    
 }

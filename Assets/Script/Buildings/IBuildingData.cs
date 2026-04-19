@@ -28,6 +28,7 @@ public enum BuildingState
 [Serializable]
 public class IBuildingData
 {
+    // Build data
     public int ID;
     public string Name;
     public BuildingType BuildingType;
@@ -38,4 +39,10 @@ public class IBuildingData
     public BuildingState State;
     public int Price;
     public int[] UpgradePrice;
+
+    //Battle data
+    public int MaxHP;
+    public int Attack;
+    public int DefendHP;
 }
+
