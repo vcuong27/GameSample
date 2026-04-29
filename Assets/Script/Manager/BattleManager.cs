@@ -21,6 +21,22 @@ public enum BattleResult
     DRAW
 }
 
+public class BattleResultData
+{
+    public BattleResult Result;
+    public int RemainingUnits;
+    public int DestroyedBuildings;
+    public float TimeTaken;
+
+    public BattleResultData(BattleResult result, int remainingUnits, int destroyedBuildings, float timeTaken)
+    {
+        Result = result;
+        RemainingUnits = remainingUnits;
+        DestroyedBuildings = destroyedBuildings;
+        TimeTaken = timeTaken;
+    }
+}
+
 public class BattleManager : MonoBehaviour
 {
     private static BattleManager _instance;
@@ -137,8 +153,6 @@ public class BattleManager : MonoBehaviour
         // tha unit
         SpawnUnit();
 
-
-
         int count = 0;
         foreach (var building in listBuildingObj)
         {
@@ -181,6 +195,14 @@ public class BattleManager : MonoBehaviour
             battleResult = BattleResult.DRAW;
             battleState = BattleState.END;
         }
+
+        // cập nhập tài nguyên, chỉ số
+        // cập nhập vào battle result
+
+        // sử dụng item
+        // update thông của item khi được sử dụng
+
+
     }
 
     public void EndBattle()
@@ -253,4 +275,8 @@ public class BattleManager : MonoBehaviour
         return false;
     }
 
+    internal BattleResultData GetBattleResultData()
+    {
+        throw new NotImplementedException();
+    }
 }

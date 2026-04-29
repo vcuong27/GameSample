@@ -19,7 +19,7 @@ public class IUnit : MonoBehaviour
 
     void Update()
     {
-
-            m_NavigationAgent.SetDestination(Target.transform.position);
+        m_NavigationAgent.SetDestination(Target.transform.position);
+        m_NavigationAgent.isStopped = true;
     }
 }

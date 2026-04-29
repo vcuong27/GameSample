@@ -1,5 +1,7 @@
+using Assets.Script.Manager;
 using Lean.Gui;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
 public class GameController : IMenuStack
@@ -21,13 +23,26 @@ public class GameController : IMenuStack
 
     public void OpenShop()
     {
+        ShowBlockPopup("Shop", "Wating ...");
         OpenMenu(uIShop.gameObject.GetComponent<LeanWindow>());
         uIShop.InitUI();
+        CloseBlockPopup();
     }
 
     public void CloseShop()
     {
+
         CloseMenu();
+        ShowNoticePopup("Shop Closed", "You have closed the shop.");
+        ShowNoticePopup("Game Play", "Wating ...");
+    }
+
+    public void OpenGamePlay()
+    {
+        ShowConfirmPopup("Start Battle", "Are you sure you want to start the battle?", () =>
+        {
+            GameSceneManager.LoadScene(GameSceneManager.SCENE_BATTLE);
+        });
     }
 
     public void OpenBuildMenu(IBuilding building )

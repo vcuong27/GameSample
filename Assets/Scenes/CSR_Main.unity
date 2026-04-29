@@ -1206,6 +1206,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e7a506a68582b64e98ef26db92ac0f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameController
+  confirmPopupPref: {fileID: 4605313513005168176, guid: 3afe1ae0286397343bdc5393a200d571, type: 3}
+  noticePopupPref: {fileID: 883813273999967296, guid: 8ac610c063b179943a215d6640cd1c00, type: 3}
+  blockPopupPref: {fileID: 5870626150336013461, guid: 613b30a9c4dda2f44a157cdf92bc88c7, type: 3}
   uIRoot: {fileID: 582715736}
   uIGamePlay: {fileID: 396960204}
   uIShop: {fileID: 1805232850}
@@ -1613,6 +1616,18 @@ PrefabInstance:
     - target: {fileID: 7023207447218584547, guid: 4a735e4efa39b3e4d9faeb1a363c8cfa, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7190746796384473959, guid: 4a735e4efa39b3e4d9faeb1a363c8cfa, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.54499996
+      objectReference: {fileID: 0}
+    - target: {fileID: 7190746796384473959, guid: 4a735e4efa39b3e4d9faeb1a363c8cfa, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7190746796384473959, guid: 4a735e4efa39b3e4d9faeb1a363c8cfa, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.54499996
       objectReference: {fileID: 0}
     - target: {fileID: 7873038757047588261, guid: 4a735e4efa39b3e4d9faeb1a363c8cfa, type: 3}
       propertyPath: m_AnchorMax.y
