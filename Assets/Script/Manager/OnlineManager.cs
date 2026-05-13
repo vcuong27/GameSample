@@ -171,8 +171,7 @@ public class OnlineManager : MonoBehaviour
             case MessageID.ANSWER_FRIEND:
                 break;
             case MessageID.GET_PROFILE:
-                PlayerProfileData profile = JsonUtility.FromJson<PlayerProfileData>(packet.ReadString());
-                PlayerProfile.Instance.Initialize(profile);
+                PlayerProfile.Instance.Initialize(packet.ReadString());
                 break;
             case MessageID.ANSWER_PARTY_INVITE:
                 break;

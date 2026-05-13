@@ -37,8 +37,8 @@ public class UIMainBattle : MonoBehaviour
     internal void ShowResult(BattleResult result)
     {
         BattleResultData battleResultData = BattleManager.Instance.GetBattleResultData();
+        PlayerProfile.Instance.IncreasePlayerExperience(battleResultData.ExpErned);
         //OnlineManager.Instance.SentBattleResult(result, battleResultData);
-        //PlayerProfile.Instance.UpdateBattleResult(result, battleResultData);
     }
 
     internal void StartBattle()

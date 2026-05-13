@@ -27,13 +27,15 @@ public class BattleResultData
     public int RemainingUnits;
     public int DestroyedBuildings;
     public float TimeTaken;
+    public int ExpErned;
 
-    public BattleResultData(BattleResult result, int remainingUnits, int destroyedBuildings, float timeTaken)
+    public BattleResultData(BattleResult result, int remainingUnits, int destroyedBuildings, float timeTaken, int expErned)
     {
         Result = result;
         RemainingUnits = remainingUnits;
         DestroyedBuildings = destroyedBuildings;
         TimeTaken = timeTaken;
+        ExpErned = expErned;
     }
 }
 
@@ -66,7 +68,11 @@ public class BattleManager : MonoBehaviour
     private BattleResult battleResult;
     private int numberBuilding;
     private int numberPlayerUnit;
-    public float remainTime;
+    private float remainTime;
+    private BattleResultData battleData;
+
+
+    
 
 
     private void Awake()
@@ -97,6 +103,8 @@ public class BattleManager : MonoBehaviour
 
     public void InitData(List<PlayerBuildingData> buildingDatas, List<PlayerUnitData> playerUnitDatas, List<PlayerItemData> playerItemDatas)
     {
+        battleData = new BattleResultData(BattleResult.DRAW, 0, 0, 0, 0);
+
         listBuilding = buildingDatas;
         listPlayerUnit = playerUnitDatas;
         listPlayerItem = playerItemDatas;
@@ -207,6 +215,10 @@ public class BattleManager : MonoBehaviour
 
     public void EndBattle()
     {
+        battleData.Result = battleResult;
+        battleData.ExpErned = 100;
+        battleData.TimeTaken = 12 * 20;
+
         BattleController.Instance.ShowResult(battleResult);
         battleState = BattleState.NONE;
     }
@@ -277,6 +289,6 @@ public class BattleManager : MonoBehaviour
 
     internal BattleResultData GetBattleResultData()
     {
-        throw new NotImplementedException();
+        return battleData;
     }
 }
