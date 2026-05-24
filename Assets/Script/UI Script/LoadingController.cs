@@ -21,23 +21,21 @@ public class LoadingController : IMenuStack
         OnlineManager.Instance.ConnectToServer();
         yield return new WaitUntil(() => OnlineManager.Instance.IsConnected());
 
-
-        // Login server
+        // Login
         Debug.Log("Logging in to Server...");
         OnlineManager.Instance.LoginToServer();
         yield return new WaitUntil(() => OnlineManager.Instance.IsLoggedIn());
 
+        // build player profile
+        Debug.Log("Player Profile...");
+        PlayerProfile.Instance.RequestPlayerProfile();
+        
+
         // load local data  
         Debug.Log("Loading Local Data...");
-        yield return new WaitForSeconds(1f);
+        DataManager.Instance.Initlize();
+        yield return new WaitUntil(() => DataManager.Instance.IsInitialized());
 
-        // build player profile
-        Debug.Log("Building Player Profile...");
-        PlayerProfile.Instance.RequestPlayerProfile();
-        while (!PlayerProfile.Instance.IsInitialize())
-        {
-            yield return new WaitForSeconds(1f);
-        }
 
         // Khởi tạo UI
         Debug.Log("Initializing UI...");

@@ -25,24 +25,22 @@ public class OnlineManager : MonoBehaviour
 
     private void Start()
     {
-
+        RealtimeNetworking.OnDisconnectedFromServer += Disconnected;
+        RealtimeNetworking.OnConnectingToServerResult += ConnectResult;
+        RealtimeNetworking.OnPacketReceived += PacketReceived;
     }
 
     private void OnDestroy()
     {
-
+        RealtimeNetworking.OnDisconnectedFromServer -= Disconnected;
+        RealtimeNetworking.OnConnectingToServerResult -= ConnectResult;
+        RealtimeNetworking.OnPacketReceived -= PacketReceived;
     }
 
     public void ConnectToServer()
     {
-        RealtimeNetworking.OnDisconnectedFromServer += Disconnected;
-        RealtimeNetworking.OnConnectingToServerResult += ConnectResult;
-        RealtimeNetworking.OnPacketReceived += PacketReceived;
-        // Try to connect the server
         RealtimeNetworking.Connect();
     }
-
-
 
     private void ConnectResult(bool successful)
     {
@@ -73,6 +71,10 @@ public class OnlineManager : MonoBehaviour
         return isLoggedIn;
     }
 
+    public string GetPlayerID()
+    {
+        return playerID;
+    }
 
     private void PacketReceived(Packet packet)
     {
@@ -82,7 +84,7 @@ public class OnlineManager : MonoBehaviour
         switch (id)
         {
             case MessageID.AUTH:
-                SC_Auth  message = JsonUtility.FromJson<SC_Auth>(jsonValue);
+                SC_Auth message = JsonUtility.FromJson<SC_Auth>(jsonValue);
                 if (message.loginResult == MessageStatus.SUCCESS)
                 {
                     Debug.LogFormat("Login successful");
@@ -107,6 +109,9 @@ public class OnlineManager : MonoBehaviour
                     PlayerProfile.Instance.Initialize("");
                     Debug.LogFormat("Failed to retrieve profile: {0}", profileMessage.getProfileResult);
                 }
+                break;
+            case MessageID.CLAN_INFO:
+                SC_ClanInfo clanInfoMessage = JsonUtility.FromJson<SC_ClanInfo>(jsonValue);
                 break;
             default:
                 break;
@@ -134,13 +139,58 @@ public class OnlineManager : MonoBehaviour
 
     public void UpdatePlayerProfile(string playerName, int profileVersion, string jsonData)
     {
-        CS_PlayerProfileUpdate mes = new CS_PlayerProfileUpdate();
+        CS_PlayerProfile mes = new CS_PlayerProfile();
         mes.playerID = playerID;
         mes.playerName = playerName;
         mes.profileVersion = profileVersion;
         mes.jsonData = jsonData;
         SendMessage(MessageID.PROFILE_UPDATE, mes);
     }
+
+    public void CreatePlayerProfile(string playerID, string playerName, int profileVersion, string jsonData)
+    {
+        CS_PlayerProfile mes = new CS_PlayerProfile();
+        mes.playerID = playerID;
+        mes.playerName = playerName;
+        mes.profileVersion = profileVersion;
+        mes.jsonData = jsonData;
+        SendMessage(MessageID.PROFILE_CREATE, mes);
+    }
+
+    public void CreateClan(string clanName, int score, string jsonData)
+    {
+        CS_ClanCreate mes = new CS_ClanCreate();
+        mes.name = clanName;
+        mes.playerID = playerID;
+        mes.Score = score;
+        mes.jsonData = jsonData;
+        SendMessage(MessageID.CLAN_CREATE, mes);
+    }
+
+    public void GetClanInfo(string clanID)
+    {
+        CS_ClanInfor mes = new CS_ClanInfor();
+        mes.clanID = clanID;
+        SendMessage(MessageID.CLAN_INFO, mes);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     void SendMessage(MessageID id, IBaseMessage baseMessage)
     {
@@ -151,7 +201,6 @@ public class OnlineManager : MonoBehaviour
         _packet.SetID((int)Packet.ID.CUSTOM);
         _packet.WriteLength();
         Client.instance.tcp.SendData(_packet);
-
     }
 
 }

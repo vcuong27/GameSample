@@ -18,6 +18,8 @@ public class DataManager : MonoBehaviour
     private Menus menus;
     private List<MenuData> listMenuData;
 
+    private bool isInitialized = false;
+
     private static DataManager _instance;
     public static DataManager Instance
     {
@@ -41,6 +43,12 @@ public class DataManager : MonoBehaviour
 
         menus = Resources.Load<Menus>("Menus");
         listMenuData = menus.MenuDatas.ToList();
+        isInitialized = true;
+    }
+
+    public bool IsInitialized()
+    {
+        return isInitialized;
     }
 
     private void Awake()
@@ -49,7 +57,6 @@ public class DataManager : MonoBehaviour
             return;
 
         _instance = this;
-        Initlize();
         DontDestroyOnLoad(gameObject);
     }
 

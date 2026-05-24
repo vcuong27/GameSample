@@ -48,13 +48,13 @@ namespace DevelopersHub.RealtimeNetworking.Server
         {
             MessageID id = (MessageID)packet.ReadInt();
             string jsonValue = packet.ReadString();
-            Console.WriteLine("MessageID:{0} jsonValue:{1}", id, jsonValue);
+            Console.WriteLine("RECV <= MessageID:{0} jsonValue:{1} \n", id, jsonValue);
 
             switch (id)
             {
                 case MessageID.AUTH:
                     CS_Auth message = JsonConvert.DeserializeObject<CS_Auth>(jsonValue);
-                    Console.WriteLine("username:{0} password:{1}", message.username, message.password);
+                    //Console.WriteLine("username:{0} password:{1}", message.username, message.password);
                     SC_Auth authResult = Database.GetLoginResult(message.username, message.password);
                     SendAuthenticationResponse(clientID, authResult);
                     break;
@@ -64,8 +64,12 @@ namespace DevelopersHub.RealtimeNetworking.Server
                     SendPlayerProfileResponse(clientID, profileResult);
                     break;
                 case MessageID.PROFILE_UPDATE:
-                    CS_PlayerProfileUpdate profileUpdateMessage = JsonConvert.DeserializeObject<CS_PlayerProfileUpdate>(jsonValue);
+                    CS_PlayerProfile profileUpdateMessage = JsonConvert.DeserializeObject<CS_PlayerProfile>(jsonValue);
                     Database.UpdatePlayerProfile(profileUpdateMessage.playerID, profileUpdateMessage.playerName, profileUpdateMessage.profileVersion, profileUpdateMessage.jsonData);
+                    break;
+                case MessageID.PROFILE_CREATE:
+                    CS_PlayerProfile profileCreateMessage = JsonConvert.DeserializeObject<CS_PlayerProfile>(jsonValue);
+                    Database.CreatePlayerProfile(profileCreateMessage.playerID, profileCreateMessage.playerName, profileCreateMessage.profileVersion, profileCreateMessage.jsonData);
                     break;
                 default:
                     break;
@@ -89,7 +93,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
             _packet.Write((int)id);
             _packet.Write(JsonConvert.SerializeObject(baseMessage));
             Sender.TCP_Send(clientID, _packet);
-            Console.WriteLine("Client[{0}] Sent MessageID:{1} jsonValue:{2}", clientID, id, JsonConvert.SerializeObject(baseMessage));
+            Console.WriteLine("SEND => Client[{0}] Sent MessageID:{1} jsonValue:{2}\n", clientID, id, JsonConvert.SerializeObject(baseMessage));
         }
 
 

@@ -59,7 +59,7 @@ public class PlayerSettingData
 [Serializable]
 public class PlayerProfileData
 {
-    public int playerID;
+    public string playerID;
     public string playerName;
     public ProfileVersion profileVersion;
     public List<PlayerBuildingData> buildingDatas;
@@ -127,12 +127,6 @@ public class PlayerProfile : MonoBehaviour
     public void Initialize(string profileData)
     {
 
-        //string playerProfile = PlayerPrefs.GetString("PlayerProfile", "");
-        //if (playerProfile.Length > 0)
-        //{
-        //    LoadPlayerProfile(playerProfile);
-        //}
-
         LoadPlayerProfile(profileData);
 
         OnProfileUpdated?.Invoke();
@@ -143,7 +137,6 @@ public class PlayerProfile : MonoBehaviour
     {
         saveTimer = 0f;
         needSaveProfile = false;
-        //PlayerPrefs.SetString("PlayerProfile", JsonUtility.ToJson(CurentProfile));
         OnlineManager.Instance.UpdatePlayerProfile(CurentProfile.playerName, (int)CurentProfile.profileVersion, JsonUtility.ToJson(CurentProfile));
     }
 
@@ -152,7 +145,7 @@ public class PlayerProfile : MonoBehaviour
         return IsInitialized;
     }
 
-    public long GetPlayeID()
+    public string GetPlayerID()
     {
         return CurentProfile.playerID;
     }
@@ -311,10 +304,7 @@ public class PlayerProfile : MonoBehaviour
                     CurentProfile.settingData.IsADSOn = true;
                     CurentProfile.statData.CoinSpent = 0;
                 }
-
                 // Add ver N
-
-
                 CurentProfile.profileVersion = PROFILE_VER;
                 SavePlayerProfile();
             }
@@ -322,60 +312,65 @@ public class PlayerProfile : MonoBehaviour
         }
         else
         {
-            CurentProfile = new PlayerProfileData
-            {
-                playerID = 1,
-                playerName = "Player1",
-                profileVersion = ProfileVersion.V1,
-                buildingDatas = new List<PlayerBuildingData>(),
-                itemDatas = new List<PlayerItemData>(),
-                unitDatas = new List<PlayerUnitData>(),
-                statData = new PlayerStatData
-                {
-                    Level = 1,
-                    Experience = 0,
-                    WinNumber = 0,
-                    LoseNumber = 0,
-                },
-                settingData = new PlayerSettingData(),
-            };
-
-            CurentProfile.buildingDatas.Add(new PlayerBuildingData()
-            {
-                ID = 1,
-                Level = 1,
-                BuildingType = BuildingType.MAINTOWER,
-                State = BuildingState.IDLE,
-                Position = new Vector2Int(2, 3),
-                EndTime = DateTime.UtcNow
-            });
-            CurentProfile.buildingDatas.Add(new PlayerBuildingData()
-            {
-                ID = 2,
-                Level = 1,
-                BuildingType = BuildingType.BARRACKS,
-                State = BuildingState.IDLE,
-                Position = new Vector2Int(4, 4),
-                EndTime = DateTime.UtcNow
-            });
-
-            CurentProfile.unitDatas.Add(new PlayerUnitData()
-            {
-                ID = 1,
-                Level = 1,
-                Type = UnitType.SWORDMAN,
-                Number = 10,
-            });
-            CurentProfile.unitDatas.Add(new PlayerUnitData()
-            {
-                ID = 2,
-                Level = 1,
-                Type = UnitType.ARCHER,
-                Number = 20,
-            });
-            SavePlayerProfile();
-
+            CreatePlayerProfile();
         }
     }
-    
+
+    private void CreatePlayerProfile()
+    {
+        CurentProfile = new PlayerProfileData
+        {
+            playerID = OnlineManager.Instance.GetPlayerID(),
+            playerName = "Player1",
+            profileVersion = ProfileVersion.V1,
+            buildingDatas = new List<PlayerBuildingData>(),
+            itemDatas = new List<PlayerItemData>(),
+            unitDatas = new List<PlayerUnitData>(),
+            statData = new PlayerStatData
+            {
+                Level = 1,
+                Experience = 0,
+                WinNumber = 0,
+                LoseNumber = 0,
+            },
+            settingData = new PlayerSettingData(),
+        };
+
+        CurentProfile.buildingDatas.Add(new PlayerBuildingData()
+        {
+            ID = 1,
+            Level = 1,
+            BuildingType = BuildingType.MAINTOWER,
+            State = BuildingState.IDLE,
+            Position = new Vector2Int(2, 3),
+            EndTime = DateTime.UtcNow
+        });
+        CurentProfile.buildingDatas.Add(new PlayerBuildingData()
+        {
+            ID = 2,
+            Level = 1,
+            BuildingType = BuildingType.BARRACKS,
+            State = BuildingState.IDLE,
+            Position = new Vector2Int(4, 4),
+            EndTime = DateTime.UtcNow
+        });
+
+        CurentProfile.unitDatas.Add(new PlayerUnitData()
+        {
+            ID = 1,
+            Level = 1,
+            Type = UnitType.SWORDMAN,
+            Number = 10,
+        });
+        CurentProfile.unitDatas.Add(new PlayerUnitData()
+        {
+            ID = 2,
+            Level = 1,
+            Type = UnitType.ARCHER,
+            Number = 20,
+        });
+
+        OnlineManager.Instance.CreatePlayerProfile(CurentProfile.playerID, CurentProfile.playerName, (int)CurentProfile.profileVersion, JsonUtility.ToJson(CurentProfile));
+    }
+
 }

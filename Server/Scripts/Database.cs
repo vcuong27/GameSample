@@ -102,41 +102,21 @@ namespace DevelopersHub.RealtimeNetworking.Server
             return profileResult;
         }
 
+        public static void CreatePlayerProfile(string playerID, string playerName, int profileVersion, string jsonData)
+        {
+            string query = String.Format("INSERT INTO PlayerProfile (playerID, playerName, profileVersion, jsonData) VALUES ('{0}', '{1}', {2}, '{3}');", playerID, playerName, profileVersion, jsonData);
+            using (MySqlCommand command = new MySqlCommand(query, mysqlConnection))
+            {
+                command.ExecuteNonQuery();
+            }
+        }
+
         public static void UpdatePlayerProfile(string playerID, string playerName, int profileVersion, string jsonData)
         {
             string query = String.Format("UPDATE PlayerProfile SET playerName = '{0}', profileVersion = {1}, jsonData = '{2}' WHERE playerID = '{3}';", playerName, profileVersion, jsonData, playerID);
             using (MySqlCommand command = new MySqlCommand(query, mysqlConnection))
             {
                 command.ExecuteNonQuery();
-            }
-        }
-
-
-        public static void Demo_MySQL_1()
-        {
-            string query = String.Format("UPDATE table SET int_column = {0}, string_column = '{1}', datetime_column = NOW();", 123, "Hello World");
-            using (MySqlCommand command = new MySqlCommand(query, mysqlConnection))
-            {
-                command.ExecuteNonQuery();
-            }
-        }
-
-        public static void Demo_MySQL_2()
-        {
-            string query = String.Format("SELECT column1, column2 FROM table WHERE column3 = {0} ORDER BY column1 DESC;", 123);
-            using (MySqlCommand command = new MySqlCommand(query, mysqlConnection))
-            {
-                using (MySqlDataReader reader = command.ExecuteReader())
-                {
-                    if (reader.HasRows)
-                    {
-                        while (reader.Read())
-                        {
-                            int column1 = int.Parse(reader["column1"].ToString());
-                            string column2 = reader["column2"].ToString();
-                        }
-                    }
-                }
             }
         }
         
