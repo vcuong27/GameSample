@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class OnlineManager : MonoBehaviour
 {
-    
+
 
 
     private static OnlineManager _instance;
@@ -82,7 +82,7 @@ public class OnlineManager : MonoBehaviour
         {
             case MessageID.AUTH:
                 SC_AutenticationMessage message = JsonUtility.FromJson<SC_AutenticationMessage>(jsonValue);
-                if(message.loginResult == MessageStatus.SUCCESS)
+                if (message.loginResult == MessageStatus.SUCCESS)
                 {
                     Debug.LogFormat("Login successful");
                     isLoggedIn = true;
@@ -125,7 +125,7 @@ public class OnlineManager : MonoBehaviour
         Packet _packet = new Packet();
         _packet.Write((int)id);
         _packet.Write(JsonUtility.ToJson(baseMessage));
-        _packet.SetID((int)Packet.ID.INTERNAL);
+        _packet.SetID((int)Packet.ID.CUSTOM);
         _packet.WriteLength();
         Client.instance.tcp.SendData(_packet);
 

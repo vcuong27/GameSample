@@ -73,14 +73,10 @@ namespace DevelopersHub.RealtimeNetworking.Server
 
         private static void SendMessage(int clientID, MessageID id, IBaseMessage baseMessage)
         {
-
             Packet _packet = new Packet();
             _packet.Write((int)id);
             _packet.Write(JsonConvert.SerializeObject(baseMessage));
-            _packet.SetID((int)Packet.ID.CUSTOM);
-            _packet.WriteLength();
-            Sender.TCP_Send(clientID, id, _packet);
-
+            Sender.TCP_Send(clientID, _packet);
         }
 
 
