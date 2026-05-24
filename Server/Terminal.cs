@@ -58,12 +58,23 @@ namespace DevelopersHub.RealtimeNetworking.Server
                     SC_Auth authResult = Database.GetLoginResult(message.username, message.password);
                     SendAuthenticationResponse(clientID, authResult);
                     break;
-                case MessageID.GET_PROFILE:
+                case MessageID.PROFILE_GET:
+                    CS_PlayerProfileGet profileGetMessage = JsonConvert.DeserializeObject<CS_PlayerProfileGet>(jsonValue);
+                    SC_PlayerProfile profileResult = Database.GetPlayerProfile(profileGetMessage.playerID);
+                    SendPlayerProfileResponse(clientID, profileResult);
+                    break;
+                case MessageID.PROFILE_UPDATE:
+                    CS_PlayerProfileUpdate profileUpdateMessage = JsonConvert.DeserializeObject<CS_PlayerProfileUpdate>(jsonValue);
+                    Database.UpdatePlayerProfile(profileUpdateMessage.playerID, profileUpdateMessage.playerName, profileUpdateMessage.profileVersion, profileUpdateMessage.jsonData);
                     break;
                 default:
                     break;
             }
+        }
 
+        private static void SendPlayerProfileResponse(int clientID, SC_PlayerProfile profileResult)
+        {
+            SendMessage(clientID, MessageID.PROFILE_GET, profileResult);
         }
 
         private static void SendAuthenticationResponse(int clientID, SC_Auth authResult)

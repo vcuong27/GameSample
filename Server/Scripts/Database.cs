@@ -75,7 +75,41 @@ namespace DevelopersHub.RealtimeNetworking.Server
             return authResult;
         }
 
+        public static SC_PlayerProfile GetPlayerProfile(string playerID)
+        {
+            SC_PlayerProfile profileResult = new SC_PlayerProfile();
+            string query = String.Format("SELECT playerName, profileVersion, jsonData FROM PlayerProfile WHERE playerID = '{0}';", playerID);
+            using (MySqlCommand command = new MySqlCommand(query, mysqlConnection))
+            {
+                using (MySqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            profileResult.getProfileResult = MessageStatus.SUCCESS;
+                            profileResult.playerName = reader["playerName"].ToString();
+                            profileResult.profileVersion = int.Parse(reader["profileVersion"].ToString());
+                            profileResult.jsonData = reader["jsonData"].ToString();
+                        }
+                    }
+                    else
+                    {
+                        profileResult.getProfileResult = MessageStatus.ERROR;
+                    }
+                }
+            }
+            return profileResult;
+        }
 
+        public static void UpdatePlayerProfile(string playerID, string playerName, int profileVersion, string jsonData)
+        {
+            string query = String.Format("UPDATE PlayerProfile SET playerName = '{0}', profileVersion = {1}, jsonData = '{2}' WHERE playerID = '{3}';", playerName, profileVersion, jsonData, playerID);
+            using (MySqlCommand command = new MySqlCommand(query, mysqlConnection))
+            {
+                command.ExecuteNonQuery();
+            }
+        }
 
 
         public static void Demo_MySQL_1()

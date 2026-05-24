@@ -6,7 +6,8 @@ using System.Text;
 public enum MessageID
 {
     AUTH = 1,
-    GET_PROFILE = 2,
+    PROFILE_GET = 2,
+    PROFILE_UPDATE = 3,
 }
 
 
@@ -40,11 +41,32 @@ namespace Assets.Script.Manager
         public string playerID;
     }
 
+
     [Serializable]
-    public class CS_PlayerProfileMessage : IBaseMessage
+    public class CS_PlayerProfileGet : IBaseMessage
     {
-        public long playerID;
+        public string playerID;
     }
+
+    [Serializable]
+    public class CS_PlayerProfileUpdate : IBaseMessage
+    {
+        public string playerID;
+        public string playerName;
+        public int profileVersion;
+        public string jsonData;
+    }
+
+    [Serializable]
+    public class SC_PlayerProfile : IBaseMessage
+    {
+        public MessageStatus getProfileResult;
+        public string playerID;
+        public string playerName;
+        public int profileVersion;
+        public string jsonData;
+    }
+
 
 
 }

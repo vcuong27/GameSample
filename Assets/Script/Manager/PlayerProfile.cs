@@ -94,7 +94,7 @@ public class PlayerProfile : MonoBehaviour
 
     private void Start()
     {
-        Initialize(null);
+        //Initialize(null);
     }
 
     private void Update()
@@ -127,13 +127,13 @@ public class PlayerProfile : MonoBehaviour
     public void Initialize(string profileData)
     {
 
-        string playerProfile = PlayerPrefs.GetString("PlayerProfile", "");
-        if (playerProfile.Length > 0)
-        {
-            LoadPlayerProfile(playerProfile);
-        }
+        //string playerProfile = PlayerPrefs.GetString("PlayerProfile", "");
+        //if (playerProfile.Length > 0)
+        //{
+        //    LoadPlayerProfile(playerProfile);
+        //}
 
-        //LoadPlayerProfile(profileData);
+        LoadPlayerProfile(profileData);
 
         OnProfileUpdated?.Invoke();
         IsInitialized = true;
@@ -143,7 +143,8 @@ public class PlayerProfile : MonoBehaviour
     {
         saveTimer = 0f;
         needSaveProfile = false;
-        PlayerPrefs.SetString("PlayerProfile", JsonUtility.ToJson(CurentProfile));
+        //PlayerPrefs.SetString("PlayerProfile", JsonUtility.ToJson(CurentProfile));
+        OnlineManager.Instance.UpdatePlayerProfile(CurentProfile.playerName, (int)CurentProfile.profileVersion, JsonUtility.ToJson(CurentProfile));
     }
 
     public bool IsInitialize()

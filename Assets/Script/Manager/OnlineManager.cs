@@ -14,6 +14,7 @@ public class OnlineManager : MonoBehaviour
 
     private bool isConnected = false;
     private bool isLoggedIn = false;
+    private string playerID;
 
     private void Awake()
     {
@@ -85,6 +86,7 @@ public class OnlineManager : MonoBehaviour
                 if (message.loginResult == MessageStatus.SUCCESS)
                 {
                     Debug.LogFormat("Login successful");
+                    playerID = message.playerID;
                     isLoggedIn = true;
                 }
                 else
@@ -93,7 +95,18 @@ public class OnlineManager : MonoBehaviour
                     isLoggedIn = false;
                 }
                 break;
-            case MessageID.GET_PROFILE:
+            case MessageID.PROFILE_GET:
+                SC_PlayerProfile profileMessage = JsonUtility.FromJson<SC_PlayerProfile>(jsonValue);
+                if (profileMessage.getProfileResult == MessageStatus.SUCCESS)
+                {
+                    PlayerProfile.Instance.Initialize(profileMessage.jsonData);
+                    Debug.LogFormat("Profile retrieved successfully");
+                }
+                else
+                {
+                    PlayerProfile.Instance.Initialize("");
+                    Debug.LogFormat("Failed to retrieve profile: {0}", profileMessage.getProfileResult);
+                }
                 break;
             default:
                 break;
@@ -113,10 +126,20 @@ public class OnlineManager : MonoBehaviour
 
     public void GetPlayerProfile()
     {
-        CS_PlayerProfileMessage mes = new CS_PlayerProfileMessage();
-        mes.playerID = 1;
+        CS_PlayerProfileGet mes = new CS_PlayerProfileGet();
+        mes.playerID = playerID;
 
-        SendMessage(MessageID.GET_PROFILE, mes);
+        SendMessage(MessageID.PROFILE_GET, mes);
+    }
+
+    public void UpdatePlayerProfile(string playerName, int profileVersion, string jsonData)
+    {
+        CS_PlayerProfileUpdate mes = new CS_PlayerProfileUpdate();
+        mes.playerID = playerID;
+        mes.playerName = playerName;
+        mes.profileVersion = profileVersion;
+        mes.jsonData = jsonData;
+        SendMessage(MessageID.PROFILE_UPDATE, mes);
     }
 
     void SendMessage(MessageID id, IBaseMessage baseMessage)
