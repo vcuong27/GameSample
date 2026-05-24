@@ -44,13 +44,13 @@ public class LoadingController : IMenuStack
         yield return new WaitForSeconds(1f);
 
         // chuyển scene
-        AsyncOperation sceneLoading = SceneManager.LoadSceneAsync(1);
-        while (!sceneLoading.isDone)
-        {
-            float progress = Mathf.Clamp01(sceneLoading.progress / 1.0f);
-            Debug.Log("Loading progress: " + (progress * 100) + "%");
-            yield return null;
-        }
+        //AsyncOperation sceneLoading = SceneManager.LoadSceneAsync(1);
+        //while (!sceneLoading.isDone)
+        //{
+        //    float progress = Mathf.Clamp01(sceneLoading.progress / 1.0f);
+        //    Debug.Log("Loading progress: " + (progress * 100) + "%");
+        //    yield return null;
+        //}
 
     }
 

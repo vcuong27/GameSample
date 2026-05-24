@@ -50,6 +50,34 @@ namespace DevelopersHub.RealtimeNetworking.Server
             }
         }
 
+        public static SC_Auth GetLoginResult(string username, string password)
+        {
+            SC_Auth authResult = new SC_Auth();
+            string query = String.Format("SELECT playerID FROM Account WHERE username = '{0}' AND password = '{1}';", username, password);
+            using (MySqlCommand command = new MySqlCommand(query, mysqlConnection))
+            {
+                using (MySqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            authResult.loginResult = MessageStatus.SUCCESS;
+                            authResult.playerID = reader["playerID"].ToString();
+                        }
+                    }
+                    else
+                    {
+                        authResult.loginResult = MessageStatus.ERROR;
+                    }
+                }
+            }
+            return authResult;
+        }
+
+
+
+
         public static void Demo_MySQL_1()
         {
             string query = String.Format("UPDATE table SET int_column = {0}, string_column = '{1}', datetime_column = NOW();", 123, "Hello World");

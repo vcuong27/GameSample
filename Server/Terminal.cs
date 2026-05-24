@@ -1,9 +1,12 @@
-﻿using MySqlX.XDevAPI;
+﻿using MySql.Data.MySqlClient;
+using MySqlX.XDevAPI;
 using Newtonsoft.Json;
 using Org.BouncyCastle.Bcpg;
 using Org.BouncyCastle.Crypto.Utilities;
 using System;
+using System.Data;
 using System.Numerics;
+using static DevelopersHub.RealtimeNetworking.Server.Packet;
 
 namespace DevelopersHub.RealtimeNetworking.Server
 {
@@ -50,9 +53,10 @@ namespace DevelopersHub.RealtimeNetworking.Server
             switch (id)
             {
                 case MessageID.AUTH:
-                    CS_AutenticationMessage message = JsonConvert.DeserializeObject<CS_AutenticationMessage>(jsonValue);
+                    CS_Auth message = JsonConvert.DeserializeObject<CS_Auth>(jsonValue);
                     Console.WriteLine("username:{0} password:{1}", message.username, message.password);
-                    SendAuthenticationResponse(clientID, true, "Authentication successful.");
+                    SC_Auth authResult = Database.GetLoginResult(message.username, message.password);
+                    SendAuthenticationResponse(clientID, authResult);
                     break;
                 case MessageID.GET_PROFILE:
                     break;
@@ -62,12 +66,9 @@ namespace DevelopersHub.RealtimeNetworking.Server
 
         }
 
-        private static void SendAuthenticationResponse(int clientID, bool success, string message)
+        private static void SendAuthenticationResponse(int clientID, SC_Auth authResult)
         {
-            SC_AutenticationMessage responseMessage = new SC_AutenticationMessage();
-            responseMessage.loginResult = success ? MessageStatus.SUCCESS : MessageStatus.ERROR;
-            responseMessage.message = message;
-            SendMessage(clientID, MessageID.AUTH, responseMessage);
+            SendMessage(clientID, MessageID.AUTH, authResult);
         }
 
 
@@ -77,6 +78,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
             _packet.Write((int)id);
             _packet.Write(JsonConvert.SerializeObject(baseMessage));
             Sender.TCP_Send(clientID, _packet);
+            Console.WriteLine("Client[{0}] Sent MessageID:{1} jsonValue:{2}", clientID, id, JsonConvert.SerializeObject(baseMessage));
         }
 
 

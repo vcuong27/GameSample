@@ -26,17 +26,17 @@ namespace DevelopersHub.RealtimeNetworking.Server
     }
 
     [Serializable]
-    public class CS_AutenticationMessage : IBaseMessage
+    public class CS_Auth : IBaseMessage
     {
         public string username;
         public string password;
     }
 
     [Serializable]
-    public class SC_AutenticationMessage : IBaseMessage
+    public class SC_Auth : IBaseMessage
     {
         public MessageStatus loginResult;
-        public string message;
+        public string playerID;
     }
 
     [Serializable]

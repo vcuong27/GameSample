@@ -19,26 +19,26 @@ public enum MessageStatus
 
 namespace Assets.Script.Manager
 {
+
     [Serializable]
     public class IBaseMessage
     {
-        
+
     }
 
     [Serializable]
-    public class CS_AutenticationMessage : IBaseMessage
+    public class CS_Auth : IBaseMessage
     {
         public string username;
         public string password;
     }
 
     [Serializable]
-    public class SC_AutenticationMessage : IBaseMessage
+    public class SC_Auth : IBaseMessage
     {
         public MessageStatus loginResult;
-        public string message;
+        public string playerID;
     }
-
 
     [Serializable]
     public class CS_PlayerProfileMessage : IBaseMessage
@@ -46,19 +46,5 @@ namespace Assets.Script.Manager
         public long playerID;
     }
 
-    [Serializable]
-    public class CS_CollectFarmMessage : IBaseMessage
-    {
-        public long playerID;
-        public long buildingID;
-    }
-
-    [Serializable]
-    public class SC_CollectFarmMessage : IBaseMessage
-    {
-        public MessageStatus status;
-        public string message;
-        public FarmData farmData;
-    }
 
 }

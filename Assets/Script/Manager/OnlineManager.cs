@@ -81,7 +81,7 @@ public class OnlineManager : MonoBehaviour
         switch (id)
         {
             case MessageID.AUTH:
-                SC_AutenticationMessage message = JsonUtility.FromJson<SC_AutenticationMessage>(jsonValue);
+                SC_Auth  message = JsonUtility.FromJson<SC_Auth>(jsonValue);
                 if (message.loginResult == MessageStatus.SUCCESS)
                 {
                     Debug.LogFormat("Login successful");
@@ -89,7 +89,7 @@ public class OnlineManager : MonoBehaviour
                 }
                 else
                 {
-                    Debug.LogFormat("Login failed: {0}", message.message);
+                    Debug.LogFormat("Login failed: {0}", message.loginResult);
                     isLoggedIn = false;
                 }
                 break;
@@ -104,9 +104,9 @@ public class OnlineManager : MonoBehaviour
 
     public void LoginToServer()
     {
-        CS_AutenticationMessage aut = new CS_AutenticationMessage();
-        aut.username = "account_01";
-        aut.password = "password_01";
+        CS_Auth aut = new CS_Auth();
+        aut.username = "player01";
+        aut.password = "123456";
 
         SendMessage(MessageID.AUTH, aut);
     }
