@@ -45,7 +45,7 @@ public class FarmBuilding : IBuilding
         curentFarmData.ColectedTime = DateTime.UtcNow;
         ObjectUI.SetActive(false);
         
-        OnlineManager.Instance.CollectFarm(curentFarmData.ID);
+        //OnlineManager.Instance.CollectFarm(curentFarmData.ID);
 
     }
 

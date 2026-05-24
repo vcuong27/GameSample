@@ -1,63 +1,19 @@
 using Assets.Script.Manager;
 using DevelopersHub.RealtimeNetworking.Client;
-using NUnit.Framework.Constraints;
 using System;
-using UnityEditor.Sprites;
 using UnityEngine;
-using static DevelopersHub.RealtimeNetworking.Client.RealtimeNetworking;
 
 public class OnlineManager : MonoBehaviour
 {
-    public enum MessageID
-    {
-        AUTH = 1,
-        GET_ROOMS = 2,
-        CREATE_ROOM = 3,
-        JOIN_ROOM = 4,
-        LEAVE_ROOM = 5,
-        DELETE_ROOM = 6,
-        ROOM_UPDATED = 7,
-        KICK_FROM_ROOM = 8,
-        STATUS_IN_ROOM = 9,
-        START_ROOM = 10,
-        SYNC_GAME = 11,
-        SET_HOST = 12,
-        DESTROY_OBJECT = 13,
-        CHANGE_OWNER = 14,
-        CHANGE_OWNER_CONFIRM = 15,
-        CREATE_PARTY = 16,
-        INVITE_PARTY = 17,
-        LEAVE_PARTY = 18,
-        KICK_PARTY_MEMBER = 19,
-        JOIN_MATCHMAKING = 20,
-        LEAVE_MATCHMAKING = 21,
-        PARTY_UPDATED = 22,
-        GET_FRIENDS = 23,
-        ADD_FRIEND = 24,
-        REMOVE_FRIEND = 25,
-        ANSWER_FRIEND = 26,
-        GET_PROFILE = 27,
-        ANSWER_PARTY_INVITE = 28,
-        MATCHMAKING_STARTED = 29,
-        MATCHMAKING_STOPPED = 30,
-        LEAVE_GAME = 31,
-        GAME_STARTED = 32,
-        NETCODE_INIT = 33,
-        NETCODE_STARTED = 34,
-        FRIEND_REQUESTS = 35,
-        PURCHASE = 36,
-        GET_CHARACTERS = 37,
-        GET_EQUIPMENTS = 38,
-        SET_CHARACTER_SELECTED = 39,
-        CHARACTER_EQUIP = 40,
-        CHARACTER_UNEQUIP = 41,
-        COLLECT_FARM = 42,
-    }
-
+    
 
 
     private static OnlineManager _instance;
     public static OnlineManager Instance => _instance;
+
+
+    private bool isConnected = false;
+    private bool isLoggedIn = false;
 
     private void Awake()
     {
@@ -76,20 +32,81 @@ public class OnlineManager : MonoBehaviour
 
     }
 
-    public void CollectFarm(int buildingID)
+    public void ConnectToServer()
     {
-        CS_CollectFarmMessage mes = new CS_CollectFarmMessage();
-        mes.playerID = PlayerProfile.Instance.GetPlayeID();
-        mes.buildingID = buildingID;
+        RealtimeNetworking.OnDisconnectedFromServer += Disconnected;
+        RealtimeNetworking.OnConnectingToServerResult += ConnectResult;
+        RealtimeNetworking.OnPacketReceived += PacketReceived;
+        // Try to connect the server
+        RealtimeNetworking.Connect();
+    }
 
-        SendMessage(MessageID.COLLECT_FARM, mes);
-    }    
 
-    public void SendAutentication()
+
+    private void ConnectResult(bool successful)
+    {
+        if (successful)
+        {
+            Debug.Log("Connected to server successfully.");
+            isConnected = true;
+        }
+        else
+        {
+            Debug.Log("Failed to connect the server.");
+            isConnected = false;
+        }
+    }
+
+    private void Disconnected()
+    {
+        Debug.Log("Disconnected from server.");
+    }
+
+    public bool IsConnected()
+    {
+        return isConnected;
+    }
+
+    public bool IsLoggedIn()
+    {
+        return isLoggedIn;
+    }
+
+
+    private void PacketReceived(Packet packet)
+    {
+        MessageID id = (MessageID)packet.ReadInt();
+        string jsonValue = packet.ReadString();
+        Debug.LogFormat("MessageID:{0} jsonValue:{1}", id, jsonValue);
+        switch (id)
+        {
+            case MessageID.AUTH:
+                SC_AutenticationMessage message = JsonUtility.FromJson<SC_AutenticationMessage>(jsonValue);
+                if(message.loginResult == MessageStatus.SUCCESS)
+                {
+                    Debug.LogFormat("Login successful");
+                    isLoggedIn = true;
+                }
+                else
+                {
+                    Debug.LogFormat("Login failed: {0}", message.message);
+                    isLoggedIn = false;
+                }
+                break;
+            case MessageID.GET_PROFILE:
+                break;
+            default:
+                break;
+        }
+
+    }
+
+
+    public void LoginToServer()
     {
         CS_AutenticationMessage aut = new CS_AutenticationMessage();
-        aut.username = "test";
-        aut.password = "test";
+        aut.username = "account_01";
+        aut.password = "password_01";
 
         SendMessage(MessageID.AUTH, aut);
     }
@@ -97,6 +114,7 @@ public class OnlineManager : MonoBehaviour
     public void GetPlayerProfile()
     {
         CS_PlayerProfileMessage mes = new CS_PlayerProfileMessage();
+        mes.playerID = 1;
 
         SendMessage(MessageID.GET_PROFILE, mes);
     }
@@ -113,106 +131,4 @@ public class OnlineManager : MonoBehaviour
 
     }
 
-    internal void ReceiveInternal(Packet packet)
-    {
-        MessageID id = (MessageID)packet.ReadInt();
-        switch (id)
-        {
-            case MessageID.AUTH:
-                break;
-            case MessageID.GET_ROOMS:
-                break;
-            case MessageID.CREATE_ROOM:
-                break;
-            case MessageID.JOIN_ROOM:
-                break;
-            case MessageID.LEAVE_ROOM:
-                break;
-            case MessageID.DELETE_ROOM:
-                break;
-            case MessageID.ROOM_UPDATED:
-                break;
-            case MessageID.KICK_FROM_ROOM:
-                break;
-            case MessageID.STATUS_IN_ROOM:
-                break;
-            case MessageID.START_ROOM:
-                break;
-            case MessageID.SYNC_GAME:
-                break;
-            case MessageID.SET_HOST:
-                break;
-            case MessageID.DESTROY_OBJECT:
-                break;
-            case MessageID.CHANGE_OWNER:
-                break;
-            case MessageID.CHANGE_OWNER_CONFIRM:
-                break;
-            case MessageID.CREATE_PARTY:
-                break;
-            case MessageID.INVITE_PARTY:
-                break;
-            case MessageID.LEAVE_PARTY:
-                break;
-            case MessageID.KICK_PARTY_MEMBER:
-                break;
-            case MessageID.JOIN_MATCHMAKING:
-                break;
-            case MessageID.LEAVE_MATCHMAKING:
-                break;
-            case MessageID.PARTY_UPDATED:
-                break;
-            case MessageID.GET_FRIENDS:
-                break;
-            case MessageID.ADD_FRIEND:
-                break;
-            case MessageID.REMOVE_FRIEND:
-                break;
-            case MessageID.ANSWER_FRIEND:
-                break;
-            case MessageID.GET_PROFILE:
-                PlayerProfile.Instance.Initialize(packet.ReadString());
-                break;
-            case MessageID.ANSWER_PARTY_INVITE:
-                break;
-            case MessageID.MATCHMAKING_STARTED:
-                break;
-            case MessageID.MATCHMAKING_STOPPED:
-                break;
-            case MessageID.LEAVE_GAME:
-                break;
-            case MessageID.GAME_STARTED:
-                break;
-            case MessageID.NETCODE_INIT:
-                break;
-            case MessageID.NETCODE_STARTED:
-                break;
-            case MessageID.FRIEND_REQUESTS:
-                break;
-            case MessageID.PURCHASE:
-                break;
-            case MessageID.GET_CHARACTERS:
-                break;
-            case MessageID.GET_EQUIPMENTS:
-                break;
-            case MessageID.SET_CHARACTER_SELECTED:
-                break;
-            case MessageID.CHARACTER_EQUIP:
-                break;
-            case MessageID.CHARACTER_UNEQUIP:
-                break;
-            case MessageID.COLLECT_FARM:
-                SC_CollectFarmMessage sC_CollectFarmMessage = JsonUtility.FromJson<SC_CollectFarmMessage>(packet.ReadString());
-                if(sC_CollectFarmMessage.status == MessageStatus.SUCCESS)
-                {
-                    GameManager.Instance.UpdateFarmData(sC_CollectFarmMessage.farmData);
-                }
-
-                break;
-            default:
-                break;
-        }
-
-
-    }
 }

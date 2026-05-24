@@ -9,7 +9,6 @@ public enum MessageID
     GET_PROFILE = 2,
 }
 
-
 public enum MessageStatus
 {
     NONE,
@@ -17,12 +16,13 @@ public enum MessageStatus
     ERROR,
 }
 
-namespace Assets.Script.Manager
+
+namespace DevelopersHub.RealtimeNetworking.Server
 {
     [Serializable]
     public class IBaseMessage
     {
-        
+
     }
 
     [Serializable]
@@ -39,26 +39,10 @@ namespace Assets.Script.Manager
         public string message;
     }
 
-
     [Serializable]
     public class CS_PlayerProfileMessage : IBaseMessage
     {
         public long playerID;
-    }
-
-    [Serializable]
-    public class CS_CollectFarmMessage : IBaseMessage
-    {
-        public long playerID;
-        public long buildingID;
-    }
-
-    [Serializable]
-    public class SC_CollectFarmMessage : IBaseMessage
-    {
-        public MessageStatus status;
-        public string message;
-        public FarmData farmData;
     }
 
 }

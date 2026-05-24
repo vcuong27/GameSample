@@ -616,6 +616,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59a5ec5c52371764da15c41086fac636, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LoadingController
+  confirmPopupPref: {fileID: 0}
+  noticePopupPref: {fileID: 0}
+  blockPopupPref: {fileID: 0}
   uIRoot: {fileID: 1091419289}
 --- !u!1 &1399349704
 GameObject:
@@ -760,7 +763,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1432357241
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -773,7 +776,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7cf84256fc354d4a9fc3efbdc1879ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BattleManager
-  remainTime: 0
 --- !u!4 &1432357242
 Transform:
   m_ObjectHideFlags: 0
@@ -839,16 +841,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.9137255}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -4088049390063211046, guid: 39e0242329775814891ef673e48ae932, type: 3}
+  m_Sprite: {fileID: -809804992619026284, guid: 39e0242329775814891ef673e48ae932, type: 3}
   m_Type: 0
-  m_PreserveAspect: 1
+  m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1

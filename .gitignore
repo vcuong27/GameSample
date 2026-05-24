@@ -1,4 +1,5 @@
 /.vs
+Server/.vs
 /Library
 /Temp
 /Logs
@@ -11,3 +12,5 @@
 /GameSample.slnx
 /LeanCommon.csproj
 /UserSettings
+/Server/obj
+/Server/bin

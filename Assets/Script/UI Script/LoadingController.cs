@@ -18,11 +18,14 @@ public class LoadingController : IMenuStack
 
         // Khởi tạo Kết nối
         Debug.Log("Initializing Connection...");
-        yield return new WaitForSeconds(1f);
+        OnlineManager.Instance.ConnectToServer();
+        yield return new WaitUntil(() => OnlineManager.Instance.IsConnected());
 
-        // Loading data từ server
-        Debug.Log("Loading Data from Server...");
-        yield return new WaitForSeconds(1f);
+
+        // Login server
+        Debug.Log("Logging in to Server...");
+        OnlineManager.Instance.LoginToServer();
+        yield return new WaitUntil(() => OnlineManager.Instance.IsLoggedIn());
 
         // load local data  
         Debug.Log("Loading Local Data...");

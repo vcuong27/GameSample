@@ -1,8 +1,13 @@
-﻿using System;
+﻿using MySqlX.XDevAPI;
+using Newtonsoft.Json;
+using Org.BouncyCastle.Bcpg;
+using Org.BouncyCastle.Crypto.Utilities;
+using System;
 using System.Numerics;
 
 namespace DevelopersHub.RealtimeNetworking.Server
 {
+
     class Terminal
     {
 
@@ -15,7 +20,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
 
         public static void Update()
         {
-            
+
         }
         #endregion
 
@@ -38,39 +43,74 @@ namespace DevelopersHub.RealtimeNetworking.Server
         #region Data
         public static void ReceivedPacket(int clientID, Packet packet)
         {
-            // For test, remove it ->
-            int integerValue = packet.ReadInt();
-            string stringValue = packet.ReadString();
-            float floatValue = packet.ReadFloat();
-            Quaternion quaternionValue = packet.ReadQuaternion();
-            bool boolValue = packet.ReadBool();
-            Console.WriteLine("Int:{0} String:{1}, Float:{2}, Quaternion:{3}, Bool:{4}.", integerValue, stringValue, floatValue, quaternionValue, boolValue);
-            // <-
+            MessageID id = (MessageID)packet.ReadInt();
+            string jsonValue = packet.ReadString();
+            Console.WriteLine("MessageID:{0} jsonValue:{1}", id, jsonValue);
+
+            switch (id)
+            {
+                case MessageID.AUTH:
+                    CS_AutenticationMessage message = JsonConvert.DeserializeObject<CS_AutenticationMessage>(jsonValue);
+                    Console.WriteLine("username:{0} password:{1}", message.username, message.password);
+                    SendAuthenticationResponse(clientID, true, "Authentication successful.");
+                    break;
+                case MessageID.GET_PROFILE:
+                    break;
+                default:
+                    break;
+            }
+
         }
+
+        private static void SendAuthenticationResponse(int clientID, bool success, string message)
+        {
+            SC_AutenticationMessage responseMessage = new SC_AutenticationMessage();
+            responseMessage.loginResult = success ? MessageStatus.SUCCESS : MessageStatus.ERROR;
+            responseMessage.message = message;
+            SendMessage(clientID, MessageID.AUTH, responseMessage);
+        }
+
+
+        private static void SendMessage(int clientID, MessageID id, IBaseMessage baseMessage)
+        {
+
+            Packet _packet = new Packet();
+            _packet.Write((int)id);
+            _packet.Write(JsonConvert.SerializeObject(baseMessage));
+            _packet.SetID((int)Packet.ID.CUSTOM);
+            _packet.WriteLength();
+            Sender.TCP_Send(clientID, id, _packet);
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         public static void ReceivedBytes(int clientID, int packetID, byte[] data)
         {
-            
+
         }
 
         public static void ReceivedString(int clientID, int packetID, string data)
         {
-            // For test, remove it ->
-            if(packetID == 123)
-            {
-                Console.WriteLine(data);
 
-                Packet packet = new Packet();
-                packet.Write(555);
-                packet.Write(DateTime.Now.ToString());
-                Sender.TCP_Send(clientID, packet);
-            }
-            // <-
         }
 
         public static void ReceivedInteger(int clientID, int packetID, int data)
         {
-            
+
         }
 
         public static void ReceivedFloat(int clientID, int packetID, float data)
