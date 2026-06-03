@@ -29,26 +29,21 @@ public class LoadingController : IMenuStack
         // build player profile
         Debug.Log("Player Profile...");
         PlayerProfile.Instance.RequestPlayerProfile();
-        
+        yield return new WaitUntil(() => PlayerProfile.Instance.IsInitialize());
 
         // load local data  
         Debug.Log("Loading Local Data...");
         DataManager.Instance.Initlize();
         yield return new WaitUntil(() => DataManager.Instance.IsInitialized());
 
-
-        // Khởi tạo UI
-        Debug.Log("Initializing UI...");
-        yield return new WaitForSeconds(1f);
-
         // chuyển scene
-        //AsyncOperation sceneLoading = SceneManager.LoadSceneAsync(1);
-        //while (!sceneLoading.isDone)
-        //{
-        //    float progress = Mathf.Clamp01(sceneLoading.progress / 1.0f);
-        //    Debug.Log("Loading progress: " + (progress * 100) + "%");
-        //    yield return null;
-        //}
+        AsyncOperation sceneLoading = SceneManager.LoadSceneAsync(1);
+        while (!sceneLoading.isDone)
+        {
+            float progress = Mathf.Clamp01(sceneLoading.progress / 1.0f);
+            Debug.Log("Loading progress: " + (progress * 100) + "%");
+            yield return null;
+        }
 
     }
 

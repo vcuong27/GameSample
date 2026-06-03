@@ -14,7 +14,7 @@ public class OnlineManager : MonoBehaviour
 
     private bool isConnected = false;
     private bool isLoggedIn = false;
-    private string playerID;
+    private int playerID;
 
     private void Awake()
     {
@@ -71,7 +71,7 @@ public class OnlineManager : MonoBehaviour
         return isLoggedIn;
     }
 
-    public string GetPlayerID()
+    public int GetPlayerID()
     {
         return playerID;
     }
@@ -110,8 +110,31 @@ public class OnlineManager : MonoBehaviour
                     Debug.LogFormat("Failed to retrieve profile: {0}", profileMessage.getProfileResult);
                 }
                 break;
+
+            case MessageID.CLAN_CREATE:
+                SC_ClanCreate clanCreateMessage = JsonUtility.FromJson<SC_ClanCreate>(jsonValue);
+                if (clanCreateMessage.createResult == MessageStatus.SUCCESS)
+                {
+                    Debug.LogFormat("Clan created successfully");
+                    ClanManager.Instance.OnClanCreated(clanCreateMessage);
+                }
+                else
+                {
+                    Debug.LogFormat("Failed to create clan: {0}", clanCreateMessage.createResult);
+                }
+                break;
+
             case MessageID.CLAN_INFO:
                 SC_ClanInfo clanInfoMessage = JsonUtility.FromJson<SC_ClanInfo>(jsonValue);
+                if (clanInfoMessage.getInfoResult == MessageStatus.SUCCESS)
+                {
+                    Debug.LogFormat("Clan info received successfully");
+                    ClanManager.Instance.OnClanInfoReceived(clanInfoMessage);
+                }
+                else
+                {
+                    Debug.LogFormat("Failed to get clan info: {0}", clanInfoMessage.getInfoResult);
+                }
                 break;
             default:
                 break;
@@ -147,7 +170,7 @@ public class OnlineManager : MonoBehaviour
         SendMessage(MessageID.PROFILE_UPDATE, mes);
     }
 
-    public void CreatePlayerProfile(string playerID, string playerName, int profileVersion, string jsonData)
+    public void CreatePlayerProfile(int playerID, string playerName, int profileVersion, string jsonData)
     {
         CS_PlayerProfile mes = new CS_PlayerProfile();
         mes.playerID = playerID;
@@ -157,19 +180,18 @@ public class OnlineManager : MonoBehaviour
         SendMessage(MessageID.PROFILE_CREATE, mes);
     }
 
-    public void CreateClan(string clanName, int score, string jsonData)
+    public void CreateClan(string clanName, string jsonData)
     {
         CS_ClanCreate mes = new CS_ClanCreate();
         mes.name = clanName;
         mes.playerID = playerID;
-        mes.Score = score;
         mes.jsonData = jsonData;
         SendMessage(MessageID.CLAN_CREATE, mes);
     }
 
-    public void GetClanInfo(string clanID)
+    public void GetClanInfo(int clanID)
     {
-        CS_ClanInfor mes = new CS_ClanInfor();
+        CS_ClanInfo mes = new CS_ClanInfo();
         mes.clanID = clanID;
         SendMessage(MessageID.CLAN_INFO, mes);
     }

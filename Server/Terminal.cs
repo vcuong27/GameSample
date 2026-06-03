@@ -52,12 +52,16 @@ namespace DevelopersHub.RealtimeNetworking.Server
 
             switch (id)
             {
+                #region AUTH
                 case MessageID.AUTH:
                     CS_Auth message = JsonConvert.DeserializeObject<CS_Auth>(jsonValue);
                     //Console.WriteLine("username:{0} password:{1}", message.username, message.password);
                     SC_Auth authResult = Database.GetLoginResult(message.username, message.password);
                     SendAuthenticationResponse(clientID, authResult);
                     break;
+                #endregion
+
+                #region PROFILE
                 case MessageID.PROFILE_GET:
                     CS_PlayerProfileGet profileGetMessage = JsonConvert.DeserializeObject<CS_PlayerProfileGet>(jsonValue);
                     SC_PlayerProfile profileResult = Database.GetPlayerProfile(profileGetMessage.playerID);
@@ -71,21 +75,148 @@ namespace DevelopersHub.RealtimeNetworking.Server
                     CS_PlayerProfile profileCreateMessage = JsonConvert.DeserializeObject<CS_PlayerProfile>(jsonValue);
                     Database.CreatePlayerProfile(profileCreateMessage.playerID, profileCreateMessage.playerName, profileCreateMessage.profileVersion, profileCreateMessage.jsonData);
                     break;
+                #endregion
+
+                #region CLAN
+
+                case MessageID.CLAN_CREATE:
+                    CS_ClanCreate clanCreateMessage = JsonConvert.DeserializeObject<CS_ClanCreate>(jsonValue);
+                    SC_ClanCreate clanCreateResult = Database.CreateClan(clanCreateMessage.name, clanCreateMessage.playerID, clanCreateMessage.jsonData);
+                    SendClanCreateResponse(clientID, clanCreateResult);
+                    break;
+                case MessageID.CLAN_INFO:
+                    CS_ClanInfo clanInfoMessage = JsonConvert.DeserializeObject<CS_ClanInfo>(jsonValue);
+                    SC_ClanInfo clanInfoResult = Database.GetClanInfo(clanInfoMessage.clanID);
+                    SendClanInfoResponse(clientID, clanInfoResult);
+                    break;
+                case MessageID.CLAN_LIST:
+                    CS_ClanList clanListMessage = JsonConvert.DeserializeObject<CS_ClanList>(jsonValue);
+                    SC_ClanList clanListResult = Database.GetClanList(clanListMessage.pageIndex, clanListMessage.pageSize);
+                    SendClanListResponse(clientID, clanListResult);
+                    break;
+                case MessageID.CLAN_UPDATE:
+                    CS_ClanUpdate clanUpdateMessage = JsonConvert.DeserializeObject<CS_ClanUpdate>(jsonValue);
+                    SC_ClanUpdate clanUpdateResult = Database.UpdateClan(clanUpdateMessage.clanID, clanUpdateMessage.name, clanUpdateMessage.jsonData);
+                    SendClanUpdateResponse(clientID, clanUpdateResult);
+                    break;
+                case MessageID.CLAN_KICK:
+                    CS_ClanKick clanKickMessage = JsonConvert.DeserializeObject<CS_ClanKick>(jsonValue);
+                    SC_ClanKick clanKickResult = Database.KickPlayerFromClan(clanKickMessage.clanID, clanKickMessage.playerID);
+                    SendClanKickResponse(clientID, clanKickResult);
+                    break;
+                case MessageID.CLAN_ACCEPT:
+                    CS_ClanAccept clanAcceptMessage = JsonConvert.DeserializeObject<CS_ClanAccept>(jsonValue);
+                    SC_ClanAccept clanAcceptResult = Database.AcceptPlayerIntoClan(clanAcceptMessage.clanID, clanAcceptMessage.playerID);
+                    SendClanAcceptResponse(clientID, clanAcceptResult);
+                    break;
+                case MessageID.CLAN_REQUEST:
+                    CS_ClanRequest clanRequestMessage = JsonConvert.DeserializeObject<CS_ClanRequest>(jsonValue);
+                    SC_ClanJoin clanRequestResult = Database.RequestToJoinClan(clanRequestMessage.clanID, clanRequestMessage.playerID);
+                    SendClanRequestResponse(clientID, clanRequestResult);
+                    break;
+                case MessageID.CLAN_JOIN:
+                    CS_ClanJoin clanJoinMessage = JsonConvert.DeserializeObject<CS_ClanJoin>(jsonValue);
+                    SC_ClanJoin clanJoinResult = Database.JoinClan(clanJoinMessage.clanID, clanJoinMessage.playerID);
+                    SendClanJoinResponse(clientID, clanJoinResult);
+                    break;
+                case MessageID.CLAN_LEAVE:
+                    CS_ClanLeave clanLeaveMessage = JsonConvert.DeserializeObject<CS_ClanLeave>(jsonValue);
+                    SC_ClanLeave clanLeaveResult = Database.LeaveClan(clanLeaveMessage.clanID, clanLeaveMessage.playerID);
+                    SendClanLeaveResponse(clientID, clanLeaveResult);
+                    break;
+                case MessageID.CLAN_WAR_START:
+                    CS_ClanWarStart clanWarStartMessage = JsonConvert.DeserializeObject<CS_ClanWarStart>(jsonValue);
+                    SC_ClanWarStart clanWarStartResult = Database.StartClanWar(clanWarStartMessage.attackClanID, clanWarStartMessage.defendClanID);
+                    SendClanWarStartResponse(clientID, clanWarStartResult);
+                    break;
+                case MessageID.CLAN_WAR_INFO:
+                    CS_ClanWarInfo clanWarInfoMessage = JsonConvert.DeserializeObject<CS_ClanWarInfo>(jsonValue);
+                    SC_ClanWarInfo clanWarInfoResult = Database.GetClanWarInfo(clanWarInfoMessage.warID);
+                    SendClanWarInfoResponse(clientID, clanWarInfoResult);
+                    break;
+                #endregion
+
                 default:
                     break;
             }
         }
+
+
+        private static void SendClanWarInfoResponse(int clientID, SC_ClanWarInfo clanWarInfoResult)
+        {
+            SendMessage(clientID, MessageID.CLAN_WAR_INFO, clanWarInfoResult);
+        }
+
+        private static void SendClanWarStartResponse(int clientID, SC_ClanWarStart clanWarStartResult)
+        {
+            SendMessage(clientID, MessageID.CLAN_WAR_START, clanWarStartResult);
+        }
+
+        #region CLAN
+
+        private static void SendClanLeaveResponse(int clientID, SC_ClanLeave clanLeaveResult)
+        {
+            SendMessage(clientID, MessageID.CLAN_LEAVE, clanLeaveResult);
+        }
+
+        private static void SendClanJoinResponse(int clientID, SC_ClanJoin clanJoinResult)
+        {
+            SendMessage(clientID, MessageID.CLAN_JOIN, clanJoinResult);
+        }
+
+        private static void SendClanRequestResponse(int clientID, SC_ClanJoin clanRequestResult)
+        {
+            SendMessage(clientID, MessageID.CLAN_REQUEST, clanRequestResult);
+        }
+
+        private static void SendClanAcceptResponse(int clientID, SC_ClanAccept clanAcceptResult)
+        {
+            SendMessage(clientID, MessageID.CLAN_ACCEPT, clanAcceptResult);
+        }
+
+        private static void SendClanKickResponse(int clientID, SC_ClanKick clanKickResult)
+        {
+            SendMessage(clientID, MessageID.CLAN_KICK, clanKickResult);
+        }
+
+        public static void SendClanUpdateResponse(int clientID, SC_ClanUpdate clanUpdateResult)
+        {
+            SendMessage(clientID, MessageID.CLAN_UPDATE, clanUpdateResult);
+        }
+
+        private static void SendClanInfoResponse(int clientID, SC_ClanInfo clanInfoResult)
+        {
+            SendMessage(clientID, MessageID.CLAN_INFO, clanInfoResult);
+        }
+
+        private static void SendClanCreateResponse(int clientID, SC_ClanCreate clanCreateResult)
+        {
+            SendMessage(clientID, MessageID.CLAN_CREATE, clanCreateResult);
+        }
+
+        private static void SendClanListResponse(int clientID, SC_ClanList clanListResult)
+        {
+            SendMessage(clientID, MessageID.CLAN_LIST, clanListResult);
+        }
+
+        #endregion
+
+        #region PROFILE
 
         private static void SendPlayerProfileResponse(int clientID, SC_PlayerProfile profileResult)
         {
             SendMessage(clientID, MessageID.PROFILE_GET, profileResult);
         }
 
+        #endregion
+
+        #region AUTH
+
         private static void SendAuthenticationResponse(int clientID, SC_Auth authResult)
         {
             SendMessage(clientID, MessageID.AUTH, authResult);
         }
-
+        #endregion
 
         private static void SendMessage(int clientID, MessageID id, IBaseMessage baseMessage)
         {
@@ -110,6 +241,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
 
 
 
+        #region NOT USED
 
         public static void ReceivedBytes(int clientID, int packetID, byte[] data)
         {
@@ -165,6 +297,8 @@ namespace DevelopersHub.RealtimeNetworking.Server
         {
 
         }
+        #endregion
+
         #endregion
 
     }

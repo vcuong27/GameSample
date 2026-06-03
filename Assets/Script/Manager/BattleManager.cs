@@ -87,7 +87,7 @@ public class BattleManager : MonoBehaviour
     private void Start()
     {
         battleState = BattleState.INIT;
-        InitData(PlayerProfile.Instance.GetPlayerBuildingDatas(), PlayerProfile.Instance.GetPlayerUnitDatas(), PlayerProfile.Instance.GetPlayerItemData()); 
+        //InitData(PlayerProfile.Instance.GetPlayerBuildingDatas(), PlayerProfile.Instance.GetPlayerUnitDatas(), PlayerProfile.Instance.GetPlayerItemData()); 
     }
 
 

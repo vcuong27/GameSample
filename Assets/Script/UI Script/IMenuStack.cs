@@ -45,14 +45,14 @@ public class IMenuStack : MonoBehaviour
         return uIRoot;
     }
 
-    protected void ShowConfirmPopup(string title, string message, System.Action onConfirm)
+    public void ShowConfirmPopup(string title, string message, System.Action onConfirm)
     {
         ConfirmPopup popup = Instantiate(confirmPopupPref, uIRoot.transform);
         //popup.Init(title, message, onConfirm);
         OpenMenu(popup.GetComponent<LeanWindow>());
     }
 
-    protected void ShowNoticePopup(string title, string message)
+    public void ShowNoticePopup(string title, string message)
     {
         NoticePopup popup = Instantiate(noticePopupPref, uIRoot.transform);
         //popup.Init(title, message);
@@ -62,7 +62,7 @@ public class IMenuStack : MonoBehaviour
 
     private BlockPopup blockPopup = null;
 
-    protected void ShowBlockPopup(string title, string message)
+    public void ShowBlockPopup(string title, string message)
     {
         if (blockPopup == null)
         {

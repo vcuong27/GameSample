@@ -59,7 +59,7 @@ public class PlayerSettingData
 [Serializable]
 public class PlayerProfileData
 {
-    public string playerID;
+    public int playerID;
     public string playerName;
     public ProfileVersion profileVersion;
     public List<PlayerBuildingData> buildingDatas;
@@ -145,7 +145,7 @@ public class PlayerProfile : MonoBehaviour
         return IsInitialized;
     }
 
-    public string GetPlayerID()
+    public int GetPlayerID()
     {
         return CurentProfile.playerID;
     }

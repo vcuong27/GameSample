@@ -2,13 +2,76 @@
 using System;
 using System.Data;
 
+
+//--1.Bảng Tài khoản người chơi
+//CREATE TABLE Account (
+//    playerID INT NOT NULL,
+//    userName VARCHAR(255) NOT NULL,
+//    password VARCHAR(255) NOT NULL,
+//    PRIMARY KEY (playerID)
+//);
+
+//--2.Bảng Hồ sơ hiển thị của người chơi
+//CREATE TABLE PlayerProfile (
+//    playerID INT NOT NULL,
+//    playerName VARCHAR(100) NOT NULL,
+//    profileVersion INT DEFAULT 1,
+//    jsonData JSON,
+//    PRIMARY KEY (playerID),
+//    FOREIGN KEY (playerID) REFERENCES Account(playerID) ON DELETE CASCADE
+//);
+
+//--3.Bảng Thông tin Clan
+//CREATE TABLE Clan (
+//    clanID INT NOT NULL,
+//    name VARCHAR(100) NOT NULL,
+//    owner VARCHAR(100) NOT NULL,
+//    Score INT DEFAULT 0,
+//    memberCount INT DEFAULT 1,
+//    jsonData JSON,
+//    PRIMARY KEY (clanID)
+//);
+
+//--4.Bảng Thành viên trong Clan (Dữ liệu cá nhân đối với Clan)
+//CREATE TABLE ClanData (
+//    clanID INT NOT NULL,
+//    playerID INT NOT NULL,
+//    jsonData JSON, -- Chứa: điểm cống hiến, số trận clan war, vị trí...
+//    PRIMARY KEY (clanID, playerID), -- Khóa chính kết hợp để một người không thể ở 2 vị trí trong 1 clan
+//    FOREIGN KEY (clanID) REFERENCES Clan(clanID) ON DELETE CASCADE,
+//    FOREIGN KEY (playerID) REFERENCES Account(playerID) ON DELETE CASCADE
+//);
+
+//--5.Bảng Xếp hạng người chơi nội bộ Clan
+//CREATE TABLE Leaderboard (
+//    clanID INT NOT NULL,
+//    playerID INT NOT NULL,
+//    Score INT DEFAULT 0, -- Điểm số dùng để xếp hạng cá nhân trong Clan
+//    PRIMARY KEY (clanID, playerID),
+//    FOREIGN KEY (clanID) REFERENCES Clan(clanID) ON DELETE CASCADE,
+//    FOREIGN KEY (playerID) REFERENCES Account(playerID) ON DELETE CASCADE
+//);
+
+//--6.Bảng Quản lý các trận đấu Clan War
+//CREATE TABLE ClanWar (
+//    id INT AUTO_INCREMENT NOT NULL, -- ID tự động tăng cho từng trận đấu
+//    attackClanID INT NOT NULL,
+//    defendClanID INT NOT NULL,
+//    StartTime DATETIME NOT NULL,
+//    EndTime DATETIME NOT NULL,
+//    jsonData JSON, -- Chứa: detail data, kết quả các trận đánh nhỏ, phần thưởng...
+//    PRIMARY KEY (id),
+//    FOREIGN KEY (attackClanID) REFERENCES Clan(clanID) ON DELETE CASCADE,
+//    FOREIGN KEY (defendClanID) REFERENCES Clan(clanID) ON DELETE CASCADE
+//);
+
 namespace DevelopersHub.RealtimeNetworking.Server
 {
     class Database
     {
 
         #region MySQL
-        
+
         private static MySqlConnection _mysqlConnection;
         private const string _mysqlServer = "127.0.0.1";
         private const string _mysqlUsername = "root";
@@ -63,7 +126,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
                         while (reader.Read())
                         {
                             authResult.loginResult = MessageStatus.SUCCESS;
-                            authResult.playerID = reader["playerID"].ToString();
+                            authResult.playerID = int.Parse(reader["playerID"].ToString());
                         }
                     }
                     else
@@ -75,10 +138,10 @@ namespace DevelopersHub.RealtimeNetworking.Server
             return authResult;
         }
 
-        public static SC_PlayerProfile GetPlayerProfile(string playerID)
+        public static SC_PlayerProfile GetPlayerProfile(int playerID)
         {
             SC_PlayerProfile profileResult = new SC_PlayerProfile();
-            string query = String.Format("SELECT playerName, profileVersion, jsonData FROM PlayerProfile WHERE playerID = '{0}';", playerID);
+            string query = String.Format("SELECT playerName, profileVersion, jsonData FROM PlayerProfile WHERE playerID = {0};", playerID);
             using (MySqlCommand command = new MySqlCommand(query, mysqlConnection))
             {
                 using (MySqlDataReader reader = command.ExecuteReader())
@@ -102,7 +165,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
             return profileResult;
         }
 
-        public static void CreatePlayerProfile(string playerID, string playerName, int profileVersion, string jsonData)
+        public static void CreatePlayerProfile(int playerID, string playerName, int profileVersion, string jsonData)
         {
             string query = String.Format("INSERT INTO PlayerProfile (playerID, playerName, profileVersion, jsonData) VALUES ('{0}', '{1}', {2}, '{3}');", playerID, playerName, profileVersion, jsonData);
             using (MySqlCommand command = new MySqlCommand(query, mysqlConnection))
@@ -111,7 +174,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
             }
         }
 
-        public static void UpdatePlayerProfile(string playerID, string playerName, int profileVersion, string jsonData)
+        public static void UpdatePlayerProfile(int playerID, string playerName, int profileVersion, string jsonData)
         {
             string query = String.Format("UPDATE PlayerProfile SET playerName = '{0}', profileVersion = {1}, jsonData = '{2}' WHERE playerID = '{3}';", playerName, profileVersion, jsonData, playerID);
             using (MySqlCommand command = new MySqlCommand(query, mysqlConnection))
@@ -119,7 +182,331 @@ namespace DevelopersHub.RealtimeNetworking.Server
                 command.ExecuteNonQuery();
             }
         }
-        
+
+        public static SC_ClanCreate CreateClan(string clanName, int playerID, string jsonData)
+        {
+            string query = String.Format("INSERT INTO Clan (clanName, playerID, jsonData) VALUES ('{0}', {1}, '{2}');", clanName, playerID, jsonData);
+            using (MySqlCommand command = new MySqlCommand(query, mysqlConnection))
+            {
+                command.ExecuteNonQuery();
+            }
+
+            int clanID = 0;
+            string getClanIDQuery = String.Format("SELECT clanID FROM Clan WHERE clanName = '{0}' AND playerID = {1};", clanName, playerID);
+            using (MySqlCommand command = new MySqlCommand(getClanIDQuery, mysqlConnection))
+            {
+                using (MySqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        clanID = int.Parse(reader["clanID"].ToString());
+                    }
+                }
+            }
+
+            return new SC_ClanCreate
+            {
+                createResult = MessageStatus.SUCCESS,
+                clanID = clanID
+            };
+        }
+
+        public static SC_ClanInfo GetClanInfo(int clanID)
+        {
+            SC_ClanInfo clanInfoResult = new SC_ClanInfo();
+            string query = String.Format("SELECT clanName, playerID, jsonData, score FROM Clan WHERE clanID = {0};", clanID);
+            using (MySqlCommand command = new MySqlCommand(query, mysqlConnection))
+            {
+                using (MySqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            clanInfoResult.getInfoResult = MessageStatus.SUCCESS;
+                            clanInfoResult.clanID = int.Parse(reader["clanID"].ToString());
+                            clanInfoResult.ownerID = int.Parse(reader["playerID"].ToString());
+                            clanInfoResult.jsonData = reader["jsonData"].ToString();
+                            clanInfoResult.score = int.Parse(reader["score"].ToString());
+                            clanInfoResult.memberCount = int.Parse(reader["memberCount"].ToString());
+                        }
+                    }
+                    else
+                    {
+                        clanInfoResult.getInfoResult = MessageStatus.ERROR;
+                    }
+                }
+            }
+
+            if (clanInfoResult.getInfoResult == MessageStatus.SUCCESS)
+            {
+                string getPlayerNameQuery = String.Format("SELECT playerName FROM PlayerProfile WHERE playerID = {0};", clanInfoResult.ownerID);
+                using (MySqlCommand command = new MySqlCommand(getPlayerNameQuery, mysqlConnection))
+                {
+                    using (MySqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            clanInfoResult.playerOwner = reader["playerName"].ToString();
+                        }
+                    }
+                }
+            }
+            else
+            {
+                clanInfoResult.playerOwner = "Unknown";
+            }
+
+            return clanInfoResult;
+        }
+
+        public static SC_ClanList GetClanList(int pageIndex, int pageSize)
+        {
+            SC_ClanList clanListResult = new SC_ClanList();
+            clanListResult.getListResult = MessageStatus.SUCCESS;
+            clanListResult.totalClans = 0;
+            clanListResult.clans = new ClanListInfo[0];
+
+            string query = String.Format("SELECT clanID, clanName, playerID, memberCount FROM Clan LIMIT {0}, {1} ORDER BY score DESC;", pageIndex * pageSize, pageSize);
+            using (MySqlCommand command = new MySqlCommand(query, mysqlConnection))
+            {
+                using (MySqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            ClanListInfo clanInfo = new ClanListInfo();
+                            clanInfo.clanID = int.Parse(reader["clanID"].ToString());
+                            clanInfo.name = reader["clanName"].ToString();
+                            clanInfo.memberCount = int.Parse(reader["memberCount"].ToString());
+                            Array.Resize(ref clanListResult.clans, clanListResult.clans.Length + 1);
+                            clanListResult.clans[clanListResult.clans.Length - 1] = clanInfo;
+                        }
+                    }
+                }
+            }
+
+            return clanListResult;
+        }
+
+        public static SC_ClanUpdate UpdateClan(int clanID, string name, string jsonData)
+        {
+            int rs = 0;
+            string query = String.Format("UPDATE Clan SET clanName = '{0}', jsonData = '{1}' WHERE clanID = {2};", name, jsonData, clanID);
+            using (MySqlCommand command = new MySqlCommand(query, mysqlConnection))
+            {
+                rs = command.ExecuteNonQuery();
+            }
+            if (rs == 0)
+            {
+                return new SC_ClanUpdate
+                {
+                    updateResult = MessageStatus.ERROR
+                };
+            }
+            else
+            {
+                return new SC_ClanUpdate
+                {
+                    updateResult = MessageStatus.SUCCESS
+                };
+            }
+
+        }
+
+        public static SC_ClanKick KickPlayerFromClan(int clanID, int playerID)
+        {
+            int rs = 0;
+            string query = String.Format("DELETE FROM ClanMember WHERE clanID = {0} AND playerID = {1};", clanID, playerID);
+            using (MySqlCommand command = new MySqlCommand(query, mysqlConnection))
+            {
+                rs = command.ExecuteNonQuery();
+            }
+            if (rs == 0)
+            {
+                return new SC_ClanKick
+                {
+                    kickResult = MessageStatus.ERROR
+                };
+            }
+            else
+            {
+                return new SC_ClanKick
+                {
+                    kickResult = MessageStatus.SUCCESS
+                };
+            }
+
+        }
+
+        public static SC_ClanAccept AcceptPlayerIntoClan(int clanID, int playerID)
+        {
+            int rs = 0;
+            string query = String.Format("INSERT INTO ClanMember (clanID, playerID) VALUES ({0}, {1});", clanID, playerID);
+            using (MySqlCommand command = new MySqlCommand(query, mysqlConnection))
+            {
+                rs = command.ExecuteNonQuery();
+            }
+            if (rs != 0)
+            {
+                string updateMemberCountQuery = String.Format("UPDATE Clan SET memberCount = memberCount + 1 WHERE clanID = {0};", clanID);
+                using (MySqlCommand command = new MySqlCommand(updateMemberCountQuery, mysqlConnection))
+                {
+                    command.ExecuteNonQuery();
+                }
+                return new SC_ClanAccept
+                {
+                    acceptResult = MessageStatus.SUCCESS
+                };
+            }
+            else
+            {
+                return new SC_ClanAccept
+                {
+                    acceptResult = MessageStatus.ERROR
+                };
+            }
+        }
+
+        public static SC_ClanJoin RequestToJoinClan(int clanID, int playerID)
+        {
+            int rs = 0;
+            string query = String.Format("INSERT INTO ClanJoinRequest (clanID, playerID) VALUES ({0}, {1});", clanID, playerID);
+            using (MySqlCommand command = new MySqlCommand(query, mysqlConnection))
+            {
+                rs = command.ExecuteNonQuery();
+            }
+            if (rs != 0)
+            {
+                return new SC_ClanJoin
+                {
+                    joinResult = MessageStatus.SUCCESS
+                };
+            }
+            else
+            {
+                return new SC_ClanJoin
+                {
+                    joinResult = MessageStatus.ERROR
+                };
+            }
+        }
+
+        public static SC_ClanJoin JoinClan(int clanID, int playerID)
+        {
+            int rs = 0;
+            string query = String.Format("INSERT INTO ClanMember (clanID, playerID) VALUES ({0}, {1});", clanID, playerID);
+            using (MySqlCommand command = new MySqlCommand(query, mysqlConnection))
+            {
+                rs = command.ExecuteNonQuery();
+            }
+            if (rs != 0)
+            {
+                string updateMemberCountQuery = String.Format("UPDATE Clan SET memberCount = memberCount + 1 WHERE clanID = {0};", clanID);
+                using (MySqlCommand command = new MySqlCommand(updateMemberCountQuery, mysqlConnection))
+                {
+                    command.ExecuteNonQuery();
+                }
+                return new SC_ClanJoin
+                {
+                    joinResult = MessageStatus.SUCCESS
+                };
+            }
+            else
+            {
+                return new SC_ClanJoin
+                {
+                    joinResult = MessageStatus.ERROR
+                };
+            }
+        }
+
+        public static SC_ClanLeave LeaveClan(int clanID, int playerID)
+        {
+            int rs = 0;
+            string query = String.Format("DELETE FROM ClanMember WHERE clanID = {0} AND playerID = {1};", clanID, playerID);
+            using (MySqlCommand command = new MySqlCommand(query, mysqlConnection))
+            {
+                rs = command.ExecuteNonQuery();
+            }
+            if (rs != 0)
+            {
+                string updateMemberCountQuery = String.Format("UPDATE Clan SET memberCount = memberCount - 1 WHERE clanID = {0};", clanID);
+                using (MySqlCommand command = new MySqlCommand(updateMemberCountQuery, mysqlConnection))
+                {
+                    command.ExecuteNonQuery();
+                }
+                return new SC_ClanLeave
+                {
+                    leaveResult = MessageStatus.SUCCESS
+                };
+            }
+            else
+            {
+                return new SC_ClanLeave
+                {
+                    leaveResult = MessageStatus.ERROR
+                };
+            }
+        }
+
+        public static SC_ClanWarStart StartClanWar(object clanID, object opponentClanID)
+        {
+            string query = String.Format("INSERT INTO ClanWar (clanID, opponentClanID, startTime, endTime) VALUES ({0}, {1}, NOW(), NOW() + INTERVAL 30 DAY);", clanID, opponentClanID);
+            int rs = 0;
+            using (MySqlCommand command = new MySqlCommand(query, mysqlConnection))
+            {
+                rs = command.ExecuteNonQuery();
+            }
+            if (rs != 0)
+            {
+                int warID = 0;
+                string getWarIDQuery = String.Format("SELECT id from ClanWar WHERE clanID = {0} AND opponentClanID = {1};", clanID, opponentClanID);
+                using (MySqlCommand command = new MySqlCommand(getWarIDQuery, mysqlConnection))
+                {
+                    warID = Convert.ToInt32(command.ExecuteScalar());
+                }
+                return new SC_ClanWarStart
+                {
+                    startResult = MessageStatus.SUCCESS,
+                    warID = warID
+                };
+            }
+            else
+            {
+                return new SC_ClanWarStart
+                {
+                    startResult = MessageStatus.ERROR
+                };
+            }
+        }
+
+        public static SC_ClanWarInfo GetClanWarInfo(int warID)
+        {
+            SC_ClanWarInfo info = new SC_ClanWarInfo();
+            info.getInfoResult = MessageStatus.ERROR;
+            string query = String.Format("SELECT clanID, opponentClanID, startTime, endTime FROM ClanWar WHERE id = {0};", warID);
+            using (MySqlCommand command = new MySqlCommand(query, mysqlConnection))
+            {
+                using (MySqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        info.warID = warID;
+                        info.attackClanID = reader.GetInt32("clanID");
+                        info.defendClanID = reader.GetInt32("opponentClanID");
+                        info.startTime = reader.GetDateTime("startTime");
+                        info.endTime = reader.GetDateTime("endTime");
+                        info.getInfoResult = MessageStatus.SUCCESS;
+                    }
+                }
+            }
+            return info;
+        }
+
+
+
         #endregion
 
         #region SQL
