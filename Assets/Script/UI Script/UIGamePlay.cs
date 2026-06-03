@@ -55,8 +55,9 @@ public class UIGamePlay : MonoBehaviour
         GameController.Instance.OpenShop();
     }
 
-    public void OpenPopup1()
+    public void OpenClanPopup()
     {
+        GameController.Instance.OpenClanMenu();
     }
 
     public void OpenPopup2()

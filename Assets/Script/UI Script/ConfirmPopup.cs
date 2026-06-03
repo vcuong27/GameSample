@@ -1,16 +1,29 @@
+using System;
 using UnityEngine;
 
 public class ConfirmPopup : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [SerializeField] private TMPro.TextMeshProUGUI titleText;
+    [SerializeField] private TMPro.TextMeshProUGUI messageText;
+   
+    private Action onConfirm;
+    private Action onCancel;    
+
+    internal void Init(string title, string message, Action onConfirm, Action onCancel)
     {
-        
+        titleText.text = title;
+        messageText.text = message;
+        this.onConfirm = onConfirm;
+        this.onCancel = onCancel;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void OnConfirm()
     {
-        
+        onConfirm?.Invoke();
+    }
+
+    public void OnCancel()
+    {
+        onCancel?.Invoke();
     }
 }

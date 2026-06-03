@@ -45,10 +45,10 @@ public class IMenuStack : MonoBehaviour
         return uIRoot;
     }
 
-    public void ShowConfirmPopup(string title, string message, System.Action onConfirm)
+    public void ShowConfirmPopup(string title, string message, System.Action onConfirm, System.Action onCancel)
     {
         ConfirmPopup popup = Instantiate(confirmPopupPref, uIRoot.transform);
-        //popup.Init(title, message, onConfirm);
+        popup.Init(title, message, onConfirm, onCancel);
         OpenMenu(popup.GetComponent<LeanWindow>());
     }
 

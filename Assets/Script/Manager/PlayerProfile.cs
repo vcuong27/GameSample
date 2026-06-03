@@ -57,6 +57,12 @@ public class PlayerSettingData
 }
 
 [Serializable]
+public class PlayerClanData
+{
+    public int ClanID;
+}
+
+[Serializable]
 public class PlayerProfileData
 {
     public int playerID;
@@ -67,12 +73,13 @@ public class PlayerProfileData
     public List<PlayerItemData> itemDatas;
     public PlayerStatData statData;
     public PlayerSettingData settingData;
+    public PlayerClanData clanData;
 }
 
 
 public class PlayerProfile : MonoBehaviour
 {
-    public static ProfileVersion PROFILE_VER = ProfileVersion.V2;
+    public static ProfileVersion PROFILE_VER = ProfileVersion.V1;
 
     public static Action OnProfileUpdated;
 
@@ -148,6 +155,17 @@ public class PlayerProfile : MonoBehaviour
     public int GetPlayerID()
     {
         return CurentProfile.playerID;
+    }
+
+    public int getClanID()
+    {
+        return CurentProfile.clanData.ClanID;
+    }
+    
+    public void SetClanID(int clanID)
+    {
+        CurentProfile.clanData.ClanID = clanID;
+        needSaveProfile = true;
     }
 
     public string GetPlayerName()
@@ -294,15 +312,11 @@ public class PlayerProfile : MonoBehaviour
         {
             CurentProfile = JsonUtility.FromJson<PlayerProfileData>(profileJson);
 
-            if (PROFILE_VER != CurentProfile.profileVersion)
+            if (CurentProfile.profileVersion < PROFILE_VER)
             {
-                CurentProfile.profileVersion = ProfileVersion.V1;
-
                 // Add V2
                 if (CurentProfile.profileVersion < ProfileVersion.V2)
                 {
-                    CurentProfile.settingData.IsADSOn = true;
-                    CurentProfile.statData.CoinSpent = 0;
                 }
                 // Add ver N
                 CurentProfile.profileVersion = PROFILE_VER;
@@ -322,7 +336,7 @@ public class PlayerProfile : MonoBehaviour
         {
             playerID = OnlineManager.Instance.GetPlayerID(),
             playerName = "Player1",
-            profileVersion = ProfileVersion.V1,
+            profileVersion = PROFILE_VER,
             buildingDatas = new List<PlayerBuildingData>(),
             itemDatas = new List<PlayerItemData>(),
             unitDatas = new List<PlayerUnitData>(),
@@ -333,7 +347,17 @@ public class PlayerProfile : MonoBehaviour
                 WinNumber = 0,
                 LoseNumber = 0,
             },
-            settingData = new PlayerSettingData(),
+            settingData = new PlayerSettingData()
+            {
+                IsADSOn = true,
+                IsMusicOn = true,
+                IsNotificationOn = true,
+                IsSoundOn = true,
+            },
+            clanData = new PlayerClanData()
+            {
+                ClanID = -1
+            }
         };
 
         CurentProfile.buildingDatas.Add(new PlayerBuildingData()

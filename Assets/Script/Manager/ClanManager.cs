@@ -25,6 +25,7 @@ public class ClanManager : MonoBehaviour
     }
 
     private bool isInitialized = false;
+    private bool isReceivedClanInfo = false;
 
     private int clanID;
     private string playerOwner;
@@ -45,6 +46,7 @@ public class ClanManager : MonoBehaviour
     public void Initlize()
     {
         isInitialized = true;
+        isReceivedClanInfo =false;
     }
 
     public bool IsInitialized()
@@ -90,10 +92,12 @@ public class ClanManager : MonoBehaviour
             status = clanInfoMessage.ownerID == PlayerProfile.Instance.GetPlayerID() ? ClanStatus.LEADER : ClanStatus.MEMBER;
             clanInfo = JsonUtility.FromJson<ClanInfo>(clanInfoMessage.jsonData);
         }
-
+        isReceivedClanInfo = true;
         OnCLanInfoReceived?.Invoke();
     }
 
-
-
+    internal bool IsClanInfoReceived()
+    {
+        return isReceivedClanInfo;
+    }
 }

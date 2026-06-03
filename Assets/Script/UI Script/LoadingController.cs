@@ -31,6 +31,15 @@ public class LoadingController : IMenuStack
         PlayerProfile.Instance.RequestPlayerProfile();
         yield return new WaitUntil(() => PlayerProfile.Instance.IsInitialize());
 
+        //load Clan info
+        ClanManager.Instance.Initlize();
+        if (PlayerProfile.Instance.getClanID() > 0)
+        {
+            ClanManager.Instance.GetClanInfo(PlayerProfile.Instance.getClanID());
+            yield return new WaitUntil(() => ClanManager.Instance.IsClanInfoReceived());
+        }
+
+
         // load local data  
         Debug.Log("Loading Local Data...");
         DataManager.Instance.Initlize();

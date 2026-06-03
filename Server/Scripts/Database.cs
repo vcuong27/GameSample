@@ -185,14 +185,14 @@ namespace DevelopersHub.RealtimeNetworking.Server
 
         public static SC_ClanCreate CreateClan(string clanName, int playerID, string jsonData)
         {
-            string query = String.Format("INSERT INTO Clan (clanName, playerID, jsonData) VALUES ('{0}', {1}, '{2}');", clanName, playerID, jsonData);
+            string query = String.Format("INSERT INTO Clan (name, playerID, jsonData) VALUES ('{0}', {1}, '{2}');", clanName, playerID, jsonData);
             using (MySqlCommand command = new MySqlCommand(query, mysqlConnection))
             {
                 command.ExecuteNonQuery();
             }
 
             int clanID = 0;
-            string getClanIDQuery = String.Format("SELECT clanID FROM Clan WHERE clanName = '{0}' AND playerID = {1};", clanName, playerID);
+            string getClanIDQuery = String.Format("SELECT clanID FROM Clan WHERE name = '{0}' AND playerID = {1};", clanName, playerID);
             using (MySqlCommand command = new MySqlCommand(getClanIDQuery, mysqlConnection))
             {
                 using (MySqlDataReader reader = command.ExecuteReader())
@@ -214,7 +214,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
         public static SC_ClanInfo GetClanInfo(int clanID)
         {
             SC_ClanInfo clanInfoResult = new SC_ClanInfo();
-            string query = String.Format("SELECT clanName, playerID, jsonData, score FROM Clan WHERE clanID = {0};", clanID);
+            string query = String.Format("SELECT name, playerID, jsonData, score, memberCount FROM Clan WHERE clanID = {0};", clanID);
             using (MySqlCommand command = new MySqlCommand(query, mysqlConnection))
             {
                 using (MySqlDataReader reader = command.ExecuteReader())
@@ -224,11 +224,12 @@ namespace DevelopersHub.RealtimeNetworking.Server
                         while (reader.Read())
                         {
                             clanInfoResult.getInfoResult = MessageStatus.SUCCESS;
-                            clanInfoResult.clanID = int.Parse(reader["clanID"].ToString());
+                            clanInfoResult.clanID = clanID;
                             clanInfoResult.ownerID = int.Parse(reader["playerID"].ToString());
                             clanInfoResult.jsonData = reader["jsonData"].ToString();
                             clanInfoResult.score = int.Parse(reader["score"].ToString());
                             clanInfoResult.memberCount = int.Parse(reader["memberCount"].ToString());
+                            clanInfoResult.name = reader["name"].ToString();
                         }
                     }
                     else
@@ -267,7 +268,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
             clanListResult.totalClans = 0;
             clanListResult.clans = new ClanListInfo[0];
 
-            string query = String.Format("SELECT clanID, clanName, playerID, memberCount FROM Clan LIMIT {0}, {1} ORDER BY score DESC;", pageIndex * pageSize, pageSize);
+            string query = String.Format("SELECT clanID, name, playerID, memberCount FROM Clan LIMIT {0}, {1} ORDER BY score DESC;", pageIndex * pageSize, pageSize);
             using (MySqlCommand command = new MySqlCommand(query, mysqlConnection))
             {
                 using (MySqlDataReader reader = command.ExecuteReader())
@@ -278,7 +279,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
                         {
                             ClanListInfo clanInfo = new ClanListInfo();
                             clanInfo.clanID = int.Parse(reader["clanID"].ToString());
-                            clanInfo.name = reader["clanName"].ToString();
+                            clanInfo.name = reader["name"].ToString();
                             clanInfo.memberCount = int.Parse(reader["memberCount"].ToString());
                             Array.Resize(ref clanListResult.clans, clanListResult.clans.Length + 1);
                             clanListResult.clans[clanListResult.clans.Length - 1] = clanInfo;
@@ -293,7 +294,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
         public static SC_ClanUpdate UpdateClan(int clanID, string name, string jsonData)
         {
             int rs = 0;
-            string query = String.Format("UPDATE Clan SET clanName = '{0}', jsonData = '{1}' WHERE clanID = {2};", name, jsonData, clanID);
+            string query = String.Format("UPDATE Clan SET name = '{0}', jsonData = '{1}' WHERE clanID = {2};", name, jsonData, clanID);
             using (MySqlCommand command = new MySqlCommand(query, mysqlConnection))
             {
                 rs = command.ExecuteNonQuery();

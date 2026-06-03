@@ -1,5 +1,6 @@
 using Assets.Script.Manager;
 using Lean.Gui;
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
@@ -17,6 +18,7 @@ public class GameController : IMenuStack
     [SerializeField] private UIGamePlay uIGamePlay;
     [SerializeField] private UIShop uIShop;
     [SerializeField] private UIBarackPanel uIBarackPanel;
+    [SerializeField] private FindClanUI uIFindClanUI;
 
 
     IBuilding openedBuildingMenu;
@@ -42,6 +44,10 @@ public class GameController : IMenuStack
         ShowConfirmPopup("Start Battle", "Are you sure you want to start the battle?", () =>
         {
             GameSceneManager.LoadScene(GameSceneManager.SCENE_BATTLE);
+        },
+        () =>
+        {
+            CloseMenu();
         });
     }
 
@@ -104,4 +110,15 @@ public class GameController : IMenuStack
         }
     }
 
+    internal void OpenClanMenu()
+    {
+        if (PlayerProfile.Instance.getClanID() <= 0)
+        {
+            OpenMenu(uIFindClanUI.gameObject.GetComponent<LeanWindow>());
+        }
+        else
+        {
+            throw new NotImplementedException();
+        }
+    }
 }
