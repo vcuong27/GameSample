@@ -19,6 +19,7 @@ public class GameController : IMenuStack
     [SerializeField] private UIShop uIShop;
     [SerializeField] private UIBarackPanel uIBarackPanel;
     [SerializeField] private FindClanUI uIFindClanUI;
+    [SerializeField] private ClanPanelUI uIClanPanelUI;
 
 
     IBuilding openedBuildingMenu;
@@ -110,15 +111,19 @@ public class GameController : IMenuStack
         }
     }
 
-    internal void OpenClanMenu()
+    public void OpenClanMenu()
     {
         if (PlayerProfile.Instance.getClanID() <= 0)
         {
             OpenMenu(uIFindClanUI.gameObject.GetComponent<LeanWindow>());
+            uIFindClanUI.initialize(this);
         }
         else
         {
-            throw new NotImplementedException();
+            OpenMenu(uIClanPanelUI.gameObject.GetComponent<LeanWindow>());
+            uIClanPanelUI.initialize(this);
         }
     }
+
+
 }

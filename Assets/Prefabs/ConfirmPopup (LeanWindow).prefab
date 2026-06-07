@@ -310,8 +310,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3880fd75a9e18c542936b08817badcc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  titleText: {fileID: 8449490449794937234}
-  messageText: {fileID: 1582343686914539910}
+  titleText: {fileID: 8821711153610467027}
+  messageText: {fileID: 3546766767746077856}
 --- !u!1 &4264497736276670007
 GameObject:
   m_ObjectHideFlags: 0
@@ -594,8 +594,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4290969619
+  m_fontColor: {r: 0.07589798, g: 0, b: 0.764151, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1478,8 +1478,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4290969619
+  m_fontColor: {r: 0.07589798, g: 0, b: 0.764151, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:

@@ -13,8 +13,6 @@ public class FindClanUI : MonoBehaviour
         ClanManager.OnCLanInfoReceived += HandleClanInfoReceived;
     }
 
-
-
     private void OnDisable()
     {
         ClanManager.OnCLanCreated -= HandleClanCreated;
@@ -31,10 +29,19 @@ public class FindClanUI : MonoBehaviour
     {
         controller.CloseBlockPopup();
         Debug.Log("Clan Info Received: Clan information has been received successfully!");
-        // You can also update the UI with the received clan information here
+        BackToMainMenu();
+        controller.OpenClanMenu();
     }
 
+    public void initialize(GameController controller)
+    {
+        this.controller = controller;
+    }
 
+    public void BackToMainMenu()
+    {
+        controller.CloseMenu();
+    }
 
     public void CreateClan()
     {
@@ -60,6 +67,5 @@ public class FindClanUI : MonoBehaviour
         // Handle the received clan information here
         Debug.LogFormat("Clan ID: {0}, Name: {1}, Score: {2}", clanInfo.clanID, clanInfo.name, clanInfo.score);
     }
-
 
 }

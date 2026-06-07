@@ -81,17 +81,38 @@ public class ClanManager : MonoBehaviour
         OnlineManager.Instance.GetClanInfo(clanID);
     }
 
+    public string GetClanName()
+    {
+        return name;
+    }   
+
+    public string GetPlayerOwner()
+    {
+        return playerOwner;
+    }
+
+    public ClanInfo GetClanInfo()
+    {
+        if (isReceivedClanInfo)
+        {
+            return clanInfo;
+        }
+        else
+        {
+            Debug.LogWarning("Clan information has not been received yet.");
+            return null;
+        }
+    }
+
     public void OnClanInfoReceived(SC_ClanInfo clanInfoMessage)
     {
-        if(clanInfoMessage.getInfoResult == MessageStatus.SUCCESS)
-        {
-            clanID = clanInfoMessage.clanID;
-            playerOwner = clanInfoMessage.playerOwner;
-            name = clanInfoMessage.name;
-            score = clanInfoMessage.score;
-            status = clanInfoMessage.ownerID == PlayerProfile.Instance.GetPlayerID() ? ClanStatus.LEADER : ClanStatus.MEMBER;
-            clanInfo = JsonUtility.FromJson<ClanInfo>(clanInfoMessage.jsonData);
-        }
+        clanID = clanInfoMessage.clanID;
+        playerOwner = clanInfoMessage.playerOwner;
+        name = clanInfoMessage.name;
+        score = clanInfoMessage.score;
+        status = clanInfoMessage.ownerID == PlayerProfile.Instance.GetPlayerID() ? ClanStatus.LEADER : ClanStatus.MEMBER;
+        clanInfo = JsonUtility.FromJson<ClanInfo>(clanInfoMessage.jsonData);
+        PlayerProfile.Instance.SetClanID(clanID);
         isReceivedClanInfo = true;
         OnCLanInfoReceived?.Invoke();
     }
