@@ -1,4 +1,6 @@
+using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public enum ClanStatus
@@ -13,6 +15,9 @@ public class ClanManager : MonoBehaviour
 
     public static Action OnCLanCreated;
     public static Action OnCLanInfoReceived;
+    public static Action OnCLanListReceived;
+    public static Action OnClanWarStarted;
+    public static Action OnClanWarInfoReceived;
 
 
     private static ClanManager _instance;
@@ -24,6 +29,7 @@ public class ClanManager : MonoBehaviour
         }
     }
 
+
     private bool isInitialized = false;
     private bool isReceivedClanInfo = false;
 
@@ -33,6 +39,9 @@ public class ClanManager : MonoBehaviour
     private int score;
     private ClanStatus status;
     private ClanInfo clanInfo;
+    private List<ClanListInfo> clanListInfo;
+    private int currentWarID;
+    private SC_ClanWarInfo currentWarInfo;
 
     private void Awake()
     {
@@ -47,6 +56,11 @@ public class ClanManager : MonoBehaviour
     {
         isInitialized = true;
         isReceivedClanInfo =false;
+        clanListInfo = null;
+        clanInfo = null;
+        status = ClanStatus.NONE;   
+        score = 0;
+
     }
 
     public bool IsInitialized()
@@ -117,8 +131,44 @@ public class ClanManager : MonoBehaviour
         OnCLanInfoReceived?.Invoke();
     }
 
-    internal bool IsClanInfoReceived()
+    public bool IsClanInfoReceived()
     {
         return isReceivedClanInfo;
+    }
+
+    public void GetListClan(int index)
+    {
+        OnlineManager.Instance.GetListClan(index);
+    }
+
+    public void OnListClanReceived(List<ClanListInfo> listClan)
+    {
+        clanListInfo = listClan;
+    }
+
+    public List<ClanListInfo> GetClanListInfo()
+    {
+        return clanListInfo;
+    }
+
+    public void AttackClanID(int OtherClanID)
+    {
+        OnlineManager.Instance.AttackClan(clanID , OtherClanID);
+    }
+
+    public void ClanWarStarted(SC_ClanWarStart warStartMessage)
+    {
+        currentWarID = warStartMessage.warID;
+    }
+
+
+    public void GetClanWarInfo()
+    {
+        OnlineManager.Instance.GetClanWarInfo(currentWarID);
+    }
+
+    public void ClanWarInfoReceived(SC_ClanWarInfo warInfoMessage)
+    {
+        currentWarInfo = warInfoMessage;
     }
 }

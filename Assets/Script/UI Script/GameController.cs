@@ -125,5 +125,8 @@ public class GameController : IMenuStack
         }
     }
 
-
+    public void ShowClanWarPanel()
+    {
+        Debug.Log("ShowClanWarPanel");
+    }
 }

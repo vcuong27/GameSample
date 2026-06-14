@@ -268,7 +268,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
             clanListResult.totalClans = 0;
             clanListResult.clans = new ClanListInfo[0];
 
-            string query = String.Format("SELECT clanID, name, owner, memberCount FROM Clan LIMIT {0}, {1} ORDER BY score DESC;", pageIndex * pageSize, pageSize);
+            string query = String.Format("SELECT clanID, name, memberCount FROM Clan ORDER BY score DESC LIMIT {0}, {1};", pageIndex * pageSize, pageSize);
             using (MySqlCommand command = new MySqlCommand(query, mysqlConnection))
             {
                 using (MySqlDataReader reader = command.ExecuteReader())
@@ -452,9 +452,9 @@ namespace DevelopersHub.RealtimeNetworking.Server
             }
         }
 
-        public static SC_ClanWarStart StartClanWar(object clanID, object opponentClanID)
+        public static SC_ClanWarStart StartClanWar(int attackClanID, int defendClanID)
         {
-            string query = String.Format("INSERT INTO ClanWar (clanID, opponentClanID, startTime, endTime) VALUES ({0}, {1}, NOW(), NOW() + INTERVAL 30 DAY);", clanID, opponentClanID);
+            string query = String.Format("INSERT INTO ClanWar (attackClanID, defendClanID, startTime, endTime) VALUES ({0}, {1}, NOW(), NOW() + INTERVAL 30 DAY);", attackClanID, defendClanID);
             int rs = 0;
             using (MySqlCommand command = new MySqlCommand(query, mysqlConnection))
             {
@@ -463,7 +463,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
             if (rs != 0)
             {
                 int warID = 0;
-                string getWarIDQuery = String.Format("SELECT id from ClanWar WHERE clanID = {0} AND opponentClanID = {1};", clanID, opponentClanID);
+                string getWarIDQuery = String.Format("SELECT id from ClanWar WHERE attackClanID = {0} AND defendClanID = {1};", attackClanID, defendClanID);
                 using (MySqlCommand command = new MySqlCommand(getWarIDQuery, mysqlConnection))
                 {
                     warID = Convert.ToInt32(command.ExecuteScalar());
@@ -487,7 +487,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
         {
             SC_ClanWarInfo info = new SC_ClanWarInfo();
             info.getInfoResult = MessageStatus.ERROR;
-            string query = String.Format("SELECT clanID, opponentClanID, startTime, endTime FROM ClanWar WHERE id = {0};", warID);
+            string query = String.Format("SELECT attackClanID, defendClanID, startTime, endTime FROM ClanWar WHERE id = {0};", warID);
             using (MySqlCommand command = new MySqlCommand(query, mysqlConnection))
             {
                 using (MySqlDataReader reader = command.ExecuteReader())
@@ -495,8 +495,8 @@ namespace DevelopersHub.RealtimeNetworking.Server
                     if (reader.Read())
                     {
                         info.warID = warID;
-                        info.attackClanID = reader.GetInt32("clanID");
-                        info.defendClanID = reader.GetInt32("opponentClanID");
+                        info.attackClanID = reader.GetInt32("attackClanID");
+                        info.defendClanID = reader.GetInt32("defendClanID");
                         info.startTime = reader.GetDateTime("startTime");
                         info.endTime = reader.GetDateTime("endTime");
                         info.getInfoResult = MessageStatus.SUCCESS;

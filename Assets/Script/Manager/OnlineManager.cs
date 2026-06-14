@@ -1,6 +1,7 @@
 using Assets.Script.Manager;
 using DevelopersHub.RealtimeNetworking.Client;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class OnlineManager : MonoBehaviour
@@ -136,6 +137,47 @@ public class OnlineManager : MonoBehaviour
                     Debug.LogFormat("Failed to get clan info: {0}", clanInfoMessage.getInfoResult);
                 }
                 break;
+            case MessageID.CLAN_LIST:
+                SC_ClanList clanListMessage = JsonUtility.FromJson<SC_ClanList>(jsonValue);
+                if (clanListMessage.getListResult == MessageStatus.SUCCESS)
+                {
+                    Debug.LogFormat("Clan list received successfully");
+                    ClanManager.Instance.OnListClanReceived(new List<ClanListInfo>(clanListMessage.clans));
+                    ClanManager.OnCLanListReceived?.Invoke();
+                }
+                else
+                {
+                    Debug.LogFormat("Failed to get clan list: {0}", clanListMessage.getListResult);
+                }
+                break;
+            case MessageID.CLAN_WAR_START:
+                SC_ClanWarStart warStartMessage = JsonUtility.FromJson<SC_ClanWarStart>(jsonValue);
+                if (warStartMessage.startResult == MessageStatus.SUCCESS)
+                {
+                    Debug.LogFormat("Clan war started successfully");
+                    ClanManager.Instance.ClanWarStarted(warStartMessage);
+                    ClanManager.OnClanWarStarted?.Invoke();
+                }
+                else
+                {
+                    Debug.LogFormat("Failed to start clan war: {0}", warStartMessage.startResult);
+                }
+                break;
+
+            case MessageID.CLAN_WAR_INFO:
+                SC_ClanWarInfo warInfoMessage = JsonUtility.FromJson<SC_ClanWarInfo>(jsonValue);
+                if (warInfoMessage.getInfoResult == MessageStatus.SUCCESS)
+                {
+                    Debug.LogFormat("Clan war info received successfully");
+                    ClanManager.Instance.ClanWarInfoReceived(warInfoMessage);
+                    ClanManager.OnClanWarInfoReceived?.Invoke();
+                }
+                else
+                {
+                    Debug.LogFormat("Failed to get clan war info: {0}", warInfoMessage.getInfoResult);
+                }
+                break;
+
             default:
                 break;
         }
@@ -146,7 +188,7 @@ public class OnlineManager : MonoBehaviour
     public void LoginToServer()
     {
         CS_Auth aut = new CS_Auth();
-        aut.username = "player01";
+        aut.username = "player03";
         aut.password = "123456";
 
         SendMessage(MessageID.AUTH, aut);
@@ -196,6 +238,29 @@ public class OnlineManager : MonoBehaviour
         SendMessage(MessageID.CLAN_INFO, mes);
     }
 
+    public void GetListClan(int index)
+    {
+        CS_ClanList mes = new CS_ClanList();
+        mes.pageIndex = index;
+        mes.pageSize = 10;
+        SendMessage(MessageID.CLAN_LIST, mes);
+    }
+
+
+    public void AttackClan(int clanID, int otherClanID)
+    {
+        CS_ClanWarStart mes = new CS_ClanWarStart();
+        mes.attackClanID = clanID;
+        mes.defendClanID = otherClanID;
+        SendMessage(MessageID.CLAN_WAR_START, mes);
+    }
+
+    public void GetClanWarInfo(int warID)
+    {
+        CS_ClanWarInfo mes = new CS_ClanWarInfo();
+        mes.warID = warID;
+        SendMessage(MessageID.CLAN_WAR_INFO, mes);
+    }
 
 
 
@@ -206,15 +271,7 @@ public class OnlineManager : MonoBehaviour
 
 
 
-
-
-
-
-
-
-
-
-    void SendMessage(MessageID id, IBaseMessage baseMessage)
+void SendMessage(MessageID id, IBaseMessage baseMessage)
     {
 
         Packet _packet = new Packet();
@@ -224,5 +281,4 @@ public class OnlineManager : MonoBehaviour
         _packet.WriteLength();
         Client.instance.tcp.SendData(_packet);
     }
-
 }
