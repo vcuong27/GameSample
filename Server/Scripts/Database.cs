@@ -65,6 +65,18 @@ using System.Data;
 //    FOREIGN KEY (defendClanID) REFERENCES Clan(clanID) ON DELETE CASCADE
 //);
 
+// CREATE TABLE `game`.`chatmessages` (
+//      `ChatID` INT NOT NULL AUTO_INCREMENT ,
+//      `PlayerID` INT NOT NULL ,
+//      `Channel` CHAR(20) NOT NULL ,
+//      `OtherPlayerID` INT NOT NULL ,
+//      `Message` LONGTEXT NOT NULL ,
+//      `SentTime` DATETIME NOT NULL ,
+//      PRIMARY KEY (`ChatID`),
+//      FOREIGN KEY (playerID) REFERENCES Account(playerID) ON DELETE CASCADE,
+//      FOREIGN KEY (OtherPlayerID) REFERENCES Account(playerID) ON DELETE CASCADE
+// );
+
 namespace DevelopersHub.RealtimeNetworking.Server
 {
     class Database
@@ -504,6 +516,47 @@ namespace DevelopersHub.RealtimeNetworking.Server
                 }
             }
             return info;
+        }
+
+        public static SC_ChatHistories GetChatHistories(int playerID, int clanID)
+        {
+            SC_ChatHistories histories = new SC_ChatHistories();
+            histories.getHistoriesResult = MessageStatus.ERROR;
+            string query = String.Format("SELECT ChatID, PlayerID, Channel, OtherPlayerID, Message, SentTime FROM ChatHistory WHERE clanID = {0} ORDER BY timestamp DESC LIMIT 20;", clanID);
+            using (MySqlCommand command = new MySqlCommand(query, mysqlConnection))
+            {
+                using (MySqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        ChatMessageItem message = new ChatMessageItem()
+                        {
+                            chatID = reader.GetInt32("ChatID"),
+                            playerID = reader.GetInt32("PlayerID"),
+                            channel = reader.GetString("Channel"),
+                            otherPlayerID = reader.GetInt32("OtherPlayerID"),
+                            message = reader.GetString("Message"),
+                            sentTime = reader.GetDateTime("SentTime")
+                        };
+                        histories.messages.Add(message);
+                    }
+                    histories.getHistoriesResult = MessageStatus.SUCCESS;
+                }
+            }
+            return histories;
+
+
+        }
+
+        public static void SendChatMessage(CS_ChatMessage chatMessageMessage)
+        {
+            int rs = 0;
+            string query = String.Format("INSERT INTO ChatMessages (PlayerID, Channel, OtherPlayerID, Message, SentTime, clanID) VALUES ({0}, '{1}', {2}, '{3}', NOW(), {4});", chatMessageMessage.playerID, chatMessageMessage.channel, chatMessageMessage.otherPlayerID, chatMessageMessage.message, chatMessageMessage.clanID);
+            using (MySqlCommand command = new MySqlCommand(query, mysqlConnection))
+            {
+                rs = command.ExecuteNonQuery();
+            }
+
         }
 
 

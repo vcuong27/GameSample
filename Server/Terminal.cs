@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using Org.BouncyCastle.Bcpg;
 using Org.BouncyCastle.Crypto.Utilities;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Numerics;
 using static DevelopersHub.RealtimeNetworking.Server.Packet;
@@ -13,6 +14,8 @@ namespace DevelopersHub.RealtimeNetworking.Server
 
     class Terminal
     {
+
+        static List<int> connectedPlayerIDs = new List<int>();
 
         #region Update
         public const int updatesPerSecond = 30;
@@ -34,11 +37,13 @@ namespace DevelopersHub.RealtimeNetworking.Server
 
         public static void OnClientConnected(int id, string ip)
         {
+            connectedPlayerIDs.Add(id);
             onlinePlayers++;
         }
 
         public static void OnClientDisconnected(int id, string ip)
         {
+            connectedPlayerIDs.Remove(id);
             onlinePlayers--;
         }
         #endregion
@@ -136,11 +141,51 @@ namespace DevelopersHub.RealtimeNetworking.Server
                     break;
                 #endregion
 
+                #region CHAT
+                case MessageID.CHAT_HISTORIES:
+                    CS_ChatHistories chatHistoriesMessage = JsonConvert.DeserializeObject<CS_ChatHistories>(jsonValue);
+                    SC_ChatHistories chatHistoriesResult = Database.GetChatHistories(chatHistoriesMessage.playerID, chatHistoriesMessage.clanID);
+                    SendChatHistoriesResponse(clientID, chatHistoriesResult);
+                    break;
+                case MessageID.CHAT_MESSAGE:
+                    CS_ChatMessage chatMessageMessage = JsonConvert.DeserializeObject<CS_ChatMessage>(jsonValue);
+                    Database.SendChatMessage(chatMessageMessage);
+                    SendChatToOtherPlayers(clientID, chatMessageMessage);
+                    break;
+                #endregion
+
                 default:
                     break;
             }
         }
 
+        private static void SendChatToOtherPlayers(int clientID, CS_ChatMessage chatMessageMessage)
+        {
+            foreach (var client in connectedPlayerIDs)
+            {
+                if (client != clientID)
+                {
+                    //private message to other players
+                    if (chatMessageMessage.otherPlayerID != clientID)
+                    {
+                        if (chatMessageMessage.otherPlayerID == client)
+                        {
+                            SendMessage(client, MessageID.CHAT_MESSAGE, chatMessageMessage);
+                        }
+                    }
+                    else
+                    {
+                        //send to all players
+                        SendMessage(client, MessageID.CHAT_MESSAGE, chatMessageMessage);
+                    }
+                }
+            }
+        }
+
+        private static void SendChatHistoriesResponse(int clientID, SC_ChatHistories chatHistoriesResult)
+        {
+            SendMessage(clientID, MessageID.CHAT_HISTORIES, chatHistoriesResult);
+        }
 
         private static void SendClanWarInfoResponse(int clientID, SC_ClanWarInfo clanWarInfoResult)
         {

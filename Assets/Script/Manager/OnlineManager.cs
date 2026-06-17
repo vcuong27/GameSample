@@ -178,6 +178,27 @@ public class OnlineManager : MonoBehaviour
                 }
                 break;
 
+            case MessageID.CHAT_HISTORIES:
+                SC_ChatHistories chatHistoriesMessage = JsonUtility.FromJson<SC_ChatHistories>(jsonValue);
+                if (chatHistoriesMessage.getHistoriesResult == MessageStatus.SUCCESS)
+                {
+                    Debug.LogFormat("Chat histories received successfully");
+                    ChatManager.Instance.ReceiveChatHistories(chatHistoriesMessage);
+                    ChatManager.OnChatHistoriesReceived?.Invoke();
+                }
+                else
+                {
+                    Debug.LogFormat("Failed to get chat histories: {0}", chatHistoriesMessage.getHistoriesResult);
+                }
+                break;
+            case MessageID.CHAT_MESSAGE:
+                SC_ChatMessage chatMessage = JsonUtility.FromJson<SC_ChatMessage>(jsonValue);
+                Debug.LogFormat("Chat message sent successfully");
+                ChatManager.Instance.ReceiveChatMessage(chatMessage);
+                ChatManager.OnChatMessageReceived?.Invoke();
+
+                break;
+
             default:
                 break;
         }
@@ -262,6 +283,24 @@ public class OnlineManager : MonoBehaviour
         SendMessage(MessageID.CLAN_WAR_INFO, mes);
     }
 
+    public void GetChatHistory()
+    {
+        CS_ChatHistories mes = new CS_ChatHistories();
+        mes.playerID = playerID;
+        mes.clanID = PlayerProfile.Instance.getClanID();
+        SendMessage(MessageID.CHAT_HISTORIES, mes);
+    }
+
+    public void SendChatMessage(string message)
+    {
+        CS_ChatMessage mes = new CS_ChatMessage();
+        mes.playerID = playerID;
+        mes.otherPlayerID = playerID;
+        mes.clanID = PlayerProfile.Instance.getClanID();
+        mes.message = message;
+        mes.sentTime = DateTimeOffset.UtcNow.DateTime;
+        SendMessage(MessageID.CHAT_MESSAGE, mes);
+    }
 
 
 
@@ -271,7 +310,7 @@ public class OnlineManager : MonoBehaviour
 
 
 
-void SendMessage(MessageID id, IBaseMessage baseMessage)
+    void SendMessage(MessageID id, IBaseMessage baseMessage)
     {
 
         Packet _packet = new Packet();

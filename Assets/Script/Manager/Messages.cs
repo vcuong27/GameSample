@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 
 //--1.Bảng Tài khoản người chơi
@@ -85,6 +86,9 @@ public enum MessageID
     CLAN_WAR_START_BATTLE,
     CLAN_WAR_END_BATTLE,
     CLAN_WAR_INFO,
+
+    CHAT_HISTORIES = 60,
+    CHAT_MESSAGE,
 }
 
 public enum MessageStatus
@@ -361,4 +365,47 @@ public class SC_ClanWarInfo : IBaseMessage
     public DateTime endTime;
     public string jsonData;
     public BattleInfo[] battles;
+}
+
+
+[Serializable]
+public class ChatMessageItem : IBaseMessage
+{
+    public int chatID;
+    public int playerID;
+    public int otherPlayerID;
+    public string channel;
+    public string message;
+    public DateTime sentTime;
+}
+
+[Serializable]
+public class CS_ChatHistories : IBaseMessage
+{
+    public int playerID;
+    public int clanID;
+}
+
+[Serializable]
+public class SC_ChatHistories : IBaseMessage
+{
+    public MessageStatus getHistoriesResult;
+    public List<ChatMessageItem> messages;
+}
+
+[Serializable]
+public class CS_ChatMessage : IBaseMessage
+{
+    public int playerID;
+    public int otherPlayerID;
+    public int clanID;
+    public string channel;
+    public string message;
+    public DateTime sentTime;
+}
+
+[Serializable]
+public class SC_ChatMessage : IBaseMessage
+{
+    public ChatMessageItem messages;
 }
