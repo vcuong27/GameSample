@@ -11,6 +11,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
         public int id;
         public TCP tcp;
         public UDP udp;
+        public WebSocketConnection webSocket;
         public string sendToken = "xxxxx";
         public string receiveToken = "xxxxx";
 
@@ -19,6 +20,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
             id = _clientId;
             tcp = new TCP(id);
             udp = new UDP(id);
+            webSocket = new WebSocketConnection(id);
         }
 
         public class TCP

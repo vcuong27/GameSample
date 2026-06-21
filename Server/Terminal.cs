@@ -34,17 +34,22 @@ namespace DevelopersHub.RealtimeNetworking.Server
         public const int maxPlayers = 100000;
         public static int onlinePlayers = 0;
         public const int port = 5555;
+        public const int websocketPort = 5556;
+        public const string websocketPath = "/ws/";
 
         public static void OnClientConnected(int id, string ip)
         {
-            connectedPlayerIDs.Add(id);
-            onlinePlayers++;
+            if (!connectedPlayerIDs.Contains(id))
+            {
+                connectedPlayerIDs.Add(id);
+            }
+            onlinePlayers = connectedPlayerIDs.Count;
         }
 
         public static void OnClientDisconnected(int id, string ip)
         {
             connectedPlayerIDs.Remove(id);
-            onlinePlayers--;
+            onlinePlayers = connectedPlayerIDs.Count;
         }
         #endregion
 
@@ -265,11 +270,21 @@ namespace DevelopersHub.RealtimeNetworking.Server
 
         private static void SendMessage(int clientID, MessageID id, IBaseMessage baseMessage)
         {
-            Packet _packet = new Packet();
-            _packet.Write((int)id);
-            _packet.Write(JsonConvert.SerializeObject(baseMessage));
-            Sender.TCP_Send(clientID, _packet);
-            Console.WriteLine("SEND => Client[{0}] Sent MessageID:{1} jsonValue:{2}\n", clientID, id, JsonConvert.SerializeObject(baseMessage));
+            string jsonValue = JsonConvert.SerializeObject(baseMessage);
+
+            if (Server.clients.ContainsKey(clientID) && Server.clients[clientID].webSocket != null && Server.clients[clientID].webSocket.IsConnected)
+            {
+                Server.clients[clientID].webSocket.SendMessage(id, jsonValue);
+            }
+            else
+            {
+                Packet _packet = new Packet();
+                _packet.Write((int)id);
+                _packet.Write(jsonValue);
+                Sender.TCP_Send(clientID, _packet);
+            }
+
+            Console.WriteLine("SEND => Client[{0}] Sent MessageID:{1} jsonValue:{2}\n", clientID, id, jsonValue);
         }
 
 

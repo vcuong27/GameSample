@@ -46,6 +46,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
             tcpListener.BeginAcceptTcpClient(OnConnectedTCP, null);
             udpListener = new UdpClient(Port);
             udpListener.BeginReceive(OnConnectedUDP, null);
+            WebSocketServer.Start(Terminal.websocketPort, Terminal.websocketPath);
             Terminal.Start();
         }
 
@@ -56,7 +57,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
             Console.WriteLine("Incoming connection from {0}.", client.Client.RemoteEndPoint);
             for (int i = 1; i <= MaxPlayers; i++)
             {
-                if (clients[i].tcp.socket == null)
+                if (clients[i].tcp.socket == null && (clients[i].webSocket == null || !clients[i].webSocket.IsConnected))
                 {
                     clients[i].tcp.Initialize(client);
                     IPEndPoint ip = client.Client.RemoteEndPoint as IPEndPoint;
