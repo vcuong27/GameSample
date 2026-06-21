@@ -68,12 +68,6 @@ public class GameController : IMenuStack
                 break;
             case BuildingType.FARM_GOLD:
                 break;
-            case BuildingType.WORKSHOP:
-                break;
-            case BuildingType.TREE:
-                break;
-            case BuildingType.ROCK:
-                break;
             default:
                 break;
         }
@@ -99,12 +93,6 @@ public class GameController : IMenuStack
                 uIBarackPanel.gameObject.SetActive(false);
                 break;
             case BuildingType.FARM_GOLD:
-                break;
-            case BuildingType.WORKSHOP:
-                break;
-            case BuildingType.TREE:
-                break;
-            case BuildingType.ROCK:
                 break;
             default:
                 break;

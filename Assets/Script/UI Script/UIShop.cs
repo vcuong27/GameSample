@@ -13,7 +13,10 @@ public class UIShop : MonoBehaviour
 
     public void InitUI()
     {
-        if (isInit) return;
+        if (isInit)
+        {
+            return;
+        }
 
         isInit = true;
         List<IBuildingData> buildingDatas = DataManager.Instance.GetBuildingDatas();

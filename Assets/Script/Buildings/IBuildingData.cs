@@ -8,11 +8,7 @@ public enum BuildingType
     NONE = 0,
     MAINTOWER,
     FARM_GOLD = 10,
-    STORAGE_GOLD,
     BARRACKS = 50,
-    WORKSHOP = 100,
-    TREE = 1000,
-    ROCK
 }
 
 public enum BuildingState
