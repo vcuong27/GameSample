@@ -10,39 +10,8 @@ namespace DevelopersHub.RealtimeNetworking.Client
         [Tooltip("Server IP address.")]
         [SerializeField] private string _ip = "127.0.0.1"; public string ip { get { return _ip; } }
 
-        [Tooltip("Server TCP/UDP port number.")]
+        [Tooltip("Server port number.")]
         [SerializeField] private int _port = 5555; public int port { get { return _port; } }
-
-        [Header("WebSocket")]
-        [Tooltip("Use WebSocket instead of TCP/UDP when RealtimeNetworking.Connect() is called.")]
-        [SerializeField] private bool _useWebSocket = false; public bool useWebSocket { get { return _useWebSocket; } }
-
-        [Tooltip("Use wss:// instead of ws://.")]
-        [SerializeField] private bool _secureWebSocket = false; public bool secureWebSocket { get { return _secureWebSocket; } }
-
-        [Tooltip("Server WebSocket port number.")]
-        [SerializeField] private int _webSocketPort = 5556; public int webSocketPort { get { return _webSocketPort; } }
-
-        [Tooltip("Server WebSocket path. The patched server uses /ws/ by default.")]
-        [SerializeField] private string _webSocketPath = "/ws/"; public string webSocketPath { get { return _webSocketPath; } }
-
-        public string webSocketUrl
-        {
-            get
-            {
-                string scheme = _secureWebSocket ? "wss" : "ws";
-                string path = string.IsNullOrWhiteSpace(_webSocketPath) ? "/ws/" : _webSocketPath;
-                if (!path.StartsWith("/"))
-                {
-                    path = "/" + path;
-                }
-                if (!path.EndsWith("/"))
-                {
-                    path += "/";
-                }
-                return scheme + "://" + _ip + ":" + _webSocketPort + path;
-            }
-        }
 
         #if UNITY_EDITOR
         [UnityEditor.MenuItem("Developers Hub/Realtime Networking/Settings")]

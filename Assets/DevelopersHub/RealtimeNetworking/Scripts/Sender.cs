@@ -11,49 +11,13 @@ namespace DevelopersHub.RealtimeNetworking.Client
         private static void SendTCPData(Packet _packet)
         {
             _packet.WriteLength();
-            if (Client.instance.usingWebSocket)
-            {
-                Client.instance.webSocket.SendData(_packet);
-                return;
-            }
             Client.instance.tcp.SendData(_packet);
         }
 
         private static void SendUDPData(Packet _packet)
         {
             _packet.WriteLength();
-            if (Client.instance.usingWebSocket)
-            {
-                Client.instance.webSocket.SendData(_packet);
-                return;
-            }
             Client.instance.udp.SendData(_packet);
-        }
-        public static void WebSocket_SendRaw(string json)
-        {
-            if (!string.IsNullOrEmpty(json) && Client.instance.webSocket != null)
-            {
-                Client.instance.webSocket.SendText(json);
-            }
-        }
-
-        public static void WebSocket_Send(int messageID, string jsonValue)
-        {
-            WebSocket_SendRaw(WebSocketJson.CreateMessage(messageID, jsonValue));
-        }
-
-        public static void WebSocket_Send(string messageID, string jsonValue)
-        {
-            WebSocket_SendRaw(WebSocketJson.CreateMessage(messageID, jsonValue));
-        }
-
-        public static void WebSocket_SendBinary(Packet packet)
-        {
-            if (packet != null && Client.instance.webSocket != null)
-            {
-                packet.WriteLength();
-                Client.instance.webSocket.SendData(packet);
-            }
         }
         #endregion
 
