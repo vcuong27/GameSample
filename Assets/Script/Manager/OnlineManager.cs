@@ -13,6 +13,9 @@ public class OnlineManager : MonoBehaviour
     public static OnlineManager Instance => _instance;
 
 
+    [Header("Connection")]
+    [SerializeField] private bool useWebSocket = true;
+
     private bool isConnected = false;
     private bool isLoggedIn = false;
     private int playerID;
@@ -29,6 +32,7 @@ public class OnlineManager : MonoBehaviour
         RealtimeNetworking.OnDisconnectedFromServer += Disconnected;
         RealtimeNetworking.OnConnectingToServerResult += ConnectResult;
         RealtimeNetworking.OnPacketReceived += PacketReceived;
+        RealtimeNetworking.OnWebSocketMessageReceived += WebSocketMessageReceived;
     }
 
     private void OnDestroy()
@@ -36,11 +40,19 @@ public class OnlineManager : MonoBehaviour
         RealtimeNetworking.OnDisconnectedFromServer -= Disconnected;
         RealtimeNetworking.OnConnectingToServerResult -= ConnectResult;
         RealtimeNetworking.OnPacketReceived -= PacketReceived;
+        RealtimeNetworking.OnWebSocketMessageReceived -= WebSocketMessageReceived;
     }
 
     public void ConnectToServer()
     {
-        RealtimeNetworking.Connect();
+        if (useWebSocket)
+        {
+            RealtimeNetworking.ConnectWebSocket();
+        }
+        else
+        {
+            RealtimeNetworking.ConnectTCP();
+        }
     }
 
     private void ConnectResult(bool successful)
@@ -60,6 +72,8 @@ public class OnlineManager : MonoBehaviour
     private void Disconnected()
     {
         Debug.Log("Disconnected from server.");
+        isConnected = false;
+        isLoggedIn = false;
     }
 
     public bool IsConnected()
@@ -81,6 +95,17 @@ public class OnlineManager : MonoBehaviour
     {
         MessageID id = (MessageID)packet.ReadInt();
         string jsonValue = packet.ReadString();
+        ReceiveServerMessage(id, jsonValue);
+    }
+
+    private void WebSocketMessageReceived(int messageID, string messageName, string jsonValue, string rawJson)
+    {
+        MessageID id = (MessageID)messageID;
+        ReceiveServerMessage(id, jsonValue);
+    }
+
+    private void ReceiveServerMessage(MessageID id, string jsonValue)
+    {
         Debug.LogFormat("MessageID:{0} jsonValue:{1}", id, jsonValue);
         switch (id)
         {
@@ -212,7 +237,7 @@ public class OnlineManager : MonoBehaviour
         aut.username = "player03";
         aut.password = "123456";
 
-        SendMessage(MessageID.AUTH, aut);
+        SendToServer(MessageID.AUTH, aut);
     }
 
     public void GetPlayerProfile()
@@ -220,7 +245,7 @@ public class OnlineManager : MonoBehaviour
         CS_PlayerProfileGet mes = new CS_PlayerProfileGet();
         mes.playerID = playerID;
 
-        SendMessage(MessageID.PROFILE_GET, mes);
+        SendToServer(MessageID.PROFILE_GET, mes);
     }
 
     public void UpdatePlayerProfile(string playerName, int profileVersion, string jsonData)
@@ -230,7 +255,7 @@ public class OnlineManager : MonoBehaviour
         mes.playerName = playerName;
         mes.profileVersion = profileVersion;
         mes.jsonData = jsonData;
-        SendMessage(MessageID.PROFILE_UPDATE, mes);
+        SendToServer(MessageID.PROFILE_UPDATE, mes);
     }
 
     public void CreatePlayerProfile(int playerID, string playerName, int profileVersion, string jsonData)
@@ -240,7 +265,7 @@ public class OnlineManager : MonoBehaviour
         mes.playerName = playerName;
         mes.profileVersion = profileVersion;
         mes.jsonData = jsonData;
-        SendMessage(MessageID.PROFILE_CREATE, mes);
+        SendToServer(MessageID.PROFILE_CREATE, mes);
     }
 
     public void CreateClan(string clanName, string jsonData)
@@ -249,14 +274,14 @@ public class OnlineManager : MonoBehaviour
         mes.name = clanName;
         mes.playerID = playerID;
         mes.jsonData = jsonData;
-        SendMessage(MessageID.CLAN_CREATE, mes);
+        SendToServer(MessageID.CLAN_CREATE, mes);
     }
 
     public void GetClanInfo(int clanID)
     {
         CS_ClanInfo mes = new CS_ClanInfo();
         mes.clanID = clanID;
-        SendMessage(MessageID.CLAN_INFO, mes);
+        SendToServer(MessageID.CLAN_INFO, mes);
     }
 
     public void GetListClan(int index)
@@ -264,7 +289,7 @@ public class OnlineManager : MonoBehaviour
         CS_ClanList mes = new CS_ClanList();
         mes.pageIndex = index;
         mes.pageSize = 10;
-        SendMessage(MessageID.CLAN_LIST, mes);
+        SendToServer(MessageID.CLAN_LIST, mes);
     }
 
 
@@ -273,14 +298,14 @@ public class OnlineManager : MonoBehaviour
         CS_ClanWarStart mes = new CS_ClanWarStart();
         mes.attackClanID = clanID;
         mes.defendClanID = otherClanID;
-        SendMessage(MessageID.CLAN_WAR_START, mes);
+        SendToServer(MessageID.CLAN_WAR_START, mes);
     }
 
     public void GetClanWarInfo(int warID)
     {
         CS_ClanWarInfo mes = new CS_ClanWarInfo();
         mes.warID = warID;
-        SendMessage(MessageID.CLAN_WAR_INFO, mes);
+        SendToServer(MessageID.CLAN_WAR_INFO, mes);
     }
 
     public void GetChatHistory()
@@ -288,7 +313,7 @@ public class OnlineManager : MonoBehaviour
         CS_ChatHistories mes = new CS_ChatHistories();
         mes.playerID = playerID;
         mes.clanID = PlayerProfile.Instance.getClanID();
-        SendMessage(MessageID.CHAT_HISTORIES, mes);
+        SendToServer(MessageID.CHAT_HISTORIES, mes);
     }
 
     public void SendChatMessage(string message)
@@ -299,7 +324,7 @@ public class OnlineManager : MonoBehaviour
         mes.clanID = PlayerProfile.Instance.getClanID();
         mes.message = message;
         mes.sentTime = DateTimeOffset.UtcNow.DateTime;
-        SendMessage(MessageID.CHAT_MESSAGE, mes);
+        SendToServer(MessageID.CHAT_MESSAGE, mes);
     }
 
 
@@ -310,14 +335,21 @@ public class OnlineManager : MonoBehaviour
 
 
 
-    void SendMessage(MessageID id, IBaseMessage baseMessage)
+    void SendToServer(MessageID id, IBaseMessage baseMessage)
     {
+        string jsonValue = JsonUtility.ToJson(baseMessage);
+
+        if (Client.instance.usingWebSocket)
+        {
+            Sender.WebSocket_Send((int)id, jsonValue);
+            Debug.LogFormat("WS SEND => MessageID:{0} jsonValue:{1}", id, jsonValue);
+            return;
+        }
 
         Packet _packet = new Packet();
         _packet.Write((int)id);
-        _packet.Write(JsonUtility.ToJson(baseMessage));
-        _packet.SetID((int)Packet.ID.CUSTOM);
-        _packet.WriteLength();
-        Client.instance.tcp.SendData(_packet);
+        _packet.Write(jsonValue);
+        Sender.TCP_Send(_packet);
+        Debug.LogFormat("TCP SEND => MessageID:{0} jsonValue:{1}", id, jsonValue);
     }
 }

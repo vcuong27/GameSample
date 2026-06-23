@@ -7,7 +7,7 @@ namespace DevelopersHub.RealtimeNetworking.Client
     using System;
     using System.Linq;
 
-    public class Client : MonoBehaviour
+    public partial class Client : MonoBehaviour
     {
 
         private static int dataBufferSize = 4096;
@@ -17,7 +17,9 @@ namespace DevelopersHub.RealtimeNetworking.Client
         private string _receiveToken = "xxxxx"; public string receiveToken { get { return _receiveToken; } }
         public TCP tcp;
         public UDP udp;
+        public WebSocketTransport webSocket;
         private bool _isConnected = false; public bool isConnected { get { return _isConnected; } }
+        private bool _usingWebSocket = false; public bool usingWebSocket { get { return _usingWebSocket; } }
         private delegate void PacketHandler(Packet _packet);
         private static Dictionary<int, PacketHandler> packetHandlers;
         private bool _connecting = false;
@@ -85,15 +87,33 @@ namespace DevelopersHub.RealtimeNetworking.Client
 
         public void ConnectToServer()
         {
+            bool useWebSocket = settings != null && settings.useWebSocket;
+            ConnectToServer(useWebSocket);
+        }
+
+        public void ConnectToServer(bool useWebSocket)
+        {
             if (_isConnected || _connecting)
             {
                 return;
             }
 
             _connecting = true;
+            _usingWebSocket = useWebSocket;
 
-            tcp = new TCP();
-            udp = new UDP();
+            tcp = null;
+            udp = null;
+            webSocket = null;
+
+            if (_usingWebSocket)
+            {
+                webSocket = new WebSocketTransport();
+            }
+            else
+            {
+                tcp = new TCP();
+                udp = new UDP();
+            }
 
             packetHandlers = new Dictionary<int, PacketHandler>()
             {
@@ -112,7 +132,14 @@ namespace DevelopersHub.RealtimeNetworking.Client
                 { (int)Packet.ID.CUSTOM, Receiver.ReceiveCustom },
             };
 
-            tcp.Connect();
+            if (_usingWebSocket)
+            {
+                webSocket.Connect();
+            }
+            else
+            {
+                tcp.Connect();
+            }
         }
 
         public class TCP
@@ -259,7 +286,38 @@ namespace DevelopersHub.RealtimeNetworking.Client
 
             public UDP()
             {
-                endPoint = new IPEndPoint(IPAddress.Parse(instance.settings.ip), instance.settings.port);
+                endPoint = new IPEndPoint(ResolveIPAddress(instance.settings.ip), instance.settings.port);
+            }
+
+            private IPAddress ResolveIPAddress(string host)
+            {
+                IPAddress address;
+                if (IPAddress.TryParse(host, out address))
+                {
+                    return address;
+                }
+
+                try
+                {
+                    IPAddress[] addresses = Dns.GetHostAddresses(host);
+                    for (int i = 0; i < addresses.Length; i++)
+                    {
+                        if (addresses[i].AddressFamily == AddressFamily.InterNetwork)
+                        {
+                            return addresses[i];
+                        }
+                    }
+                    if (addresses.Length > 0)
+                    {
+                        return addresses[0];
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogWarning("Could not resolve UDP host '" + host + "': " + ex.Message);
+                }
+
+                return IPAddress.Loopback;
             }
 
             public void Connect(int port)
@@ -338,13 +396,17 @@ namespace DevelopersHub.RealtimeNetworking.Client
             if (_isConnected)
             {
                 _isConnected = false;
-                if (tcp.socket != null)
+                if (tcp != null && tcp.socket != null)
                 {
                     tcp.socket.Close();
                 }
-                if (udp.socket != null)
+                if (udp != null && udp.socket != null)
                 {
                     udp.socket.Close();
+                }
+                if (webSocket != null)
+                {
+                    webSocket.Disconnect();
                 }
                 if (ThreadDispatcher.instance != null)
                 {

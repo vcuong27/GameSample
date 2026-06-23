@@ -14,3 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _ip: 127.0.0.1
   _port: 5555
+  _useWebSocket: 0
+  _secureWebSocket: 0
+  _webSocketPort: 5556
+  _webSocketPath: /ws/

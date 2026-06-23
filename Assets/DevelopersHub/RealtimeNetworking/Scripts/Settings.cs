@@ -8,10 +8,61 @@ namespace DevelopersHub.RealtimeNetworking.Client
 
         [Header("Credentials")]
         [Tooltip("Server IP address.")]
-        [SerializeField] private string _ip = "127.0.0.1"; public string ip { get { return _ip; } }
+        [SerializeField] private string _ip = "localhost"; public string ip { get { return _ip; } }
 
-        [Tooltip("Server port number.")]
+        [Tooltip("Server TCP/UDP port number.")]
         [SerializeField] private int _port = 5555; public int port { get { return _port; } }
+
+        [Header("WebSocket")]
+        [Tooltip("Use WebSocket instead of TCP/UDP when RealtimeNetworking.Connect() is called.")]
+        [SerializeField] private bool _useWebSocket = false; public bool useWebSocket { get { return _useWebSocket; } }
+
+        [Tooltip("Use wss:// instead of ws://.")]
+        [SerializeField] private bool _secureWebSocket = false; public bool secureWebSocket { get { return _secureWebSocket; } }
+
+        [Tooltip("Server WebSocket port number.")]
+        [SerializeField] private int _webSocketPort = 5556; public int webSocketPort { get { return _webSocketPort; } }
+
+        [Tooltip("Server WebSocket path. The patched server uses /ws/ by default.")]
+        [SerializeField] private string _webSocketPath = "/ws/"; public string webSocketPath { get { return _webSocketPath; } }
+
+        public string webSocketUrl
+        {
+            get
+            {
+                string scheme = _secureWebSocket ? "wss" : "ws";
+                string host = NormalizeWebSocketHost(_ip);
+                string path = string.IsNullOrWhiteSpace(_webSocketPath) ? "/ws/" : _webSocketPath;
+                if (!path.StartsWith("/"))
+                {
+                    path = "/" + path;
+                }
+                if (!path.EndsWith("/"))
+                {
+                    path += "/";
+                }
+                return scheme + "://" + host + ":" + _webSocketPort + path;
+            }
+        }
+
+        private string NormalizeWebSocketHost(string host)
+        {
+            if (string.IsNullOrWhiteSpace(host))
+            {
+                return "localhost";
+            }
+
+            host = host.Trim();
+
+            // The local server fix uses HttpListener prefix http://localhost:5556/ws/.
+            // Normalize loopback IPs to localhost so Unity Editor can connect without Windows URL ACL/admin setup.
+            if (host == "127.0.0.1" || host == "::1")
+            {
+                return "localhost";
+            }
+
+            return host;
+        }
 
         #if UNITY_EDITOR
         [UnityEditor.MenuItem("Developers Hub/Realtime Networking/Settings")]

@@ -20,6 +20,8 @@ namespace DevelopersHub.RealtimeNetworking.Client
         public static event QuaternionCallback OnQuaternionReceived;
         public static event ByteCallback OnByteReceived;
         public static event BytesCallback OnByteArrayReceived;
+        public static event WebSocketTextCallback OnWebSocketTextReceived;
+        public static event WebSocketMessageCallback OnWebSocketMessageReceived;
         public delegate void ActionCallback(bool successful);
         public delegate void NoCallback();
         public delegate void PacketCallback(Packet packet);
@@ -34,6 +36,8 @@ namespace DevelopersHub.RealtimeNetworking.Client
         public delegate void QuaternionCallback(int id, Quaternion value);
         public delegate void ByteCallback(int id, byte value);
         public delegate void BytesCallback(int id, byte[] value);
+        public delegate void WebSocketTextCallback(string rawJson);
+        public delegate void WebSocketMessageCallback(int messageID, string messageName, string jsonValue, string rawJson);
         #endregion
 
         private bool _initialized = false;
@@ -67,6 +71,16 @@ namespace DevelopersHub.RealtimeNetworking.Client
         public static void Connect()
         {
             Client.instance.ConnectToServer();
+        }
+
+        public static void ConnectTCP()
+        {
+            Client.instance.ConnectToServer(false);
+        }
+
+        public static void ConnectWebSocket()
+        {
+            Client.instance.ConnectToServer(true);
         }
 
         public void _Connection(bool result)
@@ -178,6 +192,22 @@ namespace DevelopersHub.RealtimeNetworking.Client
             if (OnByteArrayReceived != null)
             {
                 OnByteArrayReceived.Invoke(id, value);
+            }
+        }
+
+        public void _ReceiveWebSocketText(string rawJson)
+        {
+            if (OnWebSocketTextReceived != null)
+            {
+                OnWebSocketTextReceived.Invoke(rawJson);
+            }
+        }
+
+        public void _ReceiveWebSocketMessage(int messageID, string messageName, string jsonValue, string rawJson)
+        {
+            if (OnWebSocketMessageReceived != null)
+            {
+                OnWebSocketMessageReceived.Invoke(messageID, messageName, jsonValue, rawJson);
             }
         }
 
