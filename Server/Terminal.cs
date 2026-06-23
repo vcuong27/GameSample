@@ -35,6 +35,9 @@ namespace DevelopersHub.RealtimeNetworking.Server
         public static int onlinePlayers = 0;
         public const int port = 5555;
         public const int websocketPort = 5556;
+        // Use "localhost" for local Unity editor testing without Administrator permission.
+        // Use "+" to accept LAN/mobile clients, then register URL ACL as described in WebSocket_USAGE.md.
+        public const string websocketHost = "localhost";
         public const string websocketPath = "/ws/";
 
         public static void OnClientConnected(int id, string ip)
