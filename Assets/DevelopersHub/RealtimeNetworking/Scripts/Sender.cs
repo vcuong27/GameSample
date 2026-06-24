@@ -11,24 +11,29 @@ namespace DevelopersHub.RealtimeNetworking.Client
         private static void SendTCPData(Packet _packet)
         {
             _packet.WriteLength();
+
             if (Client.instance.usingWebSocket)
             {
-                Client.instance.webSocket.SendData(_packet);
+                Debug.LogWarning("Simple WebSocket mode does not support raw TCP Packet sending. Use Sender.WebSocket_Send(messageID, jsonValue) or Sender.TCP_Send(messageID, stringData).");
                 return;
             }
+
             Client.instance.tcp.SendData(_packet);
         }
 
         private static void SendUDPData(Packet _packet)
         {
             _packet.WriteLength();
+
             if (Client.instance.usingWebSocket)
             {
-                Client.instance.webSocket.SendData(_packet);
+                Debug.LogWarning("Simple WebSocket mode does not support UDP Packet sending. Use Sender.WebSocket_Send(messageID, jsonValue) or Sender.TCP_Send(messageID, stringData).");
                 return;
             }
+
             Client.instance.udp.SendData(_packet);
         }
+
         public static void WebSocket_SendRaw(string json)
         {
             if (!string.IsNullOrEmpty(json) && Client.instance.webSocket != null)
@@ -49,17 +54,19 @@ namespace DevelopersHub.RealtimeNetworking.Client
 
         public static void WebSocket_SendBinary(Packet packet)
         {
-            if (packet != null && Client.instance.webSocket != null)
-            {
-                packet.WriteLength();
-                Client.instance.webSocket.SendData(packet);
-            }
+            Debug.LogWarning("Simple WebSocket mode does not support binary sending. Use Sender.WebSocket_Send(messageID, jsonValue).");
         }
         #endregion
 
         #region TCP
         public static void TCP_Send(int packetID)
         {
+            if (Client.instance.usingWebSocket)
+            {
+                WebSocket_Send(packetID, "{}");
+                return;
+            }
+
             using (Packet packet = new Packet((int)Packet.ID.NULL))
             {
                 packet.Write(packetID);
@@ -80,6 +87,12 @@ namespace DevelopersHub.RealtimeNetworking.Client
         {
             if (data != null)
             {
+                if (Client.instance.usingWebSocket)
+                {
+                    WebSocket_Send(packetID, data);
+                    return;
+                }
+
                 using (Packet packet = new Packet((int)Packet.ID.STRING))
                 {
                     packet.Write(packetID);
@@ -183,10 +196,16 @@ namespace DevelopersHub.RealtimeNetworking.Client
             }
         }
         #endregion
-        
+
         #region UDP
         public static void UDP_Send(int packetID)
         {
+            if (Client.instance.usingWebSocket)
+            {
+                WebSocket_Send(packetID, "{}");
+                return;
+            }
+
             using (Packet packet = new Packet((int)Packet.ID.NULL))
             {
                 packet.Write(packetID);
@@ -207,6 +226,12 @@ namespace DevelopersHub.RealtimeNetworking.Client
         {
             if (data != null)
             {
+                if (Client.instance.usingWebSocket)
+                {
+                    WebSocket_Send(packetID, data);
+                    return;
+                }
+
                 using (Packet packet = new Packet((int)Packet.ID.STRING))
                 {
                     packet.Write(packetID);

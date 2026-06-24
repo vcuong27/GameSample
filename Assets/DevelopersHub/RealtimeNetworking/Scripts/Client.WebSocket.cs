@@ -69,7 +69,7 @@ namespace DevelopersHub.RealtimeNetworking.Client
                 }
 
                 DisposeCurrentSocket();
-                FailConnection("WebSocket connection failed. Tried: " + string.Join(" | ", errors.ToArray()) + ". Make sure the server console shows: WebSocket Server Started on ws://localhost:5556/ws/");
+                FailConnection("WebSocket connection failed. Tried: " + string.Join(" | ", errors.ToArray()));
             }
 
             public async void SendText(string text)
@@ -80,50 +80,29 @@ namespace DevelopersHub.RealtimeNetworking.Client
                 }
 
                 byte[] data = Encoding.UTF8.GetBytes(text);
-                await SendAsync(data, WebSocketMessageType.Text);
-            }
 
-            public async void SendBinary(byte[] data)
-            {
-                if (data == null || data.Length == 0 || !isConnected)
-                {
-                    return;
-                }
-
-                await SendAsync(data, WebSocketMessageType.Binary);
-            }
-
-            public void SendData(Packet packet)
-            {
-                if (packet == null)
-                {
-                    return;
-                }
-
-                SendBinary(packet.ToArray());
-            }
-
-            private async Task SendAsync(byte[] data, WebSocketMessageType messageType)
-            {
                 try
                 {
                     await sendLock.WaitAsync();
-                    try
+
+                    if (isConnected && cancellation != null)
                     {
-                        if (isConnected && cancellation != null)
-                        {
-                            await socket.SendAsync(new ArraySegment<byte>(data), messageType, true, cancellation.Token);
-                        }
-                    }
-                    finally
-                    {
-                        sendLock.Release();
+                        await socket.SendAsync(new ArraySegment<byte>(data), WebSocketMessageType.Text, true, cancellation.Token);
                     }
                 }
                 catch (Exception ex)
                 {
-                    Debug.Log("Error sending data to server via WebSocket: " + ex.Message);
+                    Debug.Log("Error sending WebSocket text: " + ex.Message);
                 }
+                finally
+                {
+                    sendLock.Release();
+                }
+            }
+
+            public void SendData(Packet packet)
+            {
+                Debug.LogWarning("Simple WebSocket mode does not send binary Packet data. Use Sender.WebSocket_Send(messageID, jsonValue) or Sender.TCP_Send(messageID, jsonValue).");
             }
 
             private async Task ReceiveLoop()
@@ -135,28 +114,29 @@ namespace DevelopersHub.RealtimeNetworking.Client
                         using (MemoryStream messageStream = new MemoryStream())
                         {
                             WebSocketReceiveResult result;
+
                             do
                             {
                                 result = await socket.ReceiveAsync(new ArraySegment<byte>(receiveBuffer), cancellation.Token);
+
                                 if (result.MessageType == WebSocketMessageType.Close)
                                 {
                                     DisconnectFromReceiveLoop();
                                     return;
                                 }
+
                                 messageStream.Write(receiveBuffer, 0, result.Count);
                             }
                             while (!result.EndOfMessage);
 
-                            byte[] messageBytes = messageStream.ToArray();
-                            if (result.MessageType == WebSocketMessageType.Text)
+                            if (result.MessageType != WebSocketMessageType.Text)
                             {
-                                string text = Encoding.UTF8.GetString(messageBytes);
-                                Threading.ExecuteOnMainThread(() => instance.HandleWebSocketText(text));
+                                Debug.LogWarning("Simple WebSocket mode ignores non-text messages.");
+                                continue;
                             }
-                            else if (result.MessageType == WebSocketMessageType.Binary)
-                            {
-                                Threading.ExecuteOnMainThread(() => instance.HandleWebSocketBinary(messageBytes));
-                            }
+
+                            string text = Encoding.UTF8.GetString(messageStream.ToArray());
+                            Threading.ExecuteOnMainThread(() => instance.HandleWebSocketText(text));
                         }
                     }
                 }
@@ -329,47 +309,11 @@ namespace DevelopersHub.RealtimeNetworking.Client
             {
                 RealtimeNetworking.instance._ReceiveWebSocketMessage(messageID, messageName, jsonValue, text);
 
-                if (messageID >= 0 && !string.IsNullOrEmpty(jsonValue))
+                if (messageID >= 0)
                 {
                     RealtimeNetworking.instance._ReceiveString(messageID, jsonValue);
                 }
             }
-        }
-
-        private void HandleWebSocketBinary(byte[] data)
-        {
-            byte[] packetBytes = RemoveTcpLengthPrefixIfNeeded(data);
-            using (Packet packet = new Packet(packetBytes))
-            {
-                int packetID = packet.ReadInt();
-                PacketHandler handler;
-                if (packetHandlers != null && packetHandlers.TryGetValue(packetID, out handler))
-                {
-                    handler(packet);
-                }
-                else
-                {
-                    Debug.LogWarning("Invalid WebSocket binary packet ID: " + packetID);
-                }
-            }
-        }
-
-        private byte[] RemoveTcpLengthPrefixIfNeeded(byte[] data)
-        {
-            if (data == null || data.Length < 8)
-            {
-                return data;
-            }
-
-            int length = BitConverter.ToInt32(data, 0);
-            if (length == data.Length - 4)
-            {
-                byte[] packetBytes = new byte[length];
-                Array.Copy(data, 4, packetBytes, 0, length);
-                return packetBytes;
-            }
-
-            return data;
         }
 
         private void WebSocketConnectionFailed()

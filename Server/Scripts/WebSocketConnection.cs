@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.Net.WebSockets;
 using System.Text;
@@ -17,10 +17,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
 
         public bool IsConnected
         {
-            get
-            {
-                return socket != null && socket.State == WebSocketState.Open;
-            }
+            get { return socket != null && socket.State == WebSocketState.Open; }
         }
 
         public WebSocketConnection(int _id)
@@ -34,54 +31,39 @@ namespace DevelopersHub.RealtimeNetworking.Server
             remoteAddress = _remoteAddress;
         }
 
-        public async Task SendInitializationAsync(string token)
+        public Task SendInitializationAsync(string token)
         {
-            string json = JsonConvert.SerializeObject(new
+            return SendJsonAsync(new
             {
                 packetID = "INITIALIZATION",
                 clientID = id,
                 token = token
             });
-
-            await SendTextAsync(json);
         }
 
         public async void SendMessage(MessageID messageID, string jsonValue)
         {
             try
             {
-                await SendMessageAsync(messageID, jsonValue);
+                await SendJsonAsync(new
+                {
+                    messageID = (int)messageID,
+                    messageName = messageID.ToString(),
+                    jsonValue = string.IsNullOrEmpty(jsonValue) ? "{}" : jsonValue
+                });
             }
             catch (Exception ex)
             {
-                Tools.LogError(ex.Message, ex.StackTrace);
+                Tools.LogError(ex.Message, ex.StackTrace, "WebSocket");
             }
         }
 
-        public async Task SendMessageAsync(MessageID messageID, string jsonValue)
+        private Task SendJsonAsync(object value)
         {
-            object data = null;
-            try
-            {
-                data = JsonConvert.DeserializeObject(jsonValue);
-            }
-            catch
-            {
-                data = jsonValue;
-            }
-
-            string json = JsonConvert.SerializeObject(new
-            {
-                messageID = (int)messageID,
-                messageName = messageID.ToString(),
-                jsonValue = jsonValue,
-                data = data
-            });
-
-            await SendTextAsync(json);
+            return SendTextAsync(JsonConvert.SerializeObject(value));
         }
 
-        public async Task SendTextAsync(string text)
+        private async Task SendTextAsync(string text)
         {
             if (!IsConnected)
             {
@@ -89,6 +71,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
             }
 
             byte[] bytes = Encoding.UTF8.GetBytes(text);
+
             await sendLock.WaitAsync();
             try
             {
@@ -96,10 +79,6 @@ namespace DevelopersHub.RealtimeNetworking.Server
                 {
                     await socket.SendAsync(new ArraySegment<byte>(bytes), WebSocketMessageType.Text, true, CancellationToken.None);
                 }
-            }
-            catch (Exception ex)
-            {
-                Tools.LogError(ex.Message, ex.StackTrace);
             }
             finally
             {
@@ -111,6 +90,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
         {
             WebSocket currentSocket = socket;
             socket = null;
+            remoteAddress = null;
 
             if (currentSocket == null)
             {
@@ -126,12 +106,11 @@ namespace DevelopersHub.RealtimeNetworking.Server
             }
             catch (Exception ex)
             {
-                Tools.LogError(ex.Message, ex.StackTrace);
+                Tools.LogError(ex.Message, ex.StackTrace, "WebSocket");
             }
             finally
             {
                 currentSocket.Dispose();
-                remoteAddress = null;
             }
         }
     }

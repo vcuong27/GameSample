@@ -1,9 +1,6 @@
-﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.WebSockets;
 using System.Text;
@@ -15,7 +12,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
     class WebSocketServer
     {
         private static HttpListener listener;
-        private static bool isRunning = false;
+        private static bool isRunning;
 
         public static int Port { get; private set; }
         public static string Path { get; private set; }
@@ -23,105 +20,37 @@ namespace DevelopersHub.RealtimeNetworking.Server
 
         public static void Start(int port, string path)
         {
-            Start(port, path, Terminal.websocketHost);
-        }
-
-        public static void Start(int port, string path, string host)
-        {
             if (!HttpListener.IsSupported)
             {
-                Console.WriteLine("WebSocket server cannot start because HttpListener is not supported on this platform.");
+                Console.WriteLine("WebSocket server cannot start because HttpListener is not supported.");
                 return;
             }
 
             Port = port;
             Path = NormalizePath(path);
-            Host = NormalizeHost(host);
+            Host = string.IsNullOrWhiteSpace(Terminal.websocketHost) ? "localhost" : Terminal.websocketHost.Trim();
 
-            string primaryPrefix = BuildPrefix(Host, Port, Path);
-            string fallbackPrefix = BuildPrefix("localhost", Port, Path);
-
-            if (!TryStartListener(new[] { primaryPrefix }))
-            {
-                if (!IsLocalHost(Host) && TryStartListener(new[] { fallbackPrefix }))
-                {
-                    Host = "localhost";
-                    Console.WriteLine("WebSocket Server Started on ws://localhost:{0}{1}", Port, Path);
-                    Console.WriteLine("Warning: WebSocket fallback is local-only. To accept LAN/mobile clients, run the URL ACL command in WebSocket_USAGE.md or run the server as Administrator.");
-                    return;
-                }
-
-                Console.WriteLine("WebSocket Server could not start. See WebSocket_USAGE.md for Windows URL ACL instructions.");
-                return;
-            }
-
-            Console.WriteLine("WebSocket Server Started on ws://{0}:{1}{2}", DisplayHost(Host), Port, Path);
-        }
-
-        private static bool TryStartListener(IEnumerable<string> prefixes)
-        {
-            StopListenerOnly();
-
-            HttpListener newListener = new HttpListener();
-            foreach (string prefix in prefixes)
-            {
-                newListener.Prefixes.Add(prefix);
-            }
+            listener = new HttpListener();
+            listener.Prefixes.Add("http://" + Host + ":" + Port + Path);
 
             try
             {
-                newListener.Start();
-                listener = newListener;
+                listener.Start();
                 isRunning = true;
                 _ = AcceptLoopAsync();
-                return true;
-            }
-            catch (HttpListenerException ex)
-            {
-                Tools.LogError(ex.Message, ex.StackTrace, "WebSocket");
-                newListener.Close();
-                return false;
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                Tools.LogError(ex.Message, ex.StackTrace, "WebSocket");
-                newListener.Close();
-                return false;
+
+                string displayHost = Host == "+" || Host == "*" ? "0.0.0.0" : Host;
+                Console.WriteLine("WebSocket Server Started on ws://{0}:{1}{2}", displayHost, Port, Path);
             }
             catch (Exception ex)
             {
                 Tools.LogError(ex.Message, ex.StackTrace, "WebSocket");
-                newListener.Close();
-                return false;
-            }
-        }
+                Console.WriteLine("WebSocket Server could not start. For local test use Terminal.websocketHost = \"localhost\".");
 
-        private static void StopListenerOnly()
-        {
-            isRunning = false;
-
-            if (listener == null)
-            {
-                return;
-            }
-
-            try
-            {
-                listener.Stop();
-            }
-            catch
-            {
-            }
-
-            try
-            {
                 listener.Close();
+                listener = null;
+                isRunning = false;
             }
-            catch
-            {
-            }
-
-            listener = null;
         }
 
         private static string NormalizePath(string path)
@@ -144,38 +73,6 @@ namespace DevelopersHub.RealtimeNetworking.Server
             return path;
         }
 
-        private static string NormalizeHost(string host)
-        {
-            if (string.IsNullOrWhiteSpace(host))
-            {
-                return "localhost";
-            }
-
-            return host.Trim();
-        }
-
-        private static string BuildPrefix(string host, int port, string path)
-        {
-            return $"http://{host}:{port}{path}";
-        }
-
-        private static bool IsLocalHost(string host)
-        {
-            return string.Equals(host, "localhost", StringComparison.OrdinalIgnoreCase) ||
-                   string.Equals(host, "127.0.0.1", StringComparison.OrdinalIgnoreCase) ||
-                   string.Equals(host, "::1", StringComparison.OrdinalIgnoreCase);
-        }
-
-        private static string DisplayHost(string host)
-        {
-            if (host == "+" || host == "*")
-            {
-                return "0.0.0.0";
-            }
-
-            return host;
-        }
-
         private static async Task AcceptLoopAsync()
         {
             while (isRunning)
@@ -183,24 +80,16 @@ namespace DevelopersHub.RealtimeNetworking.Server
                 try
                 {
                     HttpListenerContext context = await listener.GetContextAsync();
-                    _ = HandleContextAsync(context);
+                    _ = HandleClientAsync(context);
                 }
-                catch (ObjectDisposedException)
+                catch
                 {
                     return;
-                }
-                catch (HttpListenerException)
-                {
-                    return;
-                }
-                catch (Exception ex)
-                {
-                    Tools.LogError(ex.Message, ex.StackTrace, "WebSocket");
                 }
             }
         }
 
-        private static async Task HandleContextAsync(HttpListenerContext context)
+        private static async Task HandleClientAsync(HttpListenerContext context)
         {
             if (!context.Request.IsWebSocketRequest)
             {
@@ -227,10 +116,11 @@ namespace DevelopersHub.RealtimeNetworking.Server
 
                 Server.clients[clientID].webSocket.Initialize(socket, remoteAddress);
                 Server.clients[clientID].sendToken = Tools.GenerateToken();
+
                 Terminal.OnClientConnected(clientID, remoteAddress);
                 connected = true;
 
-                Console.WriteLine("Incoming WebSocket connection from {0}. Client ID: {1}.", remoteAddress, clientID);
+                Console.WriteLine("WebSocket client connected. ID: {0}, IP: {1}", clientID, remoteAddress);
                 await Server.clients[clientID].webSocket.SendInitializationAsync(Server.clients[clientID].sendToken);
                 await ReceiveLoopAsync(clientID, socket);
             }
@@ -243,7 +133,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
                 if (connected)
                 {
                     Terminal.OnClientDisconnected(clientID, remoteAddress);
-                    Console.WriteLine("WebSocket client with IP {0} has been disconnected.", remoteAddress);
+                    Console.WriteLine("WebSocket client disconnected. ID: {0}, IP: {1}", clientID, remoteAddress);
                 }
 
                 await Server.clients[clientID].webSocket.DisconnectAsync();
@@ -254,7 +144,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
         {
             for (int i = 1; i <= Server.MaxPlayers; i++)
             {
-                if (Server.clients[i].tcp.socket == null && (Server.clients[i].webSocket == null || !Server.clients[i].webSocket.IsConnected))
+                if (Server.clients[i].tcp.socket == null && !Server.clients[i].webSocket.IsConnected)
                 {
                     return i;
                 }
@@ -269,7 +159,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
 
             while (socket.State == WebSocketState.Open)
             {
-                using (MemoryStream messageStream = new MemoryStream())
+                using (MemoryStream stream = new MemoryStream())
                 {
                     WebSocketReceiveResult result;
                     do
@@ -281,19 +171,14 @@ namespace DevelopersHub.RealtimeNetworking.Server
                             return;
                         }
 
-                        messageStream.Write(buffer, 0, result.Count);
+                        stream.Write(buffer, 0, result.Count);
                     }
                     while (!result.EndOfMessage);
 
-                    byte[] data = messageStream.ToArray();
                     if (result.MessageType == WebSocketMessageType.Text)
                     {
-                        string text = Encoding.UTF8.GetString(data);
+                        string text = Encoding.UTF8.GetString(stream.ToArray());
                         HandleTextMessage(clientID, text);
-                    }
-                    else if (result.MessageType == WebSocketMessageType.Binary)
-                    {
-                        HandleBinaryMessage(clientID, data);
                     }
                 }
             }
@@ -303,15 +188,16 @@ namespace DevelopersHub.RealtimeNetworking.Server
         {
             try
             {
-                JObject root = JObject.Parse(text);
-                if (!TryReadMessageID(root, out MessageID messageID))
+                JObject json = JObject.Parse(text);
+
+                MessageID messageID;
+                if (!ReadMessageID(json, out messageID))
                 {
-                    Console.WriteLine("Invalid WebSocket message from Client[{0}]. Missing or invalid messageID.", clientID);
+                    Console.WriteLine("Invalid WebSocket message. Missing messageID. Client ID: {0}", clientID);
                     return;
                 }
 
-                JToken dataToken = GetProperty(root, "jsonValue") ?? GetProperty(root, "data") ?? GetProperty(root, "payload");
-                string jsonValue = GetJsonValue(dataToken);
+                string jsonValue = json["jsonValue"] != null ? json["jsonValue"].ToString() : "{}";
 
                 using (Packet packet = new Packet())
                 {
@@ -334,10 +220,11 @@ namespace DevelopersHub.RealtimeNetworking.Server
             }
         }
 
-        private static bool TryReadMessageID(JObject root, out MessageID messageID)
+        private static bool ReadMessageID(JObject json, out MessageID messageID)
         {
-            messageID = default;
-            JToken token = GetProperty(root, "messageID") ?? GetProperty(root, "packetID") ?? GetProperty(root, "id");
+            messageID = 0;
+
+            JToken token = json["messageID"];
             if (token == null)
             {
                 return false;
@@ -345,85 +232,11 @@ namespace DevelopersHub.RealtimeNetworking.Server
 
             if (token.Type == JTokenType.Integer)
             {
-                int value = token.Value<int>();
-                if (Enum.IsDefined(typeof(MessageID), value))
-                {
-                    messageID = (MessageID)value;
-                    return true;
-                }
-
-                return false;
-            }
-
-            string text = token.ToString();
-            if (int.TryParse(text, out int numericValue) && Enum.IsDefined(typeof(MessageID), numericValue))
-            {
-                messageID = (MessageID)numericValue;
+                messageID = (MessageID)token.Value<int>();
                 return true;
             }
 
-            return Enum.TryParse(text, true, out messageID);
-        }
-
-        private static JToken GetProperty(JObject root, string name)
-        {
-            JProperty property = root.Properties().FirstOrDefault(p => string.Equals(p.Name, name, StringComparison.OrdinalIgnoreCase));
-            return property != null ? property.Value : null;
-        }
-
-        private static string GetJsonValue(JToken token)
-        {
-            if (token == null || token.Type == JTokenType.Null)
-            {
-                return "{}";
-            }
-
-            if (token.Type == JTokenType.String)
-            {
-                return token.ToString();
-            }
-
-            return token.ToString(Formatting.None);
-        }
-
-        private static void HandleBinaryMessage(int clientID, byte[] data)
-        {
-            try
-            {
-                if (data == null || data.Length == 0)
-                {
-                    return;
-                }
-
-                byte[] packetData = StripLengthPrefixIfPresent(data);
-                Threading.ExecuteOnMainThread(() =>
-                {
-                    using (Packet packet = new Packet(packetData))
-                    {
-                        Terminal.ReceivedPacket(clientID, packet);
-                    }
-                });
-            }
-            catch (Exception ex)
-            {
-                Tools.LogError(ex.Message, ex.StackTrace, "WebSocket");
-            }
-        }
-
-        private static byte[] StripLengthPrefixIfPresent(byte[] data)
-        {
-            if (data.Length >= 4)
-            {
-                int declaredLength = BitConverter.ToInt32(data, 0);
-                if (declaredLength == data.Length - 4)
-                {
-                    byte[] stripped = new byte[declaredLength];
-                    Buffer.BlockCopy(data, 4, stripped, 0, declaredLength);
-                    return stripped;
-                }
-            }
-
-            return data;
+            return Enum.TryParse(token.ToString(), true, out messageID);
         }
     }
 }

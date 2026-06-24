@@ -8,32 +8,24 @@ namespace DevelopersHub.RealtimeNetworking.Client
     {
         public static string CreateMessage(int messageID, string jsonValue)
         {
-            return CreateMessage(messageID.ToString(), jsonValue, false);
+            return "{\"messageID\":" + messageID + ",\"jsonValue\":" + Quote(jsonValue ?? "{}") + "}";
         }
 
         public static string CreateMessage(string messageID, string jsonValue)
         {
-            int parsedMessageID;
-            bool isNumeric = int.TryParse(messageID, out parsedMessageID);
-            return CreateMessage(messageID, jsonValue, !isNumeric);
-        }
+            int numericID;
+            if (int.TryParse(messageID, out numericID))
+            {
+                return CreateMessage(numericID, jsonValue);
+            }
 
-        private static string CreateMessage(string messageID, string jsonValue, bool quoteMessageID)
-        {
-            string idPart = quoteMessageID ? Quote(messageID) : messageID;
-            string dataPart = FormatJsonPayload(jsonValue);
-            return "{\"messageID\":" + idPart + ",\"data\":" + dataPart + "}";
+            return "{\"messageID\":" + Quote(messageID) + ",\"jsonValue\":" + Quote(jsonValue ?? "{}") + "}";
         }
 
         public static bool TryParseInitialization(string json, out int clientID, out string token)
         {
             clientID = 0;
             token = string.Empty;
-
-            if (string.IsNullOrEmpty(json))
-            {
-                return false;
-            }
 
             string packetID;
             if (!TryGetString(json, "packetID", out packetID))
@@ -64,23 +56,7 @@ namespace DevelopersHub.RealtimeNetworking.Client
             TryGetString(json, "messageName", out messageName);
             TryGetString(json, "jsonValue", out jsonValue);
 
-            return messageID >= 0 || !string.IsNullOrEmpty(messageName) || !string.IsNullOrEmpty(jsonValue);
-        }
-
-        private static string FormatJsonPayload(string jsonValue)
-        {
-            if (string.IsNullOrWhiteSpace(jsonValue))
-            {
-                return "{}";
-            }
-
-            string trimmed = jsonValue.Trim();
-            if ((trimmed.StartsWith("{") && trimmed.EndsWith("}")) || (trimmed.StartsWith("[") && trimmed.EndsWith("]")))
-            {
-                return trimmed;
-            }
-
-            return Quote(jsonValue);
+            return messageID >= 0;
         }
 
         private static string Quote(string value)
@@ -91,9 +67,11 @@ namespace DevelopersHub.RealtimeNetworking.Client
         private static string Escape(string value)
         {
             StringBuilder builder = new StringBuilder(value.Length + 8);
+
             for (int i = 0; i < value.Length; i++)
             {
                 char c = value[i];
+
                 switch (c)
                 {
                     case '\\': builder.Append("\\\\"); break;
@@ -116,12 +94,19 @@ namespace DevelopersHub.RealtimeNetworking.Client
                         break;
                 }
             }
+
             return builder.ToString();
         }
 
         private static bool TryGetInt(string json, string fieldName, out int value)
         {
             value = 0;
+
+            if (string.IsNullOrEmpty(json))
+            {
+                return false;
+            }
+
             Match match = Regex.Match(json, "\\\"" + Regex.Escape(fieldName) + "\\\"\\s*:\\s*(-?\\d+)", RegexOptions.IgnoreCase);
             return match.Success && int.TryParse(match.Groups[1].Value, out value);
         }
@@ -129,24 +114,20 @@ namespace DevelopersHub.RealtimeNetworking.Client
         private static bool TryGetString(string json, string fieldName, out string value)
         {
             value = string.Empty;
+
+            if (string.IsNullOrEmpty(json))
+            {
+                return false;
+            }
+
             Match match = Regex.Match(json, "\\\"" + Regex.Escape(fieldName) + "\\\"\\s*:\\s*\\\"((?:\\\\.|[^\\\"])*)\\\"", RegexOptions.IgnoreCase);
             if (!match.Success)
             {
                 return false;
             }
 
-            value = Unescape(match.Groups[1].Value);
+            value = Regex.Unescape(match.Groups[1].Value);
             return true;
-        }
-
-        private static string Unescape(string value)
-        {
-            if (string.IsNullOrEmpty(value))
-            {
-                return string.Empty;
-            }
-
-            return Regex.Unescape(value);
         }
     }
 }
