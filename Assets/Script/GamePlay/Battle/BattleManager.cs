@@ -39,19 +39,8 @@ public class BattleResultData
     }
 }
 
-public class BattleManager : MonoBehaviour
+public class BattleManager : Singleton<BattleManager>
 {
-    private static BattleManager _instance;
-    public static BattleManager Instance
-    {
-        get
-        {
-            return _instance;
-        }
-    }
-
-
-
 
     //enemy
     private List<PlayerBuildingData> listBuilding;
@@ -71,18 +60,6 @@ public class BattleManager : MonoBehaviour
     private float remainTime;
     private BattleResultData battleData;
 
-
-    
-
-
-    private void Awake()
-    {
-        if (_instance != null)
-            return;
-
-        _instance = this;
-        DontDestroyOnLoad(gameObject);
-    }
 
     private void Start()
     {
@@ -124,12 +101,12 @@ public class BattleManager : MonoBehaviour
            bool result = BattleController.Instance.gridManager.PlaceBuilding(building.Position, buildingData.size, building.BuildingType);
             if (result)
             {
-                GameObject buildingObj = Instantiate(DataManager.Instance.GetbuidingDataGames(buildingData.buildingType).buildingPrefab, BattleController.Instance.object3D.transform);
-                buildingObj.transform.position = GridManager.Instance.CellToWorldCenter(building.Position, buildingData.size);
-                buildingObj.GetComponent<IBuilding>()?.InitBatle();
-                listBuildingObj.Add(buildingObj.GetComponent<IBuilding>());
-                numberBuilding ++;
-                Debug.Log("Building placed successfully.");
+                //GameObject buildingObj = Instantiate(DataManager.Instance.GetbuidingDataGames(buildingData.buildingType).buildingPrefab, BattleController.Instance.object3D.transform);
+                //buildingObj.transform.position = GridManager.Instance.CellToWorldCenter(building.Position, buildingData.size);
+                //buildingObj.GetComponent<IBuilding>()?.InitBatle();
+                //listBuildingObj.Add(buildingObj.GetComponent<IBuilding>());
+                //numberBuilding ++;
+                //Debug.Log("Building placed successfully.");
             }
             else
             {

@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Assets.Script.Manager
+    public class GameSceneManager : Singleton<GameSceneManager>
 {
-    public static class GameSceneManager
-    {
         public const string SCENE_MAIN = "CSR_Main";
         public const string SCENE_BATTLE = "SCR_Battle";
         public const string SCENE_ANIMATE = "SCR_Animate";
@@ -13,7 +11,7 @@ namespace Assets.Script.Manager
 
         private static string currentScene = SCENE_MAIN;
 
-        public static void LoadScene(string sceneName)
+        public void LoadScene(string sceneName)
         {
             currentScene = sceneName;
             switch (sceneName)
@@ -31,11 +29,10 @@ namespace Assets.Script.Manager
             }
         }
 
-        public static string GetCurrentScene()
+        public string GetCurrentScene()
         {
             return currentScene;
         }
 
 
     }
-}

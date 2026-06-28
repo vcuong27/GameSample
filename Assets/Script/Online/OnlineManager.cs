@@ -1,31 +1,14 @@
-using Assets.Script.Manager;
 using DevelopersHub.RealtimeNetworking.Client;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class OnlineManager : MonoBehaviour
+public class OnlineManager : Singleton<OnlineManager>
 {
-
-
-
-    private static OnlineManager _instance;
-    public static OnlineManager Instance => _instance;
-
-
-    [Header("Connection")]
-    [SerializeField] private bool useWebSocket = true;
 
     private bool isConnected = false;
     private bool isLoggedIn = false;
     private int playerID;
-
-    private void Awake()
-    {
-        _instance = this;
-        DontDestroyOnLoad(gameObject);
-    }
-
 
     private void Start()
     {
@@ -45,7 +28,7 @@ public class OnlineManager : MonoBehaviour
 
     public void ConnectToServer()
     {
-        if (useWebSocket)
+        if (false)
         {
             RealtimeNetworking.ConnectWebSocket();
         }

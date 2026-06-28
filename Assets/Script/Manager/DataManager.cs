@@ -1,16 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Playables;
 
-
-
-
-public class DataManager : MonoBehaviour
+public class DataManager : Singleton<DataManager>
 {
-
-
-
 
     private Buildings buildingsData;
     private List<IBuildingData> listBuildData;
@@ -19,15 +12,6 @@ public class DataManager : MonoBehaviour
     private List<MenuData> listMenuData;
 
     private bool isInitialized = false;
-
-    private static DataManager _instance;
-    public static DataManager Instance
-    {
-        get
-        {
-            return _instance;
-        }
-    }
 
     public void InitOnlineData()
     {
@@ -49,15 +33,6 @@ public class DataManager : MonoBehaviour
     public bool IsInitialized()
     {
         return isInitialized;
-    }
-
-    private void Awake()
-    {
-        if (_instance != null)
-            return;
-
-        _instance = this;
-        DontDestroyOnLoad(gameObject);
     }
 
     public Buildings GetBuildingData()
@@ -84,8 +59,8 @@ public class DataManager : MonoBehaviour
     public MenuData GetMenuData(MenuType type)
     {
         return listMenuData.First(x => x.Type == type);
-    }  
-        
+    }
+
 
 
 }

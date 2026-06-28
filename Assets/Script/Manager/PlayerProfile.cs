@@ -77,27 +77,17 @@ public class PlayerProfileData
 }
 
 
-public class PlayerProfile : MonoBehaviour
+public class PlayerProfile : Singleton<PlayerProfile>
 {
     public static ProfileVersion PROFILE_VER = ProfileVersion.V1;
 
     public static Action OnProfileUpdated;
 
 
-    private static PlayerProfile _instance;
-    public static PlayerProfile Instance => _instance;
-
-
     private bool needSaveProfile;
     private const float SAVE_INTERVAL = 10 * 60f; // 10 minutes
     private float saveTimer = 0f;
 
-    private void Awake()
-    {
-        _instance = this;
-        DontDestroyOnLoad(gameObject);
-        needSaveProfile = false;
-    }
 
     private void Start()
     {

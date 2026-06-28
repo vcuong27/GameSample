@@ -2,20 +2,17 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Assets.Script.Manager
+public enum ArchivementType
 {
-    public enum ArchivementType
-    {
-        NONE,
-        KILL_UNIT,
-        DESTROY_BUILDING,
-        WIN_BATTLE,
-        LOSE_BATTLE,
-        DRAW_BATTLE
-    }
+    NONE,
+    KILL_UNIT,
+    DESTROY_BUILDING,
+    WIN_BATTLE,
+    LOSE_BATTLE,
+    DRAW_BATTLE
+}
 
-    public class ArchivementManager
-    {
+public class ArchivementManager : Singleton<ArchivementManager>
+{
 
-    }
 }

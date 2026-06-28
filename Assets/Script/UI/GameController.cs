@@ -1,4 +1,3 @@
-using Assets.Script.Manager;
 using Lean.Gui;
 using System;
 using UnityEngine;
@@ -44,7 +43,7 @@ public class GameController : IMenuStack
     {
         ShowConfirmPopup("Start Battle", "Are you sure you want to start the battle?", () =>
         {
-            GameSceneManager.LoadScene(GameSceneManager.SCENE_BATTLE);
+            GameSceneManager.Instance.LoadScene(GameSceneManager.SCENE_BATTLE);
         },
         () =>
         {

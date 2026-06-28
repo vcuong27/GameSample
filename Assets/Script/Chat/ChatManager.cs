@@ -3,32 +3,13 @@ using System.Dynamic;
 using UnityEngine;
 using UnityEngine.SocialPlatforms.Impl;
 
-public class ChatManager : MonoBehaviour
+public class ChatManager : Singleton<ChatManager>
 {
-
-    private static ChatManager _instance;
-    public static ChatManager Instance
-    {
-        get
-        {
-            return _instance;
-        }
-    }
 
     public static Action OnChatMessageReceived;
     public static Action OnChatHistoriesReceived;
 
     private bool isInitialized = false;
-
-
-    private void Awake()
-    {
-        if (_instance != null)
-            return;
-
-        _instance = this;
-        DontDestroyOnLoad(gameObject);
-    }
 
     public void Initialize()
     {

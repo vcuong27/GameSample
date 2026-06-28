@@ -1,4 +1,3 @@
-using Assets.Script.Manager;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -13,7 +12,7 @@ public class AnimateController : MonoBehaviour
     public IEnumerator LoadGame()
     {
 
-        AsyncOperation sceneLoading = SceneManager.LoadSceneAsync(GameSceneManager.GetCurrentScene());
+        AsyncOperation sceneLoading = SceneManager.LoadSceneAsync(GameSceneManager.Instance.GetCurrentScene());
         while (!sceneLoading.isDone)
         {
             float progress = Mathf.Clamp01(sceneLoading.progress / 1.0f);

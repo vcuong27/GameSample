@@ -10,7 +10,7 @@ public enum ClanStatus
     LEADER
 }
 
-public class ClanManager : MonoBehaviour
+public class ClanManager : Singleton<ClanManager>
 {
 
     public static Action OnCLanCreated;
@@ -18,17 +18,6 @@ public class ClanManager : MonoBehaviour
     public static Action OnCLanListReceived;
     public static Action OnClanWarStarted;
     public static Action OnClanWarInfoReceived;
-
-
-    private static ClanManager _instance;
-    public static ClanManager Instance
-    {
-        get
-        {
-            return _instance;
-        }
-    }
-
 
     private bool isInitialized = false;
     private bool isReceivedClanInfo = false;
@@ -42,15 +31,6 @@ public class ClanManager : MonoBehaviour
     private List<ClanListInfo> clanListInfo;
     private int currentWarID;
     private SC_ClanWarInfo currentWarInfo;
-
-    private void Awake()
-    {
-        if (_instance != null)
-            return;
-
-        _instance = this;
-        DontDestroyOnLoad(gameObject);
-    }
 
     public void Initlize()
     {

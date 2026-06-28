@@ -2,20 +2,9 @@ using Mono.Cecil;
 using System.Linq;
 using UnityEngine;
 
-public class SoundManager : MonoBehaviour
+public class SoundManager : Singleton<SoundManager>
 {
-
     private Sounds sounds;
-
-
-    private static SoundManager _instance;
-    public static SoundManager Instance
-    {
-        get
-        {
-            return _instance;
-        }
-    }
 
     public void Initlize()
     {
@@ -26,7 +15,5 @@ public class SoundManager : MonoBehaviour
     {
         return sounds.soundDatas.First(x => x.Type == type && x.Clip == clip).AudioClip;
     }
-
-
 
 }
