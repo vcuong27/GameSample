@@ -37,8 +37,6 @@ public class UIGamePlay : MonoBehaviour
     {
         //playerName.text = PlayerProfile.Instance.GetPlayerName();
         //playerGold.text = PlayerProfile.Instance.GetCoins().ToString();
-
-
     }
 
     public void JoyStickSet(Vector2 vector)

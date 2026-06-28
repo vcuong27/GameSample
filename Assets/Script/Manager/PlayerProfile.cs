@@ -1,6 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Unity.VisualScripting;
 using UnityEngine;
+using System;
+using System.Collections.Generic;
 
 public enum ProfileVersion
 {
@@ -62,6 +63,13 @@ public class PlayerClanData
 }
 
 [Serializable]
+public class CurrencyData
+{
+    public long Coin;
+    public long Gem;
+}
+
+[Serializable]
 public class PlayerProfileData
 {
     public int playerID;
@@ -73,20 +81,31 @@ public class PlayerProfileData
     public PlayerStatData statData;
     public PlayerSettingData settingData;
     public PlayerClanData clanData;
+    public CurrencyData currencyData;
 }
 
 
-public class PlayerProfile : Singleton<PlayerProfile>
+public class PlayerProfile : MonoBehaviour
 {
     public static ProfileVersion PROFILE_VER = ProfileVersion.V1;
 
     public static Action OnProfileUpdated;
 
 
+    private static PlayerProfile _instance;
+    public static PlayerProfile Instance => _instance;
+
+
     private bool needSaveProfile;
     private const float SAVE_INTERVAL = 10 * 60f; // 10 minutes
     private float saveTimer = 0f;
 
+    private void Awake()
+    {
+        _instance = this;
+        DontDestroyOnLoad(gameObject);
+        needSaveProfile = false;
+    }
 
     private void Start()
     {
@@ -122,9 +141,7 @@ public class PlayerProfile : Singleton<PlayerProfile>
 
     public void Initialize(string profileData)
     {
-
         LoadPlayerProfile(profileData);
-
         OnProfileUpdated?.Invoke();
         IsInitialized = true;
     }
@@ -165,6 +182,11 @@ public class PlayerProfile : Singleton<PlayerProfile>
     public PlayerStatData GetPlayerStatData()
     {
         return CurentProfile.statData;
+    }
+
+    public CurrencyData GetCurrencyData()
+    {
+        return CurentProfile.currencyData;
     }
 
     public void IncreasePlayerLevel(int number)
@@ -293,8 +315,6 @@ public class PlayerProfile : Singleton<PlayerProfile>
         SavePlayerProfile();
     }
 
-
-
     private void LoadPlayerProfile(string profileJson)
     {
         if (profileJson.Length > 10)
@@ -311,7 +331,6 @@ public class PlayerProfile : Singleton<PlayerProfile>
                 CurentProfile.profileVersion = PROFILE_VER;
                 SavePlayerProfile();
             }
-
         }
         else
         {
@@ -346,6 +365,11 @@ public class PlayerProfile : Singleton<PlayerProfile>
             clanData = new PlayerClanData()
             {
                 ClanID = -1
+            },
+            currencyData = new CurrencyData()
+            {
+                Coin = 1000,
+                Gem = 0
             }
         };
 
