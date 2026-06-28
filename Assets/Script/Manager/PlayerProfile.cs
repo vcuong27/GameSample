@@ -189,6 +189,46 @@ public class PlayerProfile : MonoBehaviour
         return CurentProfile.currencyData;
     }
 
+    public long GetPlayerCoins()
+    {
+        return CurentProfile.currencyData.Coin;
+    }
+
+    public void IncreasePlayerCoins(long number)
+    {
+        CurentProfile.currencyData.Coin += number;
+        needSaveProfile = true;
+    }
+
+    public void DecreasePlayerCoins(long number)
+    {
+        CurentProfile.currencyData.Coin -= number;
+        needSaveProfile = true;
+    }
+
+
+    public long GetPlayerGems()
+    {
+        return CurentProfile.currencyData.Gem;
+    }
+
+    public void IncreasePlayerGems(long number)
+    {
+        CurentProfile.currencyData.Gem += number;
+        needSaveProfile = true;
+    }
+
+    public void DecreasePlayerGems(long number)
+    {
+        CurentProfile.currencyData.Gem -= number;
+        needSaveProfile = true;
+    }
+
+    public int GetPlayerLevel()
+    {
+        return CurentProfile.statData.Level;
+    }
+
     public void IncreasePlayerLevel(int number)
     {
         CurentProfile.statData.Level += number;

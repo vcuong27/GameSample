@@ -5,11 +5,13 @@ using UnityEngine.UI;
 
 public class LoadingController : IMenuStack
 {
-
+    public LoginPopup loginPopup;
     public Slider slider;
 
     private void Start()
     {
+        loginPopup.gameObject.SetActive(false);
+
         slider.value = 0;
         StartCoroutine(LoadGame());
     }
@@ -24,9 +26,9 @@ public class LoadingController : IMenuStack
         yield return new WaitUntil(() => OnlineManager.Instance.IsConnected());
         slider.value = 0.2f;
 
-        // Login
-        Debug.Log("Logging in to Server...");
-        OnlineManager.Instance.LoginToServer();
+        loginPopup.Initilize(this);
+        loginPopup.gameObject.SetActive(true);
+       
         yield return new WaitUntil(() => OnlineManager.Instance.IsLoggedIn());
         slider.value = 0.3f;
 
@@ -62,5 +64,12 @@ public class LoadingController : IMenuStack
         slider.value = 1;
 
     }
+
+    public void Login()
+    {
+        // Login
+        Debug.Log("Logging in to Server...");
+        OnlineManager.Instance.LoginToServer(loginPopup.GetUsername(), loginPopup.GetPassword());
+    }    
 
 }

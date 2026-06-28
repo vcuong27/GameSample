@@ -216,11 +216,11 @@ public class OnlineManager : Singleton<OnlineManager>
     }
 
 
-    public void LoginToServer()
+    public void LoginToServer(string username, string password)
     {
         CS_Auth aut = new CS_Auth();
-        aut.username = "player02";
-        aut.password = "123456";
+        aut.username = username;
+        aut.password = password;
 
         SendToServer(MessageID.AUTH, aut);
     }
