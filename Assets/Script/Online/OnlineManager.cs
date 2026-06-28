@@ -219,7 +219,7 @@ public class OnlineManager : Singleton<OnlineManager>
     public void LoginToServer()
     {
         CS_Auth aut = new CS_Auth();
-        aut.username = "player03";
+        aut.username = "player02";
         aut.password = "123456";
 
         SendToServer(MessageID.AUTH, aut);
