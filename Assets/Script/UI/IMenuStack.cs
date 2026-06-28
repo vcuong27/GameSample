@@ -1,5 +1,4 @@
 using Lean.Gui;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -74,12 +73,12 @@ public class IMenuStack : MonoBehaviour
 
     public void CloseBlockPopup()
     {
-        if(blockPopup != null)
+        if (blockPopup != null)
         {
             Destroy(blockPopup.gameObject);
             blockPopup = null;
         }
-    }    
+    }
 
 
 }

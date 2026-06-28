@@ -1,5 +1,4 @@
 using Lean.Gui;
-using System;
 using UnityEngine;
 
 public class Sample : MonoBehaviour
@@ -27,8 +26,8 @@ public class Sample : MonoBehaviour
     }
     public void JoyStickSet(Vector2 vector)
     {
-        if(enabler)
-        Debug.Log($"[Sample] JoyStickSet: {vector}");
+        if (enabler)
+            Debug.Log($"[Sample] JoyStickSet: {vector}");
 
     }
 }

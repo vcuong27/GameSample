@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class UIUintPannelInfor : MonoBehaviour
@@ -17,7 +15,7 @@ public class UIUintPannelInfor : MonoBehaviour
         {
             UIUnitInfor uIUnitInfor = Instantiate(prefabUnitInfor, contentUnitInfor.transform).GetComponent<UIUnitInfor>();
             uIUnitInfor.Init(unit);
-        }    
+        }
     }
 
 }

@@ -16,6 +16,6 @@ public class UIDefendPlayerInfo : MonoBehaviour
     public void Init()
     {
 
-    }    
+    }
 
 }

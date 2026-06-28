@@ -22,5 +22,5 @@ public class UIShopItem : MonoBehaviour
     {
         Debug.Log($"Buy Building {data.BuildingType} ");
         //GameManager.Instance.BuyBuilding(data.BuildingType);
-    }    
+    }
 }

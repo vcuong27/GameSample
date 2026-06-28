@@ -6,11 +6,13 @@ using UnityEngine;
 public class OnlineManager : Singleton<OnlineManager>
 {
 
+    private bool useWebSocket = true;
+
     private bool isConnected = false;
     private bool isLoggedIn = false;
     private int playerID;
 
-    private void Start()
+    public OnlineManager()
     {
         RealtimeNetworking.OnDisconnectedFromServer += Disconnected;
         RealtimeNetworking.OnConnectingToServerResult += ConnectResult;
@@ -18,7 +20,7 @@ public class OnlineManager : Singleton<OnlineManager>
         RealtimeNetworking.OnWebSocketMessageReceived += WebSocketMessageReceived;
     }
 
-    private void OnDestroy()
+    ~OnlineManager()
     {
         RealtimeNetworking.OnDisconnectedFromServer -= Disconnected;
         RealtimeNetworking.OnConnectingToServerResult -= ConnectResult;
@@ -28,7 +30,7 @@ public class OnlineManager : Singleton<OnlineManager>
 
     public void ConnectToServer()
     {
-        if (false)
+        if (useWebSocket)
         {
             RealtimeNetworking.ConnectWebSocket();
         }
@@ -309,14 +311,6 @@ public class OnlineManager : Singleton<OnlineManager>
         mes.sentTime = DateTimeOffset.UtcNow.DateTime;
         SendToServer(MessageID.CHAT_MESSAGE, mes);
     }
-
-
-
-
-
-
-
-
 
     void SendToServer(MessageID id, IBaseMessage baseMessage)
     {

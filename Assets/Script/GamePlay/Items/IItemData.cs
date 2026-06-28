@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public enum ItemType
 {
     NONE = 0,
@@ -13,5 +11,5 @@ public enum ItemType
 
 public class IItemData
 {
-    
+
 }

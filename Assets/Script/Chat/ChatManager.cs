@@ -1,7 +1,5 @@
 using System;
-using System.Dynamic;
 using UnityEngine;
-using UnityEngine.SocialPlatforms.Impl;
 
 public class ChatManager : Singleton<ChatManager>
 {

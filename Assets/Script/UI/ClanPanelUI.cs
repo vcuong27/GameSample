@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,7 +17,7 @@ public class ClanPanelUI : MonoBehaviour
         ClanManager.OnClanWarInfoReceived += OnClanWarInfoReceived;
     }
 
-    
+
     private void OnDisable()
     {
         ClanManager.OnCLanListReceived -= OnListClanReceived;

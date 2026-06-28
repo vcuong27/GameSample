@@ -1,4 +1,3 @@
-using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -20,5 +19,5 @@ public class UIUnitInfor : MonoBehaviour
         textUnitName.text = "Name";
         //imageUnitIcon.sprite = unitData.UnitIcon;
     }
-    
+
 }

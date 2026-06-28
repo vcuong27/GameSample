@@ -1,7 +1,6 @@
-﻿using Unity.VisualScripting;
-using UnityEngine;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public enum ProfileVersion
 {
@@ -151,7 +150,7 @@ public class PlayerProfile : Singleton<PlayerProfile>
     {
         return CurentProfile.clanData.ClanID;
     }
-    
+
     public void SetClanID(int clanID)
     {
         CurentProfile.clanData.ClanID = clanID;

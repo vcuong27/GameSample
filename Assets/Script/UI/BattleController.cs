@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class BattleController : IMenuStack
@@ -33,7 +32,7 @@ public class BattleController : IMenuStack
 
     private void Update()
     {
-        
+
     }
 
     private void OnDestroy()
@@ -49,8 +48,8 @@ public class BattleController : IMenuStack
     public void ShowPrepare()
     {
         uIMainBattle.ShowPrepareScreen();
-    }   
-    
+    }
+
     public void StartBattle()
     {
         BattleManager.Instance.StartBattle();
@@ -66,6 +65,6 @@ public class BattleController : IMenuStack
     public void ShowResult(BattleResult result)
     {
         uIMainBattle.ShowResult(result);
-    }    
+    }
 
 }

@@ -1,8 +1,6 @@
 namespace DevelopersHub.RealtimeNetworking.Client
 {
     using System;
-    using System.Collections;
-    using System.Collections.Generic;
     using System.IO;
     using System.IO.Compression;
     using System.Security.Cryptography;
@@ -64,7 +62,7 @@ namespace DevelopersHub.RealtimeNetworking.Client
             return (T)xml.Deserialize(reader);
         }
 
-        public async static Task<string> SerializeAsync<T>(this T target)
+        public static async Task<string> SerializeAsync<T>(this T target)
         {
             Task<string> task = Task.Run(() =>
             {
@@ -76,7 +74,7 @@ namespace DevelopersHub.RealtimeNetworking.Client
             return await task;
         }
 
-        public async static Task<T> DesrializeAsync<T>(this string target)
+        public static async Task<T> DesrializeAsync<T>(this string target)
         {
             Task<T> task = Task.Run(() =>
             {
@@ -89,7 +87,7 @@ namespace DevelopersHub.RealtimeNetworking.Client
         #endregion
 
         #region Compression
-        public async static Task<byte[]> CompressAsync(string target)
+        public static async Task<byte[]> CompressAsync(string target)
         {
             Task<byte[]> task = Task.Run(() =>
             {
@@ -114,7 +112,7 @@ namespace DevelopersHub.RealtimeNetworking.Client
             }
         }
 
-        public async static Task<string> DecompressAsync(byte[] bytes)
+        public static async Task<string> DecompressAsync(byte[] bytes)
         {
             Task<string> task = Task.Run(() =>
             {

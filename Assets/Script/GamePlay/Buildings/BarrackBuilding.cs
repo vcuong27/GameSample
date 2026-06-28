@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class BarrackBuilding : IBuilding
 {
@@ -23,7 +22,7 @@ public class BarrackBuilding : IBuilding
     private float trainingTime;
     private DateTime ConstructingTime;
 
-  
+
 
 
     void Start()
@@ -72,7 +71,7 @@ public class BarrackBuilding : IBuilding
     {
         Debug.Log("Confirm");
         barrackState = BarrackState.Constructing;
-        ConstructingTime =  DateTime.UtcNow.AddSeconds(currentData.BuildTime);
+        ConstructingTime = DateTime.UtcNow.AddSeconds(currentData.BuildTime);
     }
 
     public void Cancel()

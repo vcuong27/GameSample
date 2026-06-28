@@ -120,7 +120,7 @@ namespace DevelopersHub.RealtimeNetworking.Client
 
         public static void ReceiveByte(Packet packet)
         {
-            if(packet != null)
+            if (packet != null)
             {
                 int packetID = packet.ReadInt();
                 byte data = packet.ReadByte();

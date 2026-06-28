@@ -64,7 +64,7 @@ namespace DevelopersHub.RealtimeNetworking.Client
             return host;
         }
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         [UnityEditor.MenuItem("Developers Hub/Realtime Networking/Settings")]
         public static void CreateSettings()
         {
@@ -90,7 +90,7 @@ namespace DevelopersHub.RealtimeNetworking.Client
                 UnityEditor.Selection.activeObject = asset;
             }
         }
-        #endif
+#endif
 
     }
 }

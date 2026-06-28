@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-public enum ArchivementType
+﻿public enum ArchivementType
 {
     NONE,
     KILL_UNIT,

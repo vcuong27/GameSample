@@ -5,9 +5,9 @@ public class ConfirmPopup : MonoBehaviour
 {
     [SerializeField] private TMPro.TextMeshProUGUI titleText;
     [SerializeField] private TMPro.TextMeshProUGUI messageText;
-   
+
     private Action onConfirm;
-    private Action onCancel;    
+    private Action onCancel;
 
     internal void Init(string title, string message, Action onConfirm, Action onCancel)
     {

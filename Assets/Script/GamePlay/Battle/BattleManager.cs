@@ -1,8 +1,5 @@
-using NUnit.Framework;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.PlayerSettings;
 
 public enum BattleState
 {
@@ -85,7 +82,7 @@ public class BattleManager : Singleton<BattleManager>
         listBuilding = buildingDatas;
         listPlayerUnit = playerUnitDatas;
         listPlayerItem = playerItemDatas;
-    }    
+    }
 
     public void InitBattle()
     {
@@ -98,7 +95,7 @@ public class BattleManager : Singleton<BattleManager>
         foreach (var building in listBuilding)
         {
             BuidingDataGame buildingData = DataManager.Instance.GetbuidingDataGames(building.BuildingType);
-           bool result = BattleController.Instance.gridManager.PlaceBuilding(building.Position, buildingData.size, building.BuildingType);
+            bool result = BattleController.Instance.gridManager.PlaceBuilding(building.Position, buildingData.size, building.BuildingType);
             if (result)
             {
                 //GameObject buildingObj = Instantiate(DataManager.Instance.GetbuidingDataGames(buildingData.buildingType).buildingPrefab, BattleController.Instance.object3D.transform);
@@ -112,7 +109,7 @@ public class BattleManager : Singleton<BattleManager>
             {
                 Debug.Log("Failed to place the building.");
             }
-        }   
+        }
 
 
     }
@@ -133,7 +130,7 @@ public class BattleManager : Singleton<BattleManager>
         battleState = BattleState.BATTLE;
     }
 
-    public void BattleUpdate() 
+    public void BattleUpdate()
     {
         // tha unit
         SpawnUnit();
@@ -175,7 +172,7 @@ public class BattleManager : Singleton<BattleManager>
             battleState = BattleState.END;
         }
 
-        if(remainTime <=0)
+        if (remainTime <= 0)
         {
             battleResult = BattleResult.DRAW;
             battleState = BattleState.END;

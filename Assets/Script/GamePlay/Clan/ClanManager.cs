@@ -1,4 +1,3 @@
-using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -35,10 +34,10 @@ public class ClanManager : Singleton<ClanManager>
     public void Initlize()
     {
         isInitialized = true;
-        isReceivedClanInfo =false;
+        isReceivedClanInfo = false;
         clanListInfo = null;
         clanInfo = null;
-        status = ClanStatus.NONE;   
+        status = ClanStatus.NONE;
         score = 0;
 
     }
@@ -78,7 +77,7 @@ public class ClanManager : Singleton<ClanManager>
     public string GetClanName()
     {
         return name;
-    }   
+    }
 
     public string GetPlayerOwner()
     {
@@ -133,7 +132,7 @@ public class ClanManager : Singleton<ClanManager>
 
     public void AttackClanID(int OtherClanID)
     {
-        OnlineManager.Instance.AttackClan(clanID , OtherClanID);
+        OnlineManager.Instance.AttackClan(clanID, OtherClanID);
     }
 
     public void ClanWarStarted(SC_ClanWarStart warStartMessage)

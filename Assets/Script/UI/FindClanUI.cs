@@ -1,6 +1,4 @@
-using System;
 using UnityEngine;
-using UnityEngine.InputSystem.XR;
 
 public class FindClanUI : MonoBehaviour
 {
@@ -46,12 +44,14 @@ public class FindClanUI : MonoBehaviour
     public void CreateClan()
     {
         controller.ShowConfirmPopup("Create Clan", "Are you sure you want to create a new clan?",
-            () =>{
+            () =>
+            {
                 controller.ShowBlockPopup("Clan Created", "Waiting for create clan!");
                 ClanManager.Instance.CreateClan("ClanName_01");
                 controller.CloseMenu();
             },
-            () =>{
+            () =>
+            {
                 controller.CloseMenu();
             });
     }

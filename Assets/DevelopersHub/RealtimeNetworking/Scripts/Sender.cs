@@ -1,7 +1,5 @@
 namespace DevelopersHub.RealtimeNetworking.Client
 {
-    using System.Collections;
-    using System.Collections.Generic;
     using UnityEngine;
 
     public class Sender : MonoBehaviour
@@ -76,7 +74,7 @@ namespace DevelopersHub.RealtimeNetworking.Client
 
         public static void TCP_Send(Packet packet)
         {
-            if(packet != null)
+            if (packet != null)
             {
                 packet.SetID((int)Packet.ID.CUSTOM);
                 SendTCPData(packet);

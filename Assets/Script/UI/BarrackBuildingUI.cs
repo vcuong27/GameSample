@@ -37,12 +37,12 @@ public class BarrackBuildingUI : MonoBehaviour
         ProgressImg.gameObject.SetActive(false);
         ConfirmButton.gameObject.SetActive(false);
         CancelButton.gameObject.SetActive(false);
-    }    
+    }
 
     public void Confirm()
     {
         Debug.Log("Confirm");
-        if(PlayerProfile.Instance.GetNumberPlayerItemData(ItemType.COIN) < DataManager.Instance.GetBuildingDataByID(BuildingType.BARRACKS).Price)
+        if (PlayerProfile.Instance.GetNumberPlayerItemData(ItemType.COIN) < DataManager.Instance.GetBuildingDataByID(BuildingType.BARRACKS).Price)
         {
             Debug.Log("Not enough coins build.");
             barrackBuilding.gameObject.SetActive(false);

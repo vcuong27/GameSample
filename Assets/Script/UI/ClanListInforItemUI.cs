@@ -1,7 +1,5 @@
-using System;
 using TMPro;
 using UnityEngine;
-using UnityEngine.InputSystem.XR;
 
 public class ClanListInforItemUI : MonoBehaviour
 {

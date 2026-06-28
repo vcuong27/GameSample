@@ -5,8 +5,8 @@ public class UnitDataGame
 {
     public UnitType Type;
     public Sprite Sprite;
-    public GameObject Prefab;   
-    public GameObject BulletPrefab;   
+    public GameObject Prefab;
+    public GameObject BulletPrefab;
 }
 
 [CreateAssetMenu(fileName = "Units", menuName = "Scriptable Objects/Units")]

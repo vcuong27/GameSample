@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class MyClanDetailUI : MonoBehaviour
 {
-    
+
 
     public TextMeshProUGUI clanName;
     public TextMeshProUGUI clanDescription;

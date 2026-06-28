@@ -1,7 +1,4 @@
-using Lean.Gui;
-using System;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -42,8 +39,8 @@ public class UIGamePlay : MonoBehaviour
         //playerGold.text = PlayerProfile.Instance.GetCoins().ToString();
 
 
-    }  
-    
+    }
+
     public void JoyStickSet(Vector2 vector)
     {
         //GameController.Instance.MovePlayer(x, y);

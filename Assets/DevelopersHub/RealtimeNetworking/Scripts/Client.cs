@@ -1,11 +1,11 @@
 namespace DevelopersHub.RealtimeNetworking.Client
 {
+    using System;
     using System.Collections.Generic;
-    using UnityEngine;
+    using System.Linq;
     using System.Net;
     using System.Net.Sockets;
-    using System;
-    using System.Linq;
+    using UnityEngine;
 
     public partial class Client : MonoBehaviour
     {

@@ -1,5 +1,3 @@
-using System;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class UIMainBattle : MonoBehaviour
@@ -23,7 +21,7 @@ public class UIMainBattle : MonoBehaviour
     public void UPdateBattleInfor()
     {
         //BatterInfo.Update();
-    }    
+    }
 
     public void ShowPrepareScreen()
     {

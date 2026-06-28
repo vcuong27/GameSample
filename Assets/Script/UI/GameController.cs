@@ -1,8 +1,5 @@
 using Lean.Gui;
-using System;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UIElements;
 
 public class GameController : IMenuStack
 {
@@ -51,7 +48,7 @@ public class GameController : IMenuStack
         });
     }
 
-    public void OpenBuildMenu(IBuilding building )
+    public void OpenBuildMenu(IBuilding building)
     {
         openedBuildingMenu = building;
         BuildingType type = openedBuildingMenu.buildingType;
@@ -63,7 +60,7 @@ public class GameController : IMenuStack
                 break;
             case BuildingType.BARRACKS:
                 uIBarackPanel.gameObject.SetActive(true);
-                uIBarackPanel.Initilize((BarrackBuilding)building,this);
+                uIBarackPanel.Initilize((BarrackBuilding)building, this);
                 break;
             case BuildingType.FARM_GOLD:
                 break;

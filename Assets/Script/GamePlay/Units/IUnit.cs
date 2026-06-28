@@ -1,6 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
-using Unity.AI.Navigation;
 using UnityEngine.AI;
 
 public class IUnit : MonoBehaviour
