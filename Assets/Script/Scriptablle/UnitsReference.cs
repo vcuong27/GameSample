@@ -9,11 +9,8 @@ public class UnitDataGame
     public GameObject BulletPrefab;
 }
 
-[CreateAssetMenu(fileName = "Units", menuName = "Scriptable Objects/Units")]
-public class Units : ScriptableObject
+[CreateAssetMenu(fileName = "UnitsReference", menuName = "GameScriptable/UnitsReference")]
+public class UnitsReference : ScriptableObject
 {
-    public SwordManData SwordMan;
-
     public UnitDataGame[] UnitDataGames;
-
 }

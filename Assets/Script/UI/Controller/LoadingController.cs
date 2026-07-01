@@ -53,6 +53,13 @@ public class LoadingController : IMenuStack
         yield return new WaitUntil(() => DataManager.Instance.IsInitialized());
         slider.value = 0.8f;
 
+        // load Online data  
+        DataManager.Instance.InitializeOnlineData();
+        yield return new WaitUntil(() => DataManager.Instance.IsOnlineInitialized());
+        slider.value = 0.8f;
+
+
+
         // chuyển scene
         AsyncOperation sceneLoading = SceneManager.LoadSceneAsync(1);
         while (!sceneLoading.isDone)

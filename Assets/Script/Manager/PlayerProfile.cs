@@ -97,7 +97,7 @@ public class PlayerProfile : MonoBehaviour
 
 
     private bool needSaveProfile;
-    private const float SAVE_INTERVAL = 10 * 60f; // 10 minutes
+    private const float SAVE_INTERVAL = 3;//10 * 60f; // 10 minutes
     private float saveTimer = 0f;
 
     private void Awake()

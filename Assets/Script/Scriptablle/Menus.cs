@@ -18,7 +18,7 @@ public class MenuData
     public GameObject MenuPrefab;
 }
 
-[CreateAssetMenu(fileName = "Menus", menuName = "Scriptable Objects/Menus")]
+[CreateAssetMenu(fileName = "Menus", menuName = "GameScriptable/Menus")]
 public class Menus : ScriptableObject
 {
     public MenuData[] MenuDatas;

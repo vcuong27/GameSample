@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d22a3d731d6dc747bbd8bafccd5e523, type: 3}
+  m_Name: ClanDataRef
+  m_EditorClassIdentifier: Assembly-CSharp::ClanDataReference
+  clanFlagDatas:
+  - FlagID: 0
+    FlagSprite: {fileID: 21300000, guid: 8c35201ab90e548489bbcec22209ceaf, type: 3}
+  - FlagID: 1
+    FlagSprite: {fileID: 21300000, guid: 0358e94906c704657ab9ca0a8ce5a588, type: 3}
+  - FlagID: 2
+    FlagSprite: {fileID: 21300000, guid: aef20f8e21ef14da9ba50e7d8df50510, type: 3}
+  - FlagID: 3
+    FlagSprite: {fileID: 21300000, guid: c50a0f6e42d5c4abeb157b1b97e14ae8, type: 3}
+  - FlagID: 4
+    FlagSprite: {fileID: 21300000, guid: 01388e084f08a42709215c4650bd004b, type: 3}

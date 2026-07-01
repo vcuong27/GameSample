@@ -11,12 +11,9 @@ public class BuidingDataGame
     public GameObject buildingPrefab;
 }
 
-[CreateAssetMenu(fileName = "Buildings", menuName = "SCR Objects/My Buildings")]
+[CreateAssetMenu(fileName = "BuildingsReference", menuName = "GameScriptable/BuildingsReference")]
 
-public class Buildings : ScriptableObject
+public class BuildingsReference : ScriptableObject
 {
-    public FarmData farmData;
-    public BarrackData barrackData;
-
     public BuidingDataGame[] buidingDataGames;
 }

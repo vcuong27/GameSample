@@ -10,46 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f7621c944ff2e6b40982ef579cc4e9ca, type: 3}
-  m_Name: Buildings
+  m_Name: BuildingsRef
   m_EditorClassIdentifier: Assembly-CSharp::Buildings
-  farmData:
-    ID: 1
-    Name: farm
-    BuildingType: 10
-    Level: 1
-    MaxLevel: 10
-    BuildTime: 60
-    UpgradeTime: 60
-    State: 0
-    Price: 100
-    UpgradePrice: 64000000640000006400000064000000640000006400000064000000640000006400000064000000
-    CurrentCoin: 0
-    MaxCoin: 1000
-    CoinPerMinute: 10
-  barrackData:
-    ID: 2
-    Name: barack
-    BuildingType: 50
-    Level: 1
-    MaxLevel: 10
-    BuildTime: 60
-    UpgradeTime: 60
-    State: 0
-    Price: 500
-    UpgradePrice: f4010000f4010000f4010000f4010000f4010000f4010000f4010000f4010000f4010000f4010000
   buidingDataGames:
   - size: {x: 1, y: 1}
     pivot: {x: 0, y: 0}
     buildingType: 1
-    buildSprite: {fileID: -169667091, guid: a5e645d0b2507ac42807ef8e886f7d45, type: 3}
+    buildSprite: {fileID: 21300000, guid: c81dc3bd0a77f4912ab0944a90c75485, type: 3}
     buildingPrefab: {fileID: 5931148700297190095, guid: dfabc9b7e0f02b14087a893a7a44c556, type: 3}
   - size: {x: 1, y: 1}
     pivot: {x: 0, y: 0}
     buildingType: 50
-    buildSprite: {fileID: -1611400383, guid: a5e645d0b2507ac42807ef8e886f7d45, type: 3}
+    buildSprite: {fileID: 21300000, guid: b3ab6535c20db4a51abc53bee29b4cef, type: 3}
     buildingPrefab: {fileID: 5325591293069440501, guid: eb33bfba04610a648a356c80596e50a6, type: 3}
   - size: {x: 1, y: 1}
     pivot: {x: 0, y: 0}
     buildingType: 10
-    buildSprite: {fileID: 194516358, guid: a5e645d0b2507ac42807ef8e886f7d45, type: 3}
+    buildSprite: {fileID: 21300000, guid: 28528f4472ea147f1bfd151f37e25187, type: 3}
     buildingPrefab: {fileID: 5986772186702043087, guid: 3f4e4ed240a33a94087a0b792813284b, type: 3}

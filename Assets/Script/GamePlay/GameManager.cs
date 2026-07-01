@@ -9,9 +9,18 @@ public class GameManager : MonoBehaviour
 
     public static Action<FarmData> ON_UPDATE_FARM_DATA;
 
+    private static GameManager _instance;
+    public static GameManager Instance => _instance;
+
+    private void Awake()
+    {
+        _instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
+
     public void BuyBuilding(BuildingType type)
     {
-        if (PlayerProfile.Instance.GetNumberPlayerItemData(ItemType.COIN) < DataManager.Instance.GetBuildingDataByID(type).Price)
+        if (PlayerProfile.Instance.GetPlayerCoins() < DataManager.Instance.GetBuildingDataByID(type).Price)
         {
             Debug.Log("Not enough coins to buy the building.");
             return;

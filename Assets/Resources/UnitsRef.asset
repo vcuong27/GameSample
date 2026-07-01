@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c895db07a2e06a489145ec7f3ee63f3, type: 3}
+  m_Name: UnitsRef
+  m_EditorClassIdentifier: Assembly-CSharp::Units
+  UnitDataGames:
+  - Type: 100
+    Sprite: {fileID: 21300000, guid: 1365bae73e37d47febbdb1ad178b74c4, type: 3}
+    Prefab: {fileID: 8276778771209772009, guid: 4a735e4efa39b3e4d9faeb1a363c8cfa, type: 3}
+    BulletPrefab: {fileID: 0}
+  - Type: 101
+    Sprite: {fileID: 21300000, guid: af4cc505a01a64425a7e1e7e85912203, type: 3}
+    Prefab: {fileID: 8276778771209772009, guid: 4a735e4efa39b3e4d9faeb1a363c8cfa, type: 3}
+    BulletPrefab: {fileID: 0}
+  - Type: 102
+    Sprite: {fileID: 21300000, guid: af4cc505a01a64425a7e1e7e85912203, type: 3}
+    Prefab: {fileID: 8276778771209772009, guid: 4a735e4efa39b3e4d9faeb1a363c8cfa, type: 3}
+    BulletPrefab: {fileID: 0}

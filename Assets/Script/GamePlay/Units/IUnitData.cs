@@ -4,8 +4,11 @@ public enum UnitType
 {
     NONE = 0,
     SWORDMAN = 100,
-    ARCHER = 200,
-    CAVALRY = 300
+    SWORDMAN1,
+    SWORDMAN2,
+    SWORDMAN10,
+    ARCHER,
+    CAVALRY
 }
 
 public enum UnitState

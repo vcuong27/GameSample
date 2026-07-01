@@ -1,32 +1,39 @@
 using System;
 using UnityEngine;
 
-public enum SoundType
-{
-    BGM,
-    SFX,
-}
 
-public enum SoundClip
+public enum SoundMusicType
 {
     BGM_Main,
     BGM_Battle,
+}
+
+public enum SoundSFXType
+{
     SFX_ButtonClick,
     SFX_Explosion,
 }
 
+
 [Serializable]
-public class SoundData
+public class SoundMusicData
 {
-    public SoundType Type;
-    public SoundClip Clip;
+    public SoundMusicType Type;
+    public AudioClip AudioClip;
+}
+
+[Serializable]
+public class SoundSFXData
+{
+    public SoundSFXType Type;
     public AudioClip AudioClip;
 }
 
 
-[CreateAssetMenu(fileName = "Sounds", menuName = "SCR Objects/My Sounds")]
+[CreateAssetMenu(fileName = "Sounds", menuName = "GameScriptable/Sounds")]
 
 public class Sounds : ScriptableObject
 {
-    public SoundData[] soundDatas;
+    public SoundMusicData[] musicDatas;
+    public SoundSFXData[] sfxDatas;
 }

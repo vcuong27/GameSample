@@ -10,9 +10,14 @@ public class SoundManager : Singleton<SoundManager>
         sounds = Resources.Load<Sounds>("GameSounds");
     }
 
-    public AudioClip GetAudioClipByType(SoundType type, SoundClip clip)
+    public AudioClip GetMusicByType(SoundMusicType type)
     {
-        return sounds.soundDatas.First(x => x.Type == type && x.Clip == clip).AudioClip;
+        return sounds.musicDatas.First(x => x.Type == type).AudioClip;
+    }
+
+    public AudioClip GetSFXByType(SoundSFXType type)
+    {
+        return sounds.sfxDatas.First(x => x.Type == type).AudioClip;
     }
 
 }

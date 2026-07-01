@@ -30,10 +30,7 @@ public class GameController : IMenuStack
 
     public void CloseShop()
     {
-
         CloseMenu();
-        ShowNoticePopup("Shop Closed", "You have closed the shop.");
-        ShowNoticePopup("Game Play", "Wating ...");
     }
 
     public void OpenGamePlay()
