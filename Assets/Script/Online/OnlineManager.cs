@@ -6,8 +6,6 @@ using UnityEngine;
 public class OnlineManager : Singleton<OnlineManager>
 {
 
-    private bool useWebSocket = true;
-
     private bool isConnected = false;
     private bool isLoggedIn = false;
     private int playerID;
@@ -30,7 +28,7 @@ public class OnlineManager : Singleton<OnlineManager>
 
     public void ConnectToServer()
     {
-        if (useWebSocket)
+        if (true)
         {
             RealtimeNetworking.ConnectWebSocket();
         }
@@ -320,13 +318,15 @@ public class OnlineManager : Singleton<OnlineManager>
         {
             Sender.WebSocket_Send((int)id, jsonValue);
             Debug.LogFormat("WS SEND => MessageID:{0} jsonValue:{1}", id, jsonValue);
-            return;
-        }
 
-        Packet _packet = new Packet();
-        _packet.Write((int)id);
-        _packet.Write(jsonValue);
-        Sender.TCP_Send(_packet);
-        Debug.LogFormat("TCP SEND => MessageID:{0} jsonValue:{1}", id, jsonValue);
+        }
+        else
+        {
+            Packet _packet = new Packet();
+            _packet.Write((int)id);
+            _packet.Write(jsonValue);
+            Sender.TCP_Send(_packet);
+            Debug.LogFormat("TCP SEND => MessageID:{0} jsonValue:{1}", id, jsonValue);
+        }
     }
 }

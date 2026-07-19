@@ -29,7 +29,7 @@ public class BarrackBuildingUI : MonoBehaviour
     public void UpdateConstructTime(float percent, TimeSpan timeRemaining)
     {
         ProgressImg.fillAmount = percent;
-        TimeText.text = $"{timeRemaining.ToString()}";
+        TimeText.text = timeRemaining.ToString(@"hh\:mm\:ss");
     }
 
     public void HideUI()

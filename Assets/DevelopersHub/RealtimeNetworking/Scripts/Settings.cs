@@ -18,9 +18,6 @@ namespace DevelopersHub.RealtimeNetworking.Client
         [SerializeField] private bool _useWebSocket = false; public bool useWebSocket { get { return _useWebSocket; } }
 
         [Tooltip("Use wss:// instead of ws://.")]
-        [SerializeField] private bool _secureWebSocket = false; public bool secureWebSocket { get { return _secureWebSocket; } }
-
-        [Tooltip("Server WebSocket port number.")]
         [SerializeField] private int _webSocketPort = 5556; public int webSocketPort { get { return _webSocketPort; } }
 
         [Tooltip("Server WebSocket path. The patched server uses /ws/ by default.")]
@@ -30,7 +27,7 @@ namespace DevelopersHub.RealtimeNetworking.Client
         {
             get
             {
-                string scheme = _secureWebSocket ? "wss" : "ws";
+                string scheme = "ws";
                 string host = NormalizeWebSocketHost(_ip);
                 string path = string.IsNullOrWhiteSpace(_webSocketPath) ? "/ws/" : _webSocketPath;
                 if (!path.StartsWith("/"))
