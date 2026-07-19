@@ -13,6 +13,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
         private readonly SemaphoreSlim sendLock = new SemaphoreSlim(1, 1);
 
         public WebSocket socket { get; private set; }
+
         public string remoteAddress { get; private set; }
 
         public bool IsConnected
@@ -40,22 +41,69 @@ namespace DevelopersHub.RealtimeNetworking.Server
                 token = token
             });
         }
+        private static string Escape(string value)
+        {
+            StringBuilder builder = new StringBuilder(value.Length + 8);
+
+            for (int i = 0; i < value.Length; i++)
+            {
+                char c = value[i];
+
+                switch (c)
+                {
+                    case '\\': builder.Append("\\\\"); break;
+                    case '\"': builder.Append("\\\""); break;
+                    case '\b': builder.Append("\\b"); break;
+                    case '\f': builder.Append("\\f"); break;
+                    case '\n': builder.Append("\\n"); break;
+                    case '\r': builder.Append("\\r"); break;
+                    case '\t': builder.Append("\\t"); break;
+                    default:
+                        if (c < 32)
+                        {
+                            builder.Append("\\u");
+                            builder.Append(((int)c).ToString("x4"));
+                        }
+                        else
+                        {
+                            builder.Append(c);
+                        }
+                        break;
+                }
+            }
+
+            return builder.ToString();
+        }
+
+        private static string Quote(string value)
+        {
+            return "\"" + Escape(value ?? string.Empty) + "\"";
+        }
+
+        public static string CreateMessage(int messageID, string jsonValue)
+        {
+            return "{\"messageID\":" + messageID + ",\"jsonValue\":" + Quote(jsonValue ?? "{}") + "}";
+        }
 
         public async void SendMessage(MessageID messageID, string jsonValue)
         {
-            try
-            {
-                await SendJsonAsync(new
-                {
-                    messageID = (int)messageID,
-                    messageName = messageID.ToString(),
-                    jsonValue = string.IsNullOrEmpty(jsonValue) ? "{}" : jsonValue
-                });
-            }
-            catch (Exception ex)
-            {
-                Tools.LogError(ex.Message, ex.StackTrace, "WebSocket");
-            }
+
+            string mes = CreateMessage((int)messageID, jsonValue);
+
+            Task ts =  SendTextAsync(mes);
+
+            //try
+            //{
+            //    await SendJsonAsync(new
+            //    {
+            //        messageID = (int)messageID,
+            //        jsonValue = string.IsNullOrEmpty(jsonValue) ? "{}" : jsonValue
+            //    });
+            //}
+            //catch (Exception ex)
+            //{
+            //    Tools.LogError(ex.Message, ex.StackTrace, "WebSocket");
+            //}
         }
 
         private Task SendJsonAsync(object value)

@@ -33,8 +33,8 @@ namespace DevelopersHub.RealtimeNetworking.Server
         #region Connection
         public const int maxPlayers = 100000;
         public static int onlinePlayers = 0;
-        public const int port = 5555;
-        public const int websocketPort = 5556;
+        public const int port = 8888;
+        public const int websocketPort = 9999;
         // Use "localhost" for local Unity editor testing without Administrator permission.
         // Use "+" to accept LAN/mobile clients, then register URL ACL as described in WebSocket_USAGE.md.
         public const string websocketHost = "localhost";

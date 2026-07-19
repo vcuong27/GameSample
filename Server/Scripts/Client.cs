@@ -2,6 +2,29 @@
 using System.Net;
 using System.Net.Sockets;
 
+public class PlayerData
+{
+    public int id;
+    public string username;
+    public string clanID;
+    public int score;
+    public long coin;
+    public int battlePoint;
+
+    public PlayerData(int _id, string _username)
+    {
+        id = _id;
+        username = _username;
+    }
+}
+
+public enum PlayerConnectionType
+{
+    TPC_CONNECTED,
+    UDP_CONNECTED,
+    WEB_SOCKET_CONNECTED,
+}
+
 namespace DevelopersHub.RealtimeNetworking.Server
 {
     class Client
@@ -9,6 +32,8 @@ namespace DevelopersHub.RealtimeNetworking.Server
 
         public static int dataBufferSize = 4096;
         public int id;
+        public PlayerData playerData;
+        public PlayerConnectionType connectionType;
         public TCP tcp;
         public UDP udp;
         public WebSocketConnection webSocket;

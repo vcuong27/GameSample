@@ -37,7 +37,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
             {
                 listener.Start();
                 isRunning = true;
-                _ = AcceptLoopAsync();
+                Task result = AcceptLoopAsync();
 
                 string displayHost = Host == "+" || Host == "*" ? "0.0.0.0" : Host;
                 Console.WriteLine("WebSocket Server Started on ws://{0}:{1}{2}", displayHost, Port, Path);
@@ -80,7 +80,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
                 try
                 {
                     HttpListenerContext context = await listener.GetContextAsync();
-                    _ = HandleClientAsync(context);
+                    Task result = HandleClientAsync(context);
                 }
                 catch
                 {
